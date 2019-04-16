@@ -29,22 +29,22 @@ class MOTORARDUINO():
         
         command=str(self.numMoteur)+' '+str(pas)+' '+str(vitesse)
         self.client.send(command.encode())
-        recu=self.client.recvfrom(512)[0]
+        #recu=self.client.recvfrom(512)[0]
         actualPosition=int(confArduino.value(self.moteurname+'/Pos'))
         position=actualPosition+pas
         confArduino.setValue(self.moteurname+"/Pos",position)
         confArduino.sync()
-        return recu
+        #return recu
 
     def move(self,position,vitesse=1000):
         actualPosition=int(confArduino.value(self.moteurname+'/Pos'))
         pas=int(position)-(actualPosition)
         command=str(self.numMoteur)+' '+str(pas)+' '+str(vitesse)
         self.client.send(command.encode())
-        recu,adressRemote=self.client.recvfrom(512)
+        #recu,adressRemote=self.client.recvfrom(512)
         confArduino.setValue(self.moteurname+"/Pos",position)
         confArduino.sync()
-        return recu
+        #return recu
     
     def position(self):
         actualPosition=int(confArduino.value(self.moteurname+'/Pos'))
