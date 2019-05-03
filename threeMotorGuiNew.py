@@ -5,32 +5,49 @@ Created on Mon Apr  1 11:16:50 2019
 @author: sallejaune
 """
 #%%Import
-from PyQt5 import QtCore,uic
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication,QStyle
 from PyQt5.QtWidgets import QWidget,QMessageBox,QSpinBox,QLineEdit,QFrame
 from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushButton,QGridLayout,QTextEdit,QDoubleSpinBox
 from PyQt5.QtWidgets import QInputDialog,QComboBox,QSlider,QCheckBox,QLabel,QSizePolicy,QLineEdit,QPlainTextEdit,QMessageBox,QMenu
-from pyqtgraph.Qt import QtCore,QtGui
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import QRect
 from PyQt5.QtWidgets import QShortcut,QStyleOption
 import sys,time,os
 import qdarkstyle
 
+from oneMotorGuiNew import ONEMOTORGUI
+
 class THREEMOTORGUI(QWidget) :
     """
     User interface Motor class : 
-    MOTOGUI(str(mot1), str(motorTypeName),str(mot2), str(motorTypeName), nomWin,nomTilt, )
+    MOTOGUI(str(mot1), str(motorTypeName),str(mot2), str(motorTypeName), nomWin,nomTilt,nomFoc,showRef,unit,unitFoc )
     mot0= lat  'name of the motor ' (child group of the ini file)
     mot1 =vert
     mot 2 =foc
     nonWin= windows name
     nonTilt =windows tilt name
     nomFoc= windows Focus name
-    motorTypeName= Controler name  : 'RSAI' or 'A2V' or 'NewFocus' or 'SmartAct' or 'Newport' , Servo
+    showRef True or False to show refWidget 
+    unit= initial Unit of the two fisrt motors :
+        0=sterp
+        1=Micros
+        2=mm
+        3=ps
+        4=degres
+        unitFoc= unit of the third motors
+        
+    motorTypeName= Controler name  : 'RSAI' or 'A2V' or 'NewFocus' or 'SmartAct' or 'Newport' , Servo, Arduino
+    
     fichier de config des moteurs : 'configMoteurRSAI.ini' 'configMoteurA2V.ini' 'configMoteurNewFocus.ini' 'configMoteurSmartAct.ini'
+    
+    
     """
 
-    def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',motFoc='',motorTypeName2='',nomWin='',nomTilt='',nomFoc='',parent=None):
+
+
+
+    def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',motFoc='',motorTypeName2='',nomWin='',nomTilt='',nomFoc='',showRef=False,unit=1,unitFoc=2,jogValue=1,jogValueFoc=1,parent=None):
         
         super(THREEMOTORGUI, self).__init__()
         self.motor=[str(motLat),str(motVert),str(motFoc)]
@@ -39,14 +56,20 @@ class THREEMOTORGUI(QWidget) :
         self.MOT=[0,0,0]
         self.configMotName=[0,0,0]
         self.conf=[0,0,0]
-        self.configPath="/.fichiersConfig/"
+        self.nomTilt=nomTilt
+        self.configPath="./fichiersConfig/"#"/.fichiersConfig/"
         self.isWinOpen=False
         self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
-        self.setup()
-        self.setWindowTitle(nomWin)
-        self.actionButton()
+        self.refShowId=showRef
+        self.indexUnit=unit
+        self.indexUnitFoc=unitFoc
+        self.jogValue=jogValue
+        self.jogValueFoc=jogValueFoc
+        self.LatWidget=ONEMOTORGUI(mot=self.motor[0],motorTypeName0=self.configMotName[0],nomWin='Control One Motor : ',showRef=False,unit=2)
+        self.VertWidget=ONEMOTORGUI(mot=self.motor[1],motorTypeName0=self.configMotName[1],nomWin='Control One Motor : ',showRef=False,unit=2)
+        self.FocWidget=ONEMOTORGUI(mot=self.motor[2],motorTypeName0=self.configMotName[2],nomWin='Control One Motor : ',showRef=False,unit=2)
         
-        for zi in range (0,3): #  list configuration et moor types 
+        for zi in range (0,3): #  list configuration and motor types 
             if self.motorTypeName[zi]=='RSAI':
                 self.configMotName[zi]=self.configPath+'configMoteurRSAI.ini'
                 import moteurRSAI as RSAI
@@ -82,41 +105,93 @@ class THREEMOTORGUI(QWidget) :
                  import servo as servo
                  self.motorType=servo
                  self.MOT=self.motorType[zi].MOTORSERVO(self.motor[zi])
+                 
+            elif self.motorTypeName[zi]=='Arduino':
+                print('zi',zi)
+                self.configMotName[zi]=self.configPath+'configMoteurArduino.ini'
+                print(self.configMotName[zi])
+                import moteurArduino as arduino
+                self.motorType[zi]=arduino
+                self.MOT[zi]=self.motorType[zi].MOTORARDUINO(self.motor[zi])
+                
             else:
                 print('Error config motor Type name')
-           
+                self.configMotName[zi]=self.configPath+'configMoteurTest.ini'
+                import moteurtest as test
+                self.motorType[zi]=test
+                self.MOT[zi]=self.motorType[zi].MOTORTEST(self.motor[zi])
+                
             self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.IniFormat) # fichier config motor fichier .ini
         
         self.stepmotor=[0,0,0]
         self.butePos=[0,0,0]
         self.buteNeg=[0,0,0]
-        
+        self.name=[0,0,0]
         for zzi in range(0,3):
+            
             self.stepmotor[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/stepmotor")) #list of stepmotor values for unit conversion
             self.butePos[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/buteePos")) # list 
             self.buteNeg[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/buteeneg"))
+            self.name[zzi]=str(self.conf[zzi].value(self.motor[zzi]+"/Name"))
         
-        self.unitFoc()
-        self.unitTrans()
+        self.setWindowTitle(nomWin)#+' : '+ self.name[0])
         
         self.threadLat=PositionThread(mot=self.MOT[0],motorType=self.motorType[0]) # thread for displaying position Lat
         self.threadLat.POS.connect(self.PositionLat)
         
-        
         self.threadVert=PositionThread(mot=self.MOT[1],motorType=self.motorType[1]) # thread for displaying  position Vert
         self.threadVert.POS.connect(self.PositionVert)
-        
         
         self.threadFoc=PositionThread(mot=self.MOT[2],motorType=self.motorType[2]) # thread for displaying  position Foc
         self.threadFoc.POS.connect(self.PositionFoc)
         
+        self.setup()
+        ## initialisation of the jog value 
+        if self.indexUnitFoc==0: #  step
+            self.unitChangeFoc=1
+            self.unitNameFoc='step'
+            
+        if self.indexUnitFoc==1: # micron
+            self.unitChangeFoc=float((1*self.stepmotor[0])) 
+            self.unitNameFoc='um'
+        if self.indexUnitFoc==2: #  mm 
+            self.unitChangeFoc=float((1000*self.stepmotor[0]))
+            self.unitNameFoc='mm'
+        if self.indexUnitFoc==3: #  ps  double passage : 1 microns=6fs
+            self.unitChangeFoc=float(1*self.stepmotor[0]/0.0066666666) 
+            self.unitNameFoc='ps'
+        if self.indexUnitFoc==4: #  en degres
+            self.unitChangeFoc=1 *self.stepmotor[0]
+            self.unitNameFoc='°'    
         
-        self.absLatRef=[self.ABSLatref1,self.ABSLatref2,self.ABSLatref3,self.ABSLatref4,self.ABSLatref5] 
-        self.absVertRef=[self.ABSVertref1,self.ABSVertref2,self.ABSVertref3,self.ABSVertref4,self.ABSVertref5]
-        self.absFocRef=[self.ABSFocref1,self.ABSFocref2,self.ABSFocref3,self.ABSFocref4,self.ABSFocref5] # to save positions
-        self.posText=[self.posText1,self.posText2,self.posText3,self.posText4,self.posText5]
-        self.POS=[self.Pos1,self.Pos2,self.Pos3,self.Pos4,self.Pos5]
-        self.Take=[self.take1,self.take2,self.take3,self.take4,self.take5]
+        if self.indexUnit==0: # step
+            self.unitChangeLat=1
+            self.unitChangeVert=1
+            self.unitNameTrans='step'
+        if self.indexUnit==1: # micron
+            self.unitChangeLat=float((1*self.stepmotor[0]))  
+            self.unitChangeVert=float((1*self.stepmotor[1]))  
+            self.unitNameTrans='um'
+        if self.indexUnit==2: 
+            self.unitChangeLat=float((1000*self.stepmotor[0]))
+            self.unitChangeVert=float((1000*self.stepmotor[1]))
+            self.unitNameTrans='mm'
+        if self.indexUnit==3: #  ps  en compte le double passage : 1 microns=6fs
+            self.unitChangeLat=float(1*self.stepmotor[0]/0.0066666666)  
+            self.unitChangeVert=float(1*self.stepmotor[1]/0.0066666666)  
+            self.unitNameTrans='ps'
+        if self.unitChangeLat==0:
+            self.unitChangeLat=1 # if / par 0
+        if self.unitChangeVert==0:
+            self.unitChangeVert=1 #if / 0
+        
+        
+        self.unitFoc()
+        self.unitTrans()
+        
+
+        
+        
         
     def startThread2(self):
         self.threadVert.ThreadINIT()
@@ -131,10 +206,10 @@ class THREEMOTORGUI(QWidget) :
         
     def setup(self):
         
-        self.setGeometry(0,0,200,200)
+
         vbox1=QVBoxLayout() 
         hboxTitre=QHBoxLayout()
-        self.nomTilt=QLabel('Target Translation')
+        self.nomTilt=QLabel(self.nomTilt)
         
         hboxTitre.addWidget(self.nomTilt)
         
@@ -145,6 +220,7 @@ class THREEMOTORGUI(QWidget) :
         self.unitTransBouton.addItem('um')
         self.unitTransBouton.addItem('mm')
         self.unitTransBouton.addItem('ps')
+        self.unitTransBouton.setCurrentIndex(self.indexUnit)
         
         
         hboxTitre.addWidget(self.unitTransBouton)
@@ -154,31 +230,33 @@ class THREEMOTORGUI(QWidget) :
         hLatBox=QHBoxLayout()
         hbox1=QHBoxLayout()
         
-        posLAT=QLabel('Lateral:')
-        posLAT.setMaximumHeight(20)
+        self.posLat=QPushButton('Lateral:')
+        self.posLat.setMaximumHeight(20)
         self.position_Lat=QLabel('12345667')
-        self.position_Lat.setMaximumHeight(20)
+        self.position_Lat.setStyleSheet("font: bold 25pt" )
+        self.position_Lat.setMaximumHeight(30)
         self.enPosition_Lat=QLineEdit('?')
         self.enPosition_Lat.setMaximumWidth(50)
         self.zeroButtonLat=QPushButton('Zero')
         self.zeroButtonLat.setMaximumWidth(50)
-        hLatBox.addWidget(posLAT)
+        hLatBox.addWidget(self.posLat)
         hLatBox.addWidget(self.position_Lat)
         hLatBox.addWidget(self.enPosition_Lat)
         hLatBox.addWidget(self.zeroButtonLat)
        
         hVertBox=QHBoxLayout()
-        posVert=QLabel('Vertical:')
-        posVert.setMaximumHeight(20)
+        self.posVert=QPushButton('Vertical:')
+        self.posVert.setMaximumHeight(20)
         self.position_Vert=QLabel('1234556')
-        self.position_Vert.setMaximumHeight(20)
+        self.position_Vert.setStyleSheet("font: bold 25pt" )
+        self.position_Vert.setMaximumHeight(30)
         self.enPosition_Vert=QLineEdit('?')
         self.enPosition_Vert.setMaximumWidth(50)
         self.zeroButtonVert=QPushButton('Zero')
         self.zeroButtonVert.setMaximumWidth(50)
         
         
-        hVertBox.addWidget(posVert)
+        hVertBox.addWidget(self.posVert)
         hVertBox.addWidget(self.position_Vert)
         hVertBox.addWidget(self.enPosition_Vert)
         hVertBox.addWidget(self.zeroButtonVert)
@@ -203,10 +281,11 @@ class THREEMOTORGUI(QWidget) :
         self.droite=QPushButton('right')
         self.droite.setMinimumHeight(60)
         self.droite.setMinimumWidth(60)
-        self.jogStep=QSpinBox()
+        self.jogStep=QDoubleSpinBox()
         self.jogStep.setMaximum(10000)
-        
-        
+        self.jogStep.setValue(100)
+        self.unitChangeLat=1
+    
         center=QHBoxLayout()
         center.addWidget(self.jogStep)
         
@@ -219,23 +298,26 @@ class THREEMOTORGUI(QWidget) :
         vbox1.addLayout(hbox1)     
         
         hboxFoc=QHBoxLayout()
-        posFoc=QLabel('Foc:')
-        posFoc.setMaximumHeight(20)
+        self.posFoc=QPushButton('Foc:')
+        self.posFoc.setMaximumHeight(20)
         
         self.position_Foc=QLabel('1234567')
-        self.position_Foc.setMaximumHeight(20)
+        self.position_Foc.setStyleSheet("font: bold 25pt" )
+        self.position_Foc.setMaximumHeight(30)
         self.unitFocBouton=QComboBox()
         self.unitFocBouton.addItem('Step')
         self.unitFocBouton.addItem('um')
         self.unitFocBouton.addItem('mm')
         self.unitFocBouton.addItem('ps')
         self.unitFocBouton.setMinimumWidth(80)
+        self.unitFocBouton.setCurrentIndex(self.indexUnitFoc)
+        
         
         self.enPosition_Foc=QLineEdit()
-        self.enPosition_Foc.setMaximumWidth(50)
+        self.enPosition_Foc.setMaximumWidth(60)
         self.zeroButtonFoc=QPushButton('Zero')
         
-        hboxFoc.addWidget(posFoc)
+        hboxFoc.addWidget(self.posFoc)
         
         hboxFoc.addWidget(self.position_Foc)
         hboxFoc.addWidget(self.unitFocBouton)
@@ -248,6 +330,11 @@ class THREEMOTORGUI(QWidget) :
         hboxFoc.addWidget(self.moins)
         self.jogStep_2=QDoubleSpinBox()
         self.jogStep_2.setMaximum(10000)
+        
+        if self.indexUnitFoc==2 or self.indexUnitFoc==3:
+            self.jogStep_2.setValue(1)
+        else :
+            self.jogStep_2.setValue(100)
         hboxFoc.addWidget(self.jogStep_2)
          
         
@@ -259,40 +346,52 @@ class THREEMOTORGUI(QWidget) :
         
         vbox1.addLayout(hboxFoc)
         
-        
-        hboxRef=QHBoxLayout()
-        
-        self.REF1 = REF(self)
-        hboxRef.addWidget(self.REF1)
-        self.REF2 = REF(self)
-        hboxRef.addWidget(self.REF2)
-        self.REF3 = REF(self)
-        hboxRef.addWidget(self.REF3)
-        self.REF4 = REF(self)
-        hboxRef.addWidget(self.REF4)
-        self.REF5 = REF(self)
-        hboxRef.addWidget(self.REF5)
-        hboxRef.setContentsMargins(0,0,0,0)
-        
-        vbox1.addLayout(hboxRef)
-        
-        
-        
         self.stopButton=QPushButton('STOP')
         self.stopButton.setStyleSheet("background-color: red")
         hbox3=QHBoxLayout()
         hbox3.addWidget(self.stopButton)
+        self.showRef=QPushButton('Show Ref')
+        self.showRef.setMaximumWidth(70)
+        hbox3.addWidget(self.showRef)
         vbox1.addLayout(hbox3)
+        
+        self.REF1 = REF3M(num=1)
+        self.REF2 = REF3M(num=2)
+        self.REF3 = REF3M(num=3)
+        self.REF4 = REF3M(num=4)
+        self.REF5 = REF3M(num=5)
+        self.REF6 = REF3M(num=6)
+        
+        grid_layoutRef = QGridLayout()
+        grid_layoutRef.setVerticalSpacing(4)
+        grid_layoutRef.setHorizontalSpacing(4)
+        grid_layoutRef.addWidget(self.REF1,0,0)
+        grid_layoutRef.addWidget(self.REF2,0,1)
+        grid_layoutRef.addWidget(self.REF3,1,0)
+        grid_layoutRef.addWidget(self.REF4,1,1)
+        grid_layoutRef.addWidget(self.REF5,2,0)
+        grid_layoutRef.addWidget(self.REF6,2,1)
+       
+        self.widget6REF=QWidget()
+        self.widget6REF.setLayout(grid_layoutRef)
+        vbox1.addWidget(self.widget6REF)
+        
+        
+    
         self.setLayout(vbox1)
         
+        self.absLatRef=[self.REF1.ABSLatref,self.REF2.ABSLatref,self.REF3.ABSLatref,self.REF4.ABSLatref,self.REF5.ABSLatref,self.REF6.ABSLatref] 
+        self.absVertRef=[self.REF1.ABSVertref,self.REF2.ABSVertref,self.REF3.ABSVertref,self.REF4.ABSVertref,self.REF5.ABSVertref,self.REF6.ABSVertref]
+        self.absFocRef=[self.REF1.ABSFocref,self.REF2.ABSFocref,self.REF3.ABSFocref,self.REF4.ABSFocref,self.REF5.ABSFocref,self.REF6.ABSFocref] # pour memoriser les positions
+        self.posText=[self.REF1.posText,self.REF2.posText,self.REF3.posText,self.REF4.posText,self.REF5.posText,self.REF6.posText]
+        self.POS=[self.REF1.Pos,self.REF2.Pos,self.REF3.Pos,self.REF4.Pos,self.REF5.Pos,self.REF6.Pos]
+        self.Take=[self.REF1.take,self.REF2.take,self.REF3.take,self.REF4.take,self.REF5.take,self.REF6.take]
         
-        self.absLatRef=[self.REF1.ABSLatref,self.REF2.ABSLatref,self.REF3.ABSLatref,self.REF4.ABSLatref,self.REF5.ABSLatref] 
-        self.absVertRef=[self.REF1.ABSVertref,self.REF2.ABSVertref,self.REF3.ABSVertref,self.REF4.ABSVertref,self.REF5.ABSVertref]
-        self.absFocRef=[self.REF1.ABSFocref,self.REF2.ABSFocref,self.REF3.ABSFocref,self.REF4.ABSFocref,self.REF5.ABSFocref] # pour memoriser les positions
-        self.posText=[self.REF1.posText,self.REF2.posText,self.REF3.posText,self.REF4.posText,self.REF5.posText]
-        self.POS=[self.REF1.Pos,self.REF2.Pos,self.REF3.Pos,self.REF4.Pos,self.REF5.Pos]
-        self.Take=[self.REF1.take,self.REF2.take,self.REF3.take,self.REF4.take,self.REF5.take]
         
+        self.jogStep_2.setFocus()
+        self.refShow()
+        self.actionButton()
+#        self.setWindowIcon(QIcon('./icons/LOA.png'))
         
         
     def actionButton(self):
@@ -323,8 +422,13 @@ class THREEMOTORGUI(QWidget) :
         
         #self.refZeroButton.clicked.connect(self.RefMark) # todo
         
-        self.stopButton.clicked.connect(self.StopMot)#stop motors 
-       
+        self.stopButton.clicked.connect(self.StopMot)
+        self.showRef.clicked.connect(self.refShow)
+        
+        self.posVert.clicked.connect(lambda:self.open_widget(self.VertWidget))
+        self.posLat.clicked.connect(lambda:self.open_widget(self.LatWidget))
+        self.posFoc.clicked.connect(lambda:self.open_widget(self.FocWidget))
+         
         iii=1
         for saveNameButton in self.posText: # refference name
             nbRef=str(iii)
@@ -337,25 +441,65 @@ class THREEMOTORGUI(QWidget) :
         for absButton in self.absLatRef: 
             nbRef=str(eee)
             absButton.setValue(int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))) # save reference lat  value
-            absButton.valueChanged.connect(self.savRefLat) # sauv value
+            #print('absButtonvalue',int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos")))
+            absButton.editingFinished.connect(self.savRefLat) # sauv value
             eee+=1
         eee=1     
         for absButton in self.absVertRef: 
             nbRef=str(eee)
             absButton.setValue(int(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))) #save reference vert value 
-            absButton.valueChanged.connect(self.savRefVert) # save  value
+            absButton.editingFinished.connect(self.savRefVert) # save  value
             eee+=1
         eee=1     
         for absButton in self.absFocRef: 
             nbRef=str(eee)
             absButton.setValue(int(self.conf[2].value(self.motor[2]+"/ref"+nbRef+"Pos"))) # save reference foc value
-            absButton.valueChanged.connect(self.savRefFoc) #
+            absButton.editingFinished.connect(self.savRefFoc) #
             eee+=1
             
         for takeButton in self.Take:
-            takeButton.clicked.connect(self.take) # take the value 
+            takeButton.clicked.connect(self.take)
+             # take the value 
         
+    def open_widget(self,fene):
         
+        """ open new widget 
+        """
+        
+        if fene.isWinOpen==False:
+            #New widget"
+            fene.show()
+            fene.startThread2()
+            fene.isWinOpen=True
+    
+        else:
+            #fene.activateWindow()
+            fene.raise_()
+            fene.showNormal()  
+            
+            
+            
+    def refShow(self):
+        
+        if self.refShowId==True:
+            #print(self.geometry())
+            #self.resize(368, 345)
+            self.widget6REF.show()
+            self.refShowId=False
+            self.showRef.setText('Hide Ref')
+            self.setFixedSize(600,800)
+            
+            
+        else:
+            #print(self.geometry())
+            self.widget6REF.hide()
+            self.refShowId=True
+
+            self.showRef.setText('Show Ref')
+#            
+            self.setFixedSize(600,376)
+           
+            #self.updateGeometry()      
     
 
        
@@ -364,14 +508,13 @@ class THREEMOTORGUI(QWidget) :
         action jog + foc 
         '''
         a=float(self.jogStep_2.value())
-        print(a)
         a=float(a*self.unitChangeFoc)
         b=self.MOT[2].position()
         if b+a<self.buteNeg[2] :
-            print( "STOP : positive switch")
+            print( "STOP : Positive switch")
             self.MOT[2].stopMotor()
         elif b+a>self.butePos[2] :
-            print( "STOP : Butée Négative")
+            print( "STOP : Negative switch")
             self.MOT[2].stopMotor()
         else :
             self.MOT[2].rmove(a)
@@ -384,10 +527,10 @@ class THREEMOTORGUI(QWidget) :
         a=float(a*self.unitChangeFoc)
         b=self.MOT[2].position()
         if b-a<self.buteNeg[2] :
-            print( "STOP : positive switch")
+            print( "STOP : Positive switch")
             self.MOT[2].stopMotor()
         elif b-a>self.butePos[2] :
-            print( "STOP : negative switch")
+            print( "STOP : Negative switch")
             self.MOT[2].stopMotor()
         else :
             self.MOT[2].rmove(-a)
@@ -401,10 +544,10 @@ class THREEMOTORGUI(QWidget) :
         a=float(a*self.unitChangeLat)
         b=self.MOT[0].position()
         if b-a<self.buteNeg[0] :
-            print( "STOP : positive switch")
+            print( "STOP : Positive switch")
             self.MOT[0].stopMotor()
         elif b-a>self.butePos[0] :
-            print( "STOP : negative switch")
+            print( "STOP : Negative switch")
             self.MOT[0].stopMotor()
         else :
             self.MOT[0].rmove(a)
@@ -417,10 +560,10 @@ class THREEMOTORGUI(QWidget) :
         a=float(a*self.unitChangeLat)
         b=self.MOT[0].position()
         if b-a<self.buteNeg[0] :
-            print( "STOP : positive switch")
+            print( "STOP : Positive switch")
             self.MOT[0].stopMotor()
         elif b-a>self.butePos[0] :
-            print( "STOP : negative switch")
+            print( "STOP : Negative switch")
             self.MOT[0].stopMotor()
         else :
             self.MOT[0].rmove(-a)
@@ -433,10 +576,10 @@ class THREEMOTORGUI(QWidget) :
         a=float(a*self.unitChangeVert)
         b=self.MOT[1].position()
         if b-a<self.buteNeg[1] :
-            print( "STOP : positive switch")
+            print( "STOP : Positive switch")
             self.MOT[1].stopMotor()
         elif b-a>self.butePos[1] :
-            print( "STOP : negative switch")
+            print( "STOP : Negative switch")
             self.MOT[1].stopMotor()
         else :
             self.MOT[1].rmove(a)   
@@ -450,10 +593,10 @@ class THREEMOTORGUI(QWidget) :
         a=float(a*self.unitChangeVert)
         b=self.MOT[1].position()
         if b-a<self.buteNeg[1] :
-            print( "STOP : positive switch")
+            print( "STOP : Positive switch")
             self.MOT[1].stopMotor()
         elif b-a>self.butePos[1] :
-            print( "STOP : negative switch")
+            print( "STOP : Negative switch")
             self.MOT[1].stopMotor()
         else :
             self.MOT[1].rmove(-a)           
@@ -475,40 +618,82 @@ class THREEMOTORGUI(QWidget) :
         '''
         unit change mot foc
         '''
-        ii=self.unitFocBouton.currentIndex()
-        if ii==0: #  step
+        self.indexUnitFoc=self.unitFocBouton.currentIndex()
+        valueJog_2=self.jogStep_2.value()*self.unitChangeFoc
+        if self.indexUnitFoc==0: #  step
             self.unitChangeFoc=1
-        if ii==1: # micron
+            self.unitNameFoc='step'
+        if self.indexUnitFoc==1: # micron
             self.unitChangeFoc=float((1*self.stepmotor[2]))  
-        if ii==2: #  mm 
+            self.unitNameFoc='um'
+        if self.indexUnitFoc==2: #  mm 
             self.unitChangeFoc=float((1000*self.stepmotor[2]))
-        if ii==3: #  ps  double passage : 1 microns=6fs
+            self.unitNameFoc='mm'
+        if self.indexUnitFoc==3: #  ps  double passage : 1 microns=6fs
             self.unitChangeFoc=float(1*self.stepmotor[2]/0.0066666666)    
+            self.unitNameFoc='ps'
         if self.unitChangeFoc==0:
             self.unitChangeFoc=1 #avoid 0 
-
+        
+        self.jogStep_2.setValue(valueJog_2/self.unitChangeFoc)
+        self.jogStep_2.setSuffix(" %s" % self.unitNameFoc)
+        eee=1     
+        for absButton in self.absFocRef: 
+            nbRef=str(eee)
+            absButton.setValue(int(self.conf[2].value(self.motor[2]+"/ref"+nbRef+"Pos"))) # save reference foc value
+            absButton.setSuffix(" %s" % self.unitNameFoc)
+            eee+=1
+        
     def unitTrans(self):
         '''
          unit change mot foc
         '''
-        ii=self.unitTransBouton.currentIndex()
-        if ii==0: # step
+        valueJog=self.jogStep.value()*self.unitChangeLat
+        print(valueJog)
+        
+        self.indexUnit=self.unitTransBouton.currentIndex()
+        if self.indexUnit==0: # step
             self.unitChangeLat=1
             self.unitChangeVert=1
-        if ii==1: # micron
+            self.unitNameTrans='step'
+        if self.indexUnit==1: # micron
             self.unitChangeLat=float((1*self.stepmotor[0]))  
             self.unitChangeVert=float((1*self.stepmotor[1]))  
-        if ii==2: 
+            self.unitNameTrans='um'
+        if self.indexUnit==2: 
             self.unitChangeLat=float((1000*self.stepmotor[0]))
             self.unitChangeVert=float((1000*self.stepmotor[1]))
-        if ii==3: #  ps  en compte le double passage : 1 microns=6fs
+            self.unitNameTrans='mm'
+        if self.indexUnit==3: #  ps  en compte le double passage : 1 microns=6fs
             self.unitChangeLat=float(1*self.stepmotor[0]/0.0066666666)  
             self.unitChangeVert=float(1*self.stepmotor[1]/0.0066666666)  
+            self.unitNameTrans='ps'
         if self.unitChangeLat==0:
             self.unitChangeLat=1 # if / par 0
         if self.unitChangeVert==0:
             self.unitChangeVert=1 #if / 0
-    
+        
+        
+        
+        self.jogStep.setValue(valueJog/self.unitChangeLat)
+        self.jogStep.setSuffix(" %s" % self.unitNameTrans)
+        
+        eee=1   
+        for absButton in self.absLatRef: 
+            nbRef=str(eee)
+            absButton.setValue(int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))) # save reference lat  value
+            absButton.setSuffix(" %s" % self.unitNameTrans)
+            eee+=1
+        eee=1     
+        for absButton in self.absVertRef: 
+            nbRef=str(eee)
+            absButton.setValue(int(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))) #save reference vert value 
+            absButton.setSuffix(" %s" % self.unitNameTrans)
+            eee+=1
+        
+        
+        
+        
     def StopMot(self):
         '''
         stop all motors
@@ -523,7 +708,7 @@ class THREEMOTORGUI(QWidget) :
         a=float(Posi)
         b=a # value in step
         a=a/self.unitChangeLat # value with unit changed
-        self.win.position_Lat.setText(str(round(a,2))) 
+        self.position_Lat.setText(str(round(a,2))) 
         positionConnue_Lat=0 # 
         precis=1
         if self.motorTypeName[0]=='SmartAct':
@@ -543,7 +728,7 @@ class THREEMOTORGUI(QWidget) :
         a=float(Posi)
         b=a # value in step 
         a=a/self.unitChangeVert # value  with unit changed
-        self.win.position_Vert.setText(str(round(a,2))) 
+        self.position_Vert.setText(str(round(a,2))) 
         positionConnue_Vert=0 # 
         precis=1
         if self.motorTypeName[1]=='SmartAct':
@@ -563,7 +748,7 @@ class THREEMOTORGUI(QWidget) :
         a=float(Posi)
         b=a # value in step 
         a=a/self.unitChangeFoc # 
-        self.win.position_Foc.setText(str(round(a,2))) 
+        self.position_Foc.setText(str(round(a,2))) 
         positionConnue_Foc=0
         precis=1
         if self.motorTypeName[2]=='SmartAct':
@@ -588,7 +773,8 @@ class THREEMOTORGUI(QWidget) :
         reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
         if reply == QMessageBox.Yes:
                tposLat=self.MOT[0].position()
-               nbRef=str(sender.objectName()[4])
+               nbRef=str(sender.objectName()[0])
+              # print('ref',nbRef)
                self.conf[0].setValue(self.motor[0]+"/ref"+nbRef+"Pos",tposLat)
                self.conf[0].sync()
                self.absLatRef[int(nbRef)-1].setValue(tposLat)
@@ -614,7 +800,7 @@ class THREEMOTORGUI(QWidget) :
         sender=QtCore.QObject.sender(self)
         reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
         if reply == QMessageBox.Yes:
-            nbRef=str(sender.objectName()[3])
+            nbRef=str(sender.objectName()[0])
             for i in range (0,3):
                 print(i)
                 vref=int(self.conf[i].value(self.motor[i]+"/ref"+nbRef+"Pos"))
@@ -632,7 +818,8 @@ class THREEMOTORGUI(QWidget) :
         Save reference name
         '''
         sender=QtCore.QObject.sender(self)
-        nbRef=sender.objectName()[7] #PosTExt1
+        #print('sender',sender.objectName())
+        nbRef=sender.objectName()[0] #PosTExt1
         vname=self.posText[int(nbRef)-1].text()
         for i in range (0,3):
             self.conf[i].setValue(self.motor[i]+"/ref"+nbRef+"Name",str(vname))
@@ -643,9 +830,9 @@ class THREEMOTORGUI(QWidget) :
         save reference lat value
         '''
         sender=QtCore.QObject.sender(self)
-        nbRefLat=sender.objectName()[9] # nom du button ABSref1
-        print('nbref=',nbRefLat)
-        vrefLat=int(self.absLatRef[int(nbRefLat)-1].value())
+        nbRefLat=sender.objectName()[0] # nom du button ABSref1
+        #print('nbref=',nbRefLat)
+        vrefLat=int(self.absLatRef[int(nbRefLat)-1].value()*self.unitChangeLat)
         self.conf[0].setValue(self.motor[0]+"/ref"+nbRefLat+"Pos",vrefLat)
         self.conf[0].sync()
         
@@ -654,8 +841,8 @@ class THREEMOTORGUI(QWidget) :
         save reference Vert value
         '''
         sender=QtCore.QObject.sender(self)
-        nbRefVert=sender.objectName()[10] 
-        vrefVert=int(self.absVertRef[int(nbRefVert)-1].value())
+        nbRefVert=sender.objectName()[0] 
+        vrefVert=int(self.absVertRef[int(nbRefVert)-1].value()*self.unitChangeVert)
         self.conf[1].setValue(self.motor[1]+"/ref"+nbRefVert+"Pos",vrefVert)
         self.conf[1].sync()
         
@@ -664,8 +851,8 @@ class THREEMOTORGUI(QWidget) :
         save reference Foc value
         '''
         sender=QtCore.QObject.sender(self)
-        nbRefFoc=sender.objectName()[9] 
-        vrefFoc=int(self.absLatRef[int(nbRefFoc)-1].value())
+        nbRefFoc=sender.objectName()[0] 
+        vrefFoc=int(self.absLatRef[int(nbRefFoc)-1].value()*self.unitChangeFoc)
         self.conf[2].setValue(self.motor[2]+"/ref"+nbRefFoc+"Pos",vrefFoc)
         self.conf[2].sync()        
     
@@ -688,29 +875,45 @@ class THREEMOTORGUI(QWidget) :
         time.sleep(0.1)    
         
         
-class REF(QWidget):
+class REF3M(QWidget):
     
-    def __init__(self, parent=None):
-        super(REF, self).__init__()
+    def __init__(self,num=0, parent=None):
+        QtCore.QObject.__init__(self)
+        super(REF3M, self).__init__()
         self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
         self.wid=QWidget()
-        
+        self.id=num
         self.vboxPos=QVBoxLayout()
+        
         self.posText=QLineEdit('ref')
+        self.posText.setObjectName('%s'%self.id)
         self.vboxPos.addWidget(self.posText)
+        
         self.take=QPushButton('Take')
+        self.take.setObjectName('%s'%self.id)
         self.take.setStyleSheet("background-color: rgb(255,85,0)")
+        
         self.Pos=QPushButton('Go')
         self.Pos.setStyleSheet("background-color: rgb(85, 170, 255)")
+        self.Pos.setObjectName('%s'%self.id)
+        
         LabeLatref=QLabel('Lat:')
-        self.ABSLatref=QSpinBox()
+        self.ABSLatref=QDoubleSpinBox()
+        self.ABSLatref.setObjectName('%s'%self.id)
+        self.ABSLatref.setMaximum(5000000000)
+        self.ABSLatref.setMinimum(-5000000000)
+        
         LabelVertref=QLabel('Vert:')
-        self.ABSVertref=QSpinBox()
+        self.ABSVertref=QDoubleSpinBox()
+        self.ABSVertref.setObjectName('%s'%self.id)
+        self.ABSVertref.setMaximum(5000000000)
+        self.ABSVertref.setMinimum(-5000000000)
         
         LabelFocref=QLabel('Foc:')
-        self.ABSLatref=QSpinBox()
-        LabelFocref=QLabel('Foc:')
-        self.ABSFocref=QSpinBox()
+        self.ABSFocref=QDoubleSpinBox()
+        self.ABSFocref.setObjectName('%s'%self.id)
+        self.ABSFocref.setMaximum(5000000000)
+        self.ABSFocref.setMinimum(-5000000000)
         
         grid_layoutPos = QGridLayout()
         grid_layoutPos.setVerticalSpacing(0)
@@ -723,17 +926,17 @@ class REF(QWidget):
         grid_layoutPos.addWidget(self.ABSVertref,2,1)
         grid_layoutPos.addWidget(LabelFocref,3,0)
         grid_layoutPos.addWidget(self.ABSFocref,3,1)
-        
         self.vboxPos.addLayout(grid_layoutPos)
         self.wid.setStyleSheet("background-color: rgb(60, 77, 87)")
-       
         self.wid.setLayout(self.vboxPos)
         mainVert=QVBoxLayout()
         mainVert.addWidget(self.wid)
         mainVert.setContentsMargins(0,0,0,0)
         self.setLayout(mainVert)
-
-
+       
+        
+        
+        
 class PositionThread(QtCore.QThread):
     '''
     Secon thread  to display the position
@@ -774,12 +977,11 @@ class PositionThread(QtCore.QThread):
 
 
 if __name__ =='__main__':
-    motor0="Cible_Trans_Lat"
-    motor1="Cible_Trans_Vert"
-    motor2="Cible_Foc"
+    motor0="testMot1"
+    motor1="testMot2"
+    motor2="testMot3"
     appli=QApplication(sys.argv)
-    #mot6=MOTORGUI(motor,motorTypeName='Servo')
-    mot5=THREEMOTORGUI( motLat='Cible_Trans_Lat',motorTypeName0='RSAI', motVert='Cible_Trans_Vert',motorTypeName1='RSAI',motFoc='Foc_Microscope',motorTypeName2='SmartAct',nomWin='MICROSCOPE',nomTilt='Micro Trans',nomFoc='Micro FOC')
+    mot5=THREEMOTORGUI( motLat=motor0,motorTypeName0='test', motVert=motor1,motorTypeName1='test',motFoc=motor2,motorTypeName2='test',nomWin='Control 3 motors',nomTilt='Target',unit=1,unitFoc=2,jogValue=100,jogValueFoc=1)
     mot5.show()
     mot5.startThread2()
     appli.exec_()
