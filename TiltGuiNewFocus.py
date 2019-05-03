@@ -15,6 +15,11 @@ Modified on Tue july 17  10:49:32 2018
 from PyQt5 import QtCore,uic
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QWidget,QMessageBox
+from PyQt5.QtWidgets import QWidget,QMessageBox,QSpinBox
+from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushButton,QGridLayout,QTextEdit,QDoubleSpinBox
+from PyQt5.QtWidgets import QInputDialog,QComboBox,QSlider,QCheckBox,QLabel,QSizePolicy,QLineEdit,QPlainTextEdit,QMessageBox,QMenu
+import qdarkstyle
+
 import time
 import sys
 PY = sys.version_info[0]
@@ -44,9 +49,11 @@ class TiltMOTORGUI(QWidget) :
         self.MOT=[0,0]
         self.configMotName=[0,0]
         self.conf=[0,0]
-        self.configPath="C:/Users/loa/Desktop/MoteursV7/fichiersConfig/"
+        self.configPath="./fichiersConfig/"
         self.isWinOpen=False
-        guiName='GuiTilt.ui'
+        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setup()
+        self.actionButton()
         
         for zi in range (0,2): #• creation list configuration et type de moteurs
             if self.motorTypeName[zi]=='RSAI':
@@ -72,6 +79,7 @@ class TiltMOTORGUI(QWidget) :
                  import moteurNewFocus as NewFoc
                  self.motorType[zi]=NewFoc
                  self.MOT[zi]=self.motorType[zi].MOTORNEWFOCUS(self.motor[zi])
+                 print('NewFocus')
                  
             elif self.motorTypeName[zi]=='newport':
                  self.configMotName[zi]=self.configPath+'confNewport.ini'
@@ -90,9 +98,9 @@ class TiltMOTORGUI(QWidget) :
             self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.IniFormat) # fichier config motor fichier .ini
         
         
-        self.win=uic.loadUi(guiName,self)
+        
         self.setWindowTitle(nomWin) # affichage nom du moteur sur la barre de la fenetre
-        self.nomTilt.setText(str(nomTilt)) # affichage nom du moteur
+        # affichage nom du moteur
         #self.show()
         self.stepmotor=[0,0]
         self.butePos=[0,0]
@@ -115,8 +123,67 @@ class TiltMOTORGUI(QWidget) :
         self.threadVert=PositionThread(mot=self.MOT[1],motorType=self.motorType[1]) # thread pour afficher position Vert
         self.threadVert.POS.connect(self.PositionVert)
         
-        self.setup()
         
+    def setup(self):
+        
+        vbox1=QVBoxLayout() 
+        
+        hbox1=QHBoxLayout()
+        grid_layout = QGridLayout()
+        grid_layout.setVerticalSpacing(0)
+        grid_layout.setHorizontalSpacing(10)
+        self.haut=QPushButton('Haut')
+        self.haut.setMinimumHeight(60)
+        
+        self.bas=QPushButton('Bas')
+        self.bas.setMinimumHeight(60)
+        self.gauche=QPushButton('Gauche')
+        self.gauche.setMinimumHeight(60)
+        self.gauche.setMinimumWidth(60)
+        self.droite=QPushButton('Droite')
+        self.droite.setMinimumHeight(60)
+        self.droite.setMinimumWidth(60)
+        self.jogStep=QSpinBox()
+        self.jogStep.setMaximum(10000)
+        grid_layout.addWidget(self.haut, 0, 1)
+        grid_layout.addWidget(self.bas,2,1)
+        grid_layout.addWidget(self.gauche, 1, 0)
+        grid_layout.addWidget(self.droite, 1, 2)
+        grid_layout.addWidget(self.jogStep,1,1)
+        hbox1.addLayout(grid_layout)
+        vbox1.addLayout(hbox1)
+        posLAT=QLabel('Lateral:')
+        posLAT.setMaximumHeight(20)
+        posVERT=QLabel('Vertical :')
+        posVERT.setMaximumHeight(20)
+        hbox2=QHBoxLayout()
+        hbox2.addWidget(posLAT)
+        hbox2.addWidget(posVERT)
+        vbox1.addLayout(hbox2)
+        
+        self.position_Lat=QLabel('pos')
+        self.position_Lat.setMaximumHeight(20)
+        self.position_Vert=QLabel('pos')
+        self.position_Vert.setMaximumHeight(20)
+        hbox3=QHBoxLayout()
+        hbox3.addWidget(self.position_Lat)
+        
+        hbox3.addWidget(self.position_Vert)
+        vbox1.addLayout(hbox3)
+        
+        hbox4=QHBoxLayout()
+        self.zeroButtonLat=QPushButton('Zero Lat')
+        self.zeroButtonVert=QPushButton('Zero Vert')
+        
+        hbox4.addWidget(self.zeroButtonLat)
+        hbox4.addWidget(self.zeroButtonVert)
+        vbox1.addLayout(hbox4)
+        
+        self.stopButton=QPushButton('STOP')
+        hbox5=QHBoxLayout()
+        hbox5.addWidget(self.stopButton)
+        vbox1.addLayout(hbox5)
+        self.setLayout(vbox1)       
         
 #%% Start threads       
     def startThread2(self):
@@ -128,7 +195,7 @@ class TiltMOTORGUI(QWidget) :
         
         
 #%% SETUP       
-    def setup(self):
+    def actionButton(self):
         '''
            Definition des boutons 
         '''
@@ -173,7 +240,7 @@ class TiltMOTORGUI(QWidget) :
             print( "STOP : Butée Négative")
             self.MOT[0].stopMotor()
         else :
-            self.MOT[0].rmove(a)
+            self.MOT[0].rmove(-a)
             
     def dMove(self):
         '''
@@ -189,7 +256,7 @@ class TiltMOTORGUI(QWidget) :
             print( "STOP : Butée Négative")
             self.MOT[0].stopMotor()
         else :
-            self.MOT[0].rmove(-a)
+            self.MOT[0].rmove(a)
         
     def hMove(self): 
         '''
@@ -251,7 +318,7 @@ class TiltMOTORGUI(QWidget) :
         a=float(Posi)
        
         a=a/self.unitChangeLat # valeur tenant compte du changement d'unite
-        self.win.position_Lat.setText(str(round(a,2))) 
+        self.position_Lat.setText(str(round(a,2))) 
        
     def PositionVert(self,Posi): 
         ''' 
@@ -260,7 +327,7 @@ class TiltMOTORGUI(QWidget) :
         a=float(Posi)
     
         a=a/self.unitChangeVert # valeur tenant compte du changement d'unite
-        self.win.position_Vert.setText(str(round(a,2))) 
+        self.position_Vert.setText(str(round(a,2))) 
       
     def fini(self): 
         '''
@@ -312,8 +379,7 @@ class PositionThread(QtCore.QThread):
     
 
 if __name__ =='__main__':
-    motor0="Cible_Trans_Lat"
-    motor1="Cible_Trans_Vert"
+   
     appli=QApplication(sys.argv)
     #mot6=MOTORGUI(motor,motorTypeName='Servo')
     mot5=TiltMOTORGUI( motLat='NF_Lat', motorTypeName0='NewFocus', motVert='NF_Vert', motorTypeName1='NewFocus', nomWin='Tilts Sample ', nomTilt='Tilts Sample')

@@ -2,7 +2,7 @@
 import socket
 from PyQt5.QtCore import QSettings
 
-confArduino=QSettings('fichiersConfig/configMoteurArduino.ini', QSettings.IniFormat)
+confArduino=QSettings('./fichiersConfig/configMoteurArduino.ini', QSettings.IniFormat)
 
 
 
@@ -48,7 +48,7 @@ class MOTORARDUINO():
     
     def position(self):
         actualPosition=int(confArduino.value(self.moteurname+'/Pos'))
-        print(actualPosition)
+        #print(actualPosition)
         return actualPosition
     
     def setzero(self):
