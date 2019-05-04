@@ -12,20 +12,22 @@ Created on Tue Jan 4 10:42:10 2018
 Modified on Tue july 17  10:49:32 2018
 """
 #%%Import
-from PyQt5 import QtCore,uic
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QWidget,QMessageBox
-from PyQt5.QtWidgets import QWidget,QMessageBox,QSpinBox
-from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushButton,QGridLayout,QTextEdit,QDoubleSpinBox
-from PyQt5.QtWidgets import QInputDialog,QComboBox,QSlider,QCheckBox,QLabel,QSizePolicy,QLineEdit,QPlainTextEdit,QMessageBox,QMenu
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
+from PyQt5.QtWidgets import QComboBox,QLabel
 import qdarkstyle
-
+import pathlib
 import time
 import sys
 PY = sys.version_info[0]
 if PY<3:
     print('wrong version of python : Python 3.X must be used')
-#%%class TiltMORTGUI
+
+__version__=2019.05
+
 class TILTMOTORGUI(QWidget) :
     """
     User interface Motor class : 
@@ -40,9 +42,12 @@ class TILTMOTORGUI(QWidget) :
     fichier de config des moteurs : 'configMoteurRSAI.ini' 'configMoteurA2V.ini' 'configMoteurNewFocus.ini' 'configMoteurSmartAct.ini'
     """
   
-    def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',nomWin='',nomTilt='',unit=0,parent=None):
+    def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',nomWin='',nomTilt='',unit=1,jogValue=1,parent=None):
         
         super(TILTMOTORGUI, self).__init__()
+        p = pathlib.Path(__file__)
+        sepa=os.sep
+        self.icon=str(p.parent) + sepa + 'icons' +sepa
         self.motor=[str(motLat),str(motVert)]
         self.motorTypeName=[motorTypeName0,motorTypeName1]
         self.motorType=[0,0]
@@ -53,9 +58,12 @@ class TILTMOTORGUI(QWidget) :
         self.isWinOpen=False
         self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
         self.indexUnit=unit
-        self.unitNameTrans='step'
+        self.jogValue=jogValue
+        self.nomTilt=nomTilt
         self.setup()
         self.actionButton()
+        self.setWindowIcon(QIcon(self.icon+'LOA.png'))
+        self.version=__version__
         
         
         for zi in range (0,2): #• creation list configuration et type de moteurs
@@ -122,7 +130,7 @@ class TILTMOTORGUI(QWidget) :
         
         self.unitChangeLat=self.indexUnit
         self.unitChangeVert=self.indexUnit
-        self.setWindowTitle(nomWin+' : ')
+        self.setWindowTitle(nomWin+' : '+'                     V.'+str(self.version))
         self.threadLat=PositionThread(mot=self.MOT[0],motorType=self.motorType[0]) # thread pour afficher position Lat
         self.threadLat.POS.connect(self.PositionLat)
         time.sleep(0.1)
@@ -130,12 +138,49 @@ class TILTMOTORGUI(QWidget) :
         self.threadVert=PositionThread(mot=self.MOT[1],motorType=self.motorType[1]) # thread pour afficher position Vert
         self.threadVert.POS.connect(self.PositionVert)
         
+        if self.indexUnit==0: #  step
+            self.unitChangeLat=1
+            self.unitName='step'
+            
+        if self.indexUnit==1: # micron
+            self.unitChangeLat=float((1*self.stepmotor[0])) 
+            self.unitName='um'
+        if self.indexUnit==2: #  mm 
+            self.unitChangeLat=float((1000*self.stepmotor[0]))
+            self.unitName='mm'
+        if self.indexUnit==3: #  ps  double passage : 1 microns=6fs
+            self.unitChangeLat=float(1*self.stepmotor[0]/0.0066666666) 
+            self.unitName='ps'
+        if self.indexUnit==4: #  en degres
+            self.unitChangeLat=1 *self.stepmotor[0]
+            self.unitName='°'
         
     def setup(self):
         
         vbox1=QVBoxLayout() 
         
         hbox1=QHBoxLayout()
+        hboxTitre=QHBoxLayout()
+        self.nomTilt=QLabel(self.nomTilt)
+        
+        hboxTitre.addWidget(self.nomTilt)
+        
+        self.unitTransBouton=QComboBox()
+        self.unitTransBouton.setMaximumWidth(80)
+        self.unitTransBouton.setMinimumWidth(80)
+        self.unitTransBouton.addItem('Step')
+        self.unitTransBouton.addItem('um')
+        self.unitTransBouton.addItem('mm')
+        self.unitTransBouton.addItem('ps')
+        self.unitTransBouton.setCurrentIndex(self.indexUnit)
+        
+        
+        hboxTitre.addWidget(self.unitTransBouton)
+        hboxTitre.addStretch(1)
+        
+        vbox1.addLayout(hboxTitre)
+        
+        
         grid_layout = QGridLayout()
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
@@ -150,10 +195,10 @@ class TILTMOTORGUI(QWidget) :
         self.droite=QPushButton('Droite')
         self.droite.setMinimumHeight(60)
         self.droite.setMinimumWidth(60)
-        self.jogStep=QSpinBox()
+        self.jogStep=QDoubleSpinBox()
         self.jogStep.setMaximum(10000)
-        self.jogStep.setValue(100)
-        self.jogStep.setSuffix(" %s" % self.unitNameTrans)
+        self.jogStep.setValue(self.jogValue)
+        #self.jogStep.setSuffix(" %s" % self.unitNameTrans)
         
         grid_layout.addWidget(self.haut, 0, 1)
         grid_layout.addWidget(self.bas,2,1)
@@ -199,6 +244,7 @@ class TILTMOTORGUI(QWidget) :
         vbox1.addLayout(hbox5)
         self.setLayout(vbox1)       
         
+        #self.unitTrans()
 #%% Start threads       
     def startThread2(self):
         self.threadLat.ThreadINIT()
@@ -213,7 +259,8 @@ class TILTMOTORGUI(QWidget) :
         '''
            Definition des boutons 
         '''
-       
+        self.unitTransBouton.currentIndexChanged.connect(self.unitTrans) # Trans unit change
+        
         self.haut.clicked.connect(self.hMove) # jog haut
         self.haut.setAutoRepeat(False)
         self.bas.clicked.connect(self.bMove) # jog bas
@@ -317,7 +364,37 @@ class TILTMOTORGUI(QWidget) :
         """
         #self.motorType.refMark(self.motor)
    
-
+    def unitTrans(self):
+        '''
+         unit change mot foc
+        '''
+        self.indexUnit=self.unitTransBouton.currentIndex()
+        valueJog=self.jogStep.value()*self.unitChangeLat
+        if self.indexUnit==0: # step
+            self.unitChangeLat=1
+            self.unitChangeVert=1
+            self.unitNameTrans='step'
+        if self.indexUnit==1: # micron
+            self.unitChangeLat=float((1*self.stepmotor[0]))  
+            self.unitChangeVert=float((1*self.stepmotor[1]))  
+            self.unitNameTrans='um'
+        if self.indexUnit==2: 
+            self.unitChangeLat=float((1000*self.stepmotor[0]))
+            self.unitChangeVert=float((1000*self.stepmotor[1]))
+            self.unitNameTrans='mm'
+        if self.indexUnit==3: #  ps  en compte le double passage : 1 microns=6fs
+            self.unitChangeLat=float(1*self.stepmotor[0]/0.0066666666)  
+            self.unitChangeVert=float(1*self.stepmotor[1]/0.0066666666)  
+            self.unitNameTrans='ps'
+        if self.unitChangeLat==0:
+            self.unitChangeLat=1 # if / par 0
+        if self.unitChangeVert==0:
+            self.unitChangeVert=1 #if / 0
+        
+       
+        self.jogStep.setSuffix(" %s" % self.unitNameTrans)
+        self.jogStep.setValue(valueJog/self.unitChangeLat)
+        
     def StopMot(self):
         '''
         stop les moteurs

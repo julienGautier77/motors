@@ -12,11 +12,14 @@ from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushBu
 from PyQt5.QtWidgets import QInputDialog,QComboBox,QSlider,QCheckBox,QLabel,QSizePolicy,QLineEdit,QPlainTextEdit,QMessageBox,QMenu
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QRect
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QShortcut,QStyleOption
 import sys,time,os
 import qdarkstyle
 
 from oneMotorGuiNew import ONEMOTORGUI
+__version__=2019.05
+
 
 class TWOMOTORGUI(QWidget) :
     """
@@ -38,6 +41,9 @@ class TWOMOTORGUI(QWidget) :
     def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',nomWin='',nomTilt='',showRef=False,unit=2,jogValue=1,parent=None):
         
         super(TWOMOTORGUI, self).__init__()
+        p = pathlib.Path(__file__)
+        sepa=os.sep
+        self.icon=str(p.parent) + sepa + 'icons' +sepa
         self.motor=[str(motLat),str(motVert)]
         self.motorTypeName=[motorTypeName0,motorTypeName1]
         self.motorType=[0,0,0]
@@ -53,7 +59,8 @@ class TWOMOTORGUI(QWidget) :
         self.jogValue=jogValue
         self.LatWidget=ONEMOTORGUI(mot=self.motor[0],motorTypeName0=self.configMotName[0],nomWin='Control One Motor : ',showRef=False,unit=2)
         self.VertWidget=ONEMOTORGUI(mot=self.motor[1],motorTypeName0=self.configMotName[1],nomWin='Control One Motor : ',showRef=False,unit=2)
-        
+        self.setWindowIcon(QIcon(self.icon+'LOA.png'))
+        self.vesrion=__version__
         
         for zi in range (0,2): #  list configuration et moor types 
             if self.motorTypeName[zi]=='RSAI':
@@ -120,7 +127,7 @@ class TWOMOTORGUI(QWidget) :
             self.name[zzi]=str(self.conf[zzi].value(self.motor[zzi]+"/Name"))
         
         
-        self.setWindowTitle(nomWin)#+' : '+ self.name[0])
+        self.setWindowTitle(nomWin+'                     V.'+str(self.version))#+' : '+ self.name[0])
         
         self.threadLat=PositionThread(mot=self.MOT[0],motorType=self.motorType[0]) # thread for displaying position Lat
         self.threadLat.POS.connect(self.PositionLat)

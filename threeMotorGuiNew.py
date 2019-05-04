@@ -6,16 +6,17 @@ Created on Mon Apr  1 11:16:50 2019
 """
 #%%Import
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication,QStyle
-from PyQt5.QtWidgets import QWidget,QMessageBox,QSpinBox,QLineEdit,QFrame
-from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushButton,QGridLayout,QTextEdit,QDoubleSpinBox
-from PyQt5.QtWidgets import QInputDialog,QComboBox,QSlider,QCheckBox,QLabel,QSizePolicy,QLineEdit,QPlainTextEdit,QMessageBox,QMenu
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import QRect
-from PyQt5.QtWidgets import QShortcut,QStyleOption
+
+from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit
+from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
+from PyQt5.QtWidgets import QComboBox,QLabel
+
+from PyQt5.QtGui import QIcon
+
 import sys,time,os
 import qdarkstyle
-
+import pathlib
+__version__=2019.05
 from oneMotorGuiNew import ONEMOTORGUI
 
 class THREEMOTORGUI(QWidget) :
@@ -50,6 +51,9 @@ class THREEMOTORGUI(QWidget) :
     def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',motFoc='',motorTypeName2='',nomWin='',nomTilt='',nomFoc='',showRef=False,unit=1,unitFoc=2,jogValue=1,jogValueFoc=1,parent=None):
         
         super(THREEMOTORGUI, self).__init__()
+        p = pathlib.Path(__file__)
+        sepa=os.sep
+        self.icon=str(p.parent) + sepa + 'icons' +sepa
         self.motor=[str(motLat),str(motVert),str(motFoc)]
         self.motorTypeName=[motorTypeName0,motorTypeName1,motorTypeName2]
         self.motorType=[0,0,0]
@@ -68,6 +72,9 @@ class THREEMOTORGUI(QWidget) :
         self.LatWidget=ONEMOTORGUI(mot=self.motor[0],motorTypeName0=self.configMotName[0],nomWin='Control One Motor : ',showRef=False,unit=2)
         self.VertWidget=ONEMOTORGUI(mot=self.motor[1],motorTypeName0=self.configMotName[1],nomWin='Control One Motor : ',showRef=False,unit=2)
         self.FocWidget=ONEMOTORGUI(mot=self.motor[2],motorTypeName0=self.configMotName[2],nomWin='Control One Motor : ',showRef=False,unit=2)
+        self.setWindowIcon(QIcon(self.icon+'LOA.png'))
+        self.version=__version__
+        
         
         for zi in range (0,3): #  list configuration and motor types 
             if self.motorTypeName[zi]=='RSAI':
@@ -134,7 +141,7 @@ class THREEMOTORGUI(QWidget) :
             self.buteNeg[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/buteeneg"))
             self.name[zzi]=str(self.conf[zzi].value(self.motor[zzi]+"/Name"))
         
-        self.setWindowTitle(nomWin)#+' : '+ self.name[0])
+        self.setWindowTitle(nomWin+'                     V.'+str(self.version))#+' : '+ self.name[0])
         
         self.threadLat=PositionThread(mot=self.MOT[0],motorType=self.motorType[0]) # thread for displaying position Lat
         self.threadLat.POS.connect(self.PositionLat)

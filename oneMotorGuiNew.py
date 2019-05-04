@@ -6,18 +6,18 @@ Created on Mon Apr  1 11:16:50 2019
 """
 #%%Import
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication,QStyle,QSizePolicy
-from PyQt5.QtWidgets import QWidget,QMessageBox,QSpinBox,QLineEdit,QFrame
-from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushButton,QGridLayout,QTextEdit,QDoubleSpinBox
-from PyQt5.QtWidgets import QInputDialog,QComboBox,QSlider,QCheckBox,QLabel,QSizePolicy,QLineEdit,QPlainTextEdit,QMessageBox,QMenu
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit
+from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
+from PyQt5.QtWidgets import QComboBox,QLabel
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QRect
-from PyQt5.QtWidgets import QShortcut,QStyleOption
+
 import sys,time,os
 import qdarkstyle
 import pathlib
 from scanMotor import SCAN
-
+__version__=2019.05
 class ONEMOTORGUI(QWidget) :
     """
     User interface Motor class : 
@@ -36,10 +36,11 @@ class ONEMOTORGUI(QWidget) :
     """
 
     def __init__(self, mot='',motorTypeName0='',nomWin='',showRef=False,unit=2,jogValue=1,parent=None):
+       
+        super(ONEMOTORGUI, self).__init__(parent)
         p = pathlib.Path(__file__)
         sepa=os.sep
         self.icon=str(p.parent) + sepa + 'icons' +sepa
-        super(ONEMOTORGUI, self).__init__(parent)
         self.motor=[str(mot)]
         self.motorTypeName=[motorTypeName0]
         self.motorType=[0]
@@ -52,7 +53,7 @@ class ONEMOTORGUI(QWidget) :
         self.refShowId=showRef
         self.indexUnit=unit
         self.jogValue=jogValue
-        
+        self.version=__version__
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
         
         
@@ -124,7 +125,7 @@ class ONEMOTORGUI(QWidget) :
             self.buteNeg[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/buteeneg"))
             self.name[zzi]=str(self.conf[zzi].value(self.motor[zzi]+"/Name"))
         
-        self.setWindowTitle(nomWin+' : '+ self.name[0])
+        self.setWindowTitle(nomWin+' : '+ self.name[0]+'                     V.'+str(self.version))
         
         self.thread=PositionThread(mot=self.MOT[0],motorType=self.motorType[0]) # thread for displaying position
         self.thread.POS.connect(self.Position)

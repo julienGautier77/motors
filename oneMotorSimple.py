@@ -8,24 +8,24 @@ Created on Tue Apr 16 15:49:41 2019
 
 
 #%%Import
-from PyQt5 import QtCore,uic
-from PyQt5.QtWidgets import QApplication,QStyle
-from PyQt5.QtWidgets import QWidget,QMessageBox,QSpinBox,QLineEdit,QFrame
-from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushButton,QGridLayout,QTextEdit,QDoubleSpinBox
-from PyQt5.QtWidgets import QInputDialog,QComboBox,QSlider,QCheckBox,QLabel,QSizePolicy,QLineEdit,QPlainTextEdit,QMessageBox,QMenu
-from pyqtgraph.Qt import QtCore,QtGui
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QShortcut,QStyleOption
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QDoubleSpinBox
+from PyQt5.QtWidgets import QComboBox,QLabel
+from PyQt5.QtGui import QIcon
 import sys,time,os
 import qdarkstyle
-
+import pathlib
+__version__=2019.05
 
 class ONEMOTOR(QWidget) :
 
     def __init__(self, mot0='',motorTypeName0='',nomWin='',unit=2,jogValue=1):
                  
         super(ONEMOTOR, self).__init__()
-        
+        p = pathlib.Path(__file__)
+        sepa=os.sep
+        self.icon=str(p.parent) + sepa + 'icons' +sepa
         self.motor=str(mot0)
         self.isWinOpen=False
         self.motorTypeName=motorTypeName0
@@ -34,6 +34,8 @@ class ONEMOTOR(QWidget) :
         self.isWinOpen=False
         self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
         self.jogValue=jogValue
+        self.version=__version__
+        self.setWindowIcon(QIcon(self.icon+'LOA.png'))
         
         if self.motorTypeName=='RSAI':
             self.configMotName='configMoteurRSAI.ini'
@@ -89,7 +91,7 @@ class ONEMOTOR(QWidget) :
         self.conf=QtCore.QSettings(configMotName, QtCore.QSettings.IniFormat) # fichier config motor fichier .ini
         
         self.name=str(self.conf.value(self.motor+"/Name"))
-        self.setWindowTitle(nomWin+' : '+ self.name)
+        self.setWindowTitle(nomWin+' : '+ self.name+'                     V.'+str(self.version))
         
         self.stepmotor=float(self.conf.value(self.motor+"/stepmotor"))
         self.butePos=float(self.conf.value(self.motor+"/buteePos"))
