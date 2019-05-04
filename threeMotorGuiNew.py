@@ -6,13 +6,10 @@ Created on Mon Apr  1 11:16:50 2019
 """
 #%%Import
 from PyQt5 import QtCore
-
 from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit
 from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
 from PyQt5.QtWidgets import QComboBox,QLabel
-
 from PyQt5.QtGui import QIcon
-
 import sys,time,os
 import qdarkstyle
 import pathlib
