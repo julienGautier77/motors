@@ -203,6 +203,21 @@ class ONEMOTORGUI(QWidget) :
         vbox1.addLayout(hbox0)
         #vbox1.addSpacing(10)
         
+        hboxAbs=QHBoxLayout()
+        absolueLabel=QLabel('Absolue mvt')
+        absolueLabel.setStyleSheet("background-color: green")
+        self.MoveStep=QDoubleSpinBox()
+        self.MoveStep.setMaximum(1000000)
+        self.MoveStep.setMinimum(-1000000)
+        self.MoveStep.setStyleSheet("background-color: green")
+        
+        self.absMvtButton=QPushButton('Go')
+        self.absMvtButton.setStyleSheet("background-color: green")
+        hboxAbs.addWidget(absolueLabel)
+        hboxAbs.addWidget(self.MoveStep)
+        hboxAbs.addWidget(self.absMvtButton)
+        vbox1.addLayout(hboxAbs)
+        
         hbox1=QHBoxLayout()
         self.moins=QPushButton(' - ')
         self.moins.setMaximumWidth(70)
@@ -291,7 +306,7 @@ class ONEMOTORGUI(QWidget) :
         '''
         
         self.unitBouton.currentIndexChanged.connect(self.unit) #  unit change
-        
+        self.absMvtButton.clicked.connect(self.MOVE)
         self.plus.clicked.connect(self.pMove) # jog + foc
         self.plus.setAutoRepeat(False)
         self.moins.clicked.connect(self.mMove)# jog - fo
@@ -366,7 +381,20 @@ class ONEMOTORGUI(QWidget) :
             self.setFixedSize(429,315)
            
             #self.updateGeometry()
-       
+    
+    def MOVE(self):
+        a=float(self.MoveStep.value())
+        a=float(a*self.unitChange) # changement d unite
+        if a<self.buteNeg[0] :
+            print( "STOP : Butée Négative")
+            self.MOT[0].stopMotor()
+        elif a>self.butePos[0] :
+            print( "STOP : Butée Positive")
+            self.MOT[0].stopMotor()
+        else :
+            self.MOT[0].move(a)
+    
+    
     def pMove(self):
         '''
         action jog + foc 
@@ -438,6 +466,7 @@ class ONEMOTORGUI(QWidget) :
             
         self.jogStep.setSuffix(" %s" % self.unitName)
         self.jogStep.setValue(valueJog/self.unitChange)
+        self.MoveStep.setSuffix(" %s" % self.unitName)
 #        if self.indexUnit==2 or self.indexUnit==3:
 #            self.jogStep.setValue(1)
 #        else :
