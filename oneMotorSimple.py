@@ -16,7 +16,9 @@ from PyQt5.QtGui import QIcon
 import sys,time,os
 import qdarkstyle
 import pathlib
-__version__=2019.05
+import __init__
+
+__version__=__init__.__version__
 
 class ONEMOTOR(QWidget) :
 
@@ -87,7 +89,7 @@ class ONEMOTOR(QWidget) :
             self.MOT=self.motorType.MOTORTEST(self.motor)
             
         configMotName=self.configPath+ self.configMotName  
-        print('conf:',configMotName)
+        
         self.conf=QtCore.QSettings(configMotName, QtCore.QSettings.IniFormat) # fichier config motor fichier .ini
         
         self.name=str(self.conf.value(self.motor+"/Name"))
@@ -326,7 +328,7 @@ if __name__ =='__main__':
     motor0="testMot1"
     motorType="test"
     appli=QApplication(sys.argv)
-    mot5=ONEMOTOR(mot0=motor0,motorTypeName0=motorType,nomWin='motorSimple :',unit=1,jogValue=100)
+    mot5=ONEMOTOR(mot0=motor0,motorTypeName0=motorType,nomWin='motorSimple',unit=1,jogValue=100)
     mot5.show()
     mot5.startThread2()
     appli.exec_()        

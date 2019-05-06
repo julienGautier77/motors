@@ -16,9 +16,10 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QShortcut,QStyleOption
 import sys,time,os
 import qdarkstyle
-
+import pathlib
 from oneMotorGuiNew import ONEMOTORGUI
-__version__=2019.05
+import __init__
+__version__=__init__.__version__
 
 
 class TWOMOTORGUI(QWidget) :
@@ -60,7 +61,7 @@ class TWOMOTORGUI(QWidget) :
         self.LatWidget=ONEMOTORGUI(mot=self.motor[0],motorTypeName0=self.configMotName[0],nomWin='Control One Motor : ',showRef=False,unit=2)
         self.VertWidget=ONEMOTORGUI(mot=self.motor[1],motorTypeName0=self.configMotName[1],nomWin='Control One Motor : ',showRef=False,unit=2)
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
-        self.vesrion=__version__
+        self.version=__version__
         
         for zi in range (0,2): #  list configuration et moor types 
             if self.motorTypeName[zi]=='RSAI':

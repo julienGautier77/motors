@@ -17,7 +17,12 @@ import sys,time,os
 import qdarkstyle
 import pathlib
 from scanMotor import SCAN
-__version__=2019.05
+import __init__
+
+__version__=__init__.__version__
+
+
+
 class ONEMOTORGUI(QWidget) :
     """
     User interface Motor class : 

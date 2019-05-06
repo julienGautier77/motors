@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 """
 Interface Graphique pour le pilotage de deux moteurs tilt
 Controleurs possible : A2V RSAI NewFocus SmartAct ,newport, Polulu
@@ -11,22 +13,29 @@ System 32 bit (at least python MSC v.1900 32 bit (Intel))
 Created on Tue Jan 4 10:42:10 2018
 Modified on Tue july 17  10:49:32 2018
 """
-#%%Import
+
+
+
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QWidget,QMessageBox
+from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
 from PyQt5.QtWidgets import QComboBox,QLabel
 import qdarkstyle
 import pathlib
 import time
-import sys
+import sys,os
 PY = sys.version_info[0]
 if PY<3:
     print('wrong version of python : Python 3.X must be used')
 
-__version__=2019.05
+import __init__
+
+__version__=__init__.__version__
+
+
+
 
 class TILTMOTORGUI(QWidget) :
     """
@@ -60,8 +69,8 @@ class TILTMOTORGUI(QWidget) :
         self.indexUnit=unit
         self.jogValue=jogValue
         self.nomTilt=nomTilt
-        self.setup()
-        self.actionButton()
+        
+        
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
         self.version=__version__
         
@@ -113,10 +122,6 @@ class TILTMOTORGUI(QWidget) :
             self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.IniFormat) # fichier config motor fichier .ini
         
         
-        
-        
-        # affichage nom du moteur
-        #self.show()
         self.stepmotor=[0,0]
         self.butePos=[0,0]
         self.buteNeg=[0,0]
@@ -138,6 +143,9 @@ class TILTMOTORGUI(QWidget) :
         self.threadVert=PositionThread(mot=self.MOT[1],motorType=self.motorType[1]) # thread pour afficher position Vert
         self.threadVert.POS.connect(self.PositionVert)
         
+        
+        self.setup()
+        
         if self.indexUnit==0: #  step
             self.unitChangeLat=1
             self.unitName='step'
@@ -154,6 +162,8 @@ class TILTMOTORGUI(QWidget) :
         if self.indexUnit==4: #  en degres
             self.unitChangeLat=1 *self.stepmotor[0]
             self.unitName='°'
+        self.unitTrans()
+        
         
     def setup(self):
         
@@ -195,10 +205,11 @@ class TILTMOTORGUI(QWidget) :
         self.droite=QPushButton('Droite')
         self.droite.setMinimumHeight(60)
         self.droite.setMinimumWidth(60)
+       
         self.jogStep=QDoubleSpinBox()
         self.jogStep.setMaximum(10000)
         self.jogStep.setValue(self.jogValue)
-        #self.jogStep.setSuffix(" %s" % self.unitNameTrans)
+        
         
         grid_layout.addWidget(self.haut, 0, 1)
         grid_layout.addWidget(self.bas,2,1)
@@ -244,8 +255,9 @@ class TILTMOTORGUI(QWidget) :
         vbox1.addLayout(hbox5)
         self.setLayout(vbox1)       
         
-        #self.unitTrans()
-#%% Start threads       
+        self.actionButton()
+        
+    
     def startThread2(self):
         self.threadLat.ThreadINIT()
         self.threadLat.start()
@@ -253,8 +265,7 @@ class TILTMOTORGUI(QWidget) :
         self.threadVert.ThreadINIT()
         self.threadVert.start()
         
-        
-#%% SETUP       
+      
     def actionButton(self):
         '''
            Definition des boutons 
@@ -276,8 +287,7 @@ class TILTMOTORGUI(QWidget) :
         #self.refZeroButton.clicked.connect(self.RefMark) # va en butée et fait un zero
 
         self.stopButton.clicked.connect(self.StopMot)# arret moteur
-       
- #%% Def des actions des bouttons       
+    
     def closeEvent(self, event):
         """ 
         When closing the window
@@ -429,9 +439,11 @@ class TILTMOTORGUI(QWidget) :
         self.isWinOpen=False
         time.sleep(0.1)    
 
-#
-#
-#%%######Position Thread    
+
+
+
+
+
 class PositionThread(QtCore.QThread):
     '''
     thread secondaire pour afficher la position
@@ -466,7 +478,6 @@ class PositionThread(QtCore.QThread):
         time.sleep(0.1)
         self.terminate()
         
-#%%#####################################################################
     
 
 if __name__ =='__main__':

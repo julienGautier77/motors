@@ -13,7 +13,10 @@ from PyQt5.QtGui import QIcon
 import sys,time,os
 import qdarkstyle
 import pathlib
-__version__=2019.05
+import __init__
+
+__version__=__init__.__version__
+
 from oneMotorGuiNew import ONEMOTORGUI
 
 class THREEMOTORGUI(QWidget) :
