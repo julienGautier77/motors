@@ -4,10 +4,11 @@ Created on Wed Sep 26 14:32:54 2018
 Control tir laview 
 @author: loa
 """
-from PyQt5 import QtCore,uic
+from PyQt5 import QtCore
+import qdarkstyle
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QWidget,QMessageBox,QShortcut
+from PyQt5.QtWidgets import QWidget,QMessageBox,QShortcut,QVBoxLayout,QPushButton,QHBoxLayout
 import time
 import sys
 import tirSalleJaune as tirSJ
@@ -24,16 +25,17 @@ class TIRGUI(QWidget) :
     
     def __init__(self,parent=None):
         
-        super(TIRGUI, self).__init__(parent=None)
+        super(TIRGUI, self).__init__(parent)
 #        print('motor name:',self.motor)
 #        print('motor type:',motorTypeName)
         self.isWinOpen=False
-        guiName='Tir.ui'
-        self.win=uic.loadUi(guiName,self)
-        self.win.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setup()
+        self.actionButton()
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         self.configPath="C:/Users/loa/Desktop/MoteursV7/fichiersConfig/"
         self.confRSAI=QtCore.QSettings(self.configPath+'configMoteurRSAI.ini', QtCore.QSettings.IniFormat)
-        self.setup()
+        
         
         self.threadCibleVert=PositionThread(mot='Cible_Trans_Vert',motorType='RSAI') # thread pour afficher position Spectro
         self.threadCibleVert.POS.connect(self.POSITIONVert)
@@ -59,10 +61,24 @@ class TIRGUI(QWidget) :
         time.sleep(0.1)
         self.threadSampleLat.start()
 
-
-
+    def setup(self):
+        
+        vbox1=QVBoxLayout()
+        self.tirButton=QPushButton('LASER SHOT')
+        self.tirButton.setMinimumHeight(150)
+        self.tirButton.setStyleSheet("background-color: red ;border-radius:75px")
+        vbox1.addWidget(self.tirButton)
+        hbox=QHBoxLayout()
+        self.connectButton=QPushButton('Connect')
+        hbox.addWidget(self.connectButton)
+        self.disconnectButton=QPushButton('Disconnect')
+        hbox.addWidget(self.disconnectButton)
+        vbox1.addLayout(hbox)
+        
+        self.setLayout(vbox1)
+        
     def startThread2(self):
-        self.win.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         self.threadCibleLat.ThreadINIT()
         self.threadCibleLat.start()
         time.sleep(0.1)
@@ -88,7 +104,7 @@ class TIRGUI(QWidget) :
     def POSITIONSampleVert(self,Posi):
         self.PositionSampleVert=Posi
     
-    def setup(self):
+    def actionButton(self):
         self.setWindowTitle('Tir Salle Jaune')# affichage nom du moteur sur la barre de la fenetre
         self.connectButton.clicked.connect(self.Connect)
         self.disconnectButton.clicked.connect(self.Disconnect)
@@ -162,7 +178,7 @@ class TIRGUI(QWidget) :
             
                 
             a=tirSJ.Tir()
-            self.win.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
             print( "tir :",a)
             if a==0 or a=="":
                 self.TirConnected=0
