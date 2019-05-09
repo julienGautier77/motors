@@ -720,7 +720,7 @@ class THREEMOTORGUI(QWidget) :
         precis=1
         if self.motorTypeName[0]=='SmartAct':
             precis=10000
-        for nbRefInt in range(1,5):
+        for nbRefInt in range(1,7):
             nbRef=str(nbRefInt)
             if float(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))-precis<b< float(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))+precis:
                 self.enPosition_Lat.setText(str(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Name")))
@@ -740,7 +740,7 @@ class THREEMOTORGUI(QWidget) :
         precis=1
         if self.motorTypeName[1]=='SmartAct':
             precis=10000
-        for nbRefInt in range(1,5):
+        for nbRefInt in range(1,7):
             nbRef=str(nbRefInt)
             if float(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))-precis<b< float(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))+precis:
                 self.enPosition_Vert.setText(str(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Name")))
@@ -760,7 +760,7 @@ class THREEMOTORGUI(QWidget) :
         precis=1
         if self.motorTypeName[2]=='SmartAct':
             precis=10000
-        for nbRefInt in range(1,5):
+        for nbRefInt in range(1,7):
             nbRef=str(nbRefInt)
             if float(self.conf[2].value(self.motor[2]+"/ref"+nbRef+"Pos"))-precis<b< float(self.conf[2].value(self.motor[2]+"/ref"+nbRef+"Pos"))+precis:
                 self.enPosition_Foc.setText(str(self.conf[2].value(self.motor[2]+"/ref"+nbRef+"Name")))

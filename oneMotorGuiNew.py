@@ -443,7 +443,7 @@ class ONEMOTORGUI(QWidget) :
         '''
         self.indexUnit=self.unitBouton.currentIndex()
         valueJog=self.jogStep.value()*self.unitChange
-        print(valueJog)
+        
         if self.indexUnit==0: #  step
             self.unitChange=1
             self.unitName='step'
@@ -467,11 +467,7 @@ class ONEMOTORGUI(QWidget) :
         self.jogStep.setSuffix(" %s" % self.unitName)
         self.jogStep.setValue(valueJog/self.unitChange)
         self.MoveStep.setSuffix(" %s" % self.unitName)
-#        if self.indexUnit==2 or self.indexUnit==3:
-#            self.jogStep.setValue(1)
-#        else :
-#            self.jogStep.setValue(100)
-        
+
         eee=1
         for absButton in self.absRef: 
             nbRef=str(eee)

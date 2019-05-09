@@ -330,7 +330,7 @@ class TWOMOTORGUI(QWidget) :
         
         self.zeroButtonLat.clicked.connect(self.ZeroLat)
         self.zeroButtonVert.clicked.connect(self.ZeroVert)
-        
+    
         #self.refZeroButton.clicked.connect(self.RefMark) # todo
         
         self.stopButton.clicked.connect(self.StopMot)
@@ -351,7 +351,6 @@ class TWOMOTORGUI(QWidget) :
         for absButton in self.absLatRef: 
             nbRef=str(eee)
             absButton.setValue(int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))) # save reference lat  value
-            #print('absButtonvalue',int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos")))
             absButton.editingFinished.connect(self.savRefLat) # sauv value
             eee+=1
         eee=1     
@@ -549,7 +548,7 @@ class TWOMOTORGUI(QWidget) :
         precis=1
         if self.motorTypeName[0]=='SmartAct':
             precis=10000
-        for nbRefInt in range(1,5):
+        for nbRefInt in range(1,7):
             nbRef=str(nbRefInt)
             if float(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))-precis<b< float(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))+precis:
                 self.enPosition_Lat.setText(str(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Name")))
@@ -570,7 +569,7 @@ class TWOMOTORGUI(QWidget) :
         if self.motorTypeName[1]=='SmartAct':
             precis=10000
             
-        for nbRefInt in range(1,5):
+        for nbRefInt in range(1,7):
             nbRef=str(nbRefInt)
             if float(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))-precis<b< float(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))+precis:
                 self.enPosition_Vert.setText(str(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Name")))
@@ -603,7 +602,7 @@ class TWOMOTORGUI(QWidget) :
                self.absVertRef[int(nbRef)-1].setValue(tposVert)
                print ("Position Vert saved")
                
-#
+
     def ref(self):  
         '''
         Move the motor to the reference value in step : GO button
@@ -624,7 +623,7 @@ class TWOMOTORGUI(QWidget) :
                     self.MOT[i].stopMotor()
                 else :
                     self.MOT[i].move(vref)
-#
+
     def savName(self) :
         '''
         Save reference name
@@ -710,9 +709,7 @@ class REF2M(QWidget):
         self.ABSVertref.setObjectName('%s'%self.id)
         self.ABSVertref.setMaximum(5000000000)
         self.ABSVertref.setMinimum(-5000000000)
-        
-        
-        
+       
         grid_layoutPos = QGridLayout()
         grid_layoutPos.setVerticalSpacing(0)
         grid_layoutPos.setHorizontalSpacing(10)
@@ -730,9 +727,8 @@ class REF2M(QWidget):
         mainVert.addWidget(self.wid)
         mainVert.setContentsMargins(0,0,0,0)
         self.setLayout(mainVert)
-       
-        
-        
+
+    
         
 class PositionThread(QtCore.QThread):
     '''
