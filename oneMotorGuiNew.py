@@ -501,7 +501,7 @@ class ONEMOTORGUI(QWidget) :
         precis=1
         if self.motorTypeName[0]=='SmartAct':
             precis=10000
-        for nbRefInt in range(1,5):
+        for nbRefInt in range(1,7):
             nbRef=str(nbRefInt)
             if float(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))-precis<b< float(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))+precis:
                 self.enPosition.setText(str(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Name")))
