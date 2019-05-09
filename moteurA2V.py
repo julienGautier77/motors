@@ -10,13 +10,12 @@ python 3.X pyQT5
 
 #%% Imports
 from serial import Serial
-#import struct
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QSettings
-from PyQt5 import uic
+
+from PyQt5 import QtCore
 import time
-import sys
-#import pickle # pour sauvegarder liste des positions
+
 
 #%% rack initialisation et connexion des racks
 
@@ -67,20 +66,26 @@ try :
     connectA()
 except:
     print( "Error connexion A2V rack A")
-    ap=QApplication(sys.argv)
-    az=uic.loadUi('attention.ui')
-    az.show()
-    ap.exec_()
+    msg = QMessageBox()
+    msg.setIcon(QMessageBox.Critical)
+    msg.setText("Error connexion A2V")
+    msg.setInformativeText("Error connexion A2V rack A please chek connexion or restart computeur")
+    msg.setWindowTitle("Warning ...")
+    msg.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+    msg.exec_()
     pass
 
 try :
     connectB()
 except:
     print ("Error connexion  A2Vrack B")
-    ap=QApplication(sys.argv)
-    az=uic.loadUi('attention.ui')
-    az.show()
-    ap.exec_()
+    msg = QMessageBox()
+    msg.setIcon(QMessageBox.Critical)
+    msg.setText("Error connexion A2V")
+    msg.setInformativeText("Error connexion A2V rack B please chek connexion or restart computeur")
+    msg.setWindowTitle("Warning ...")
+    msg.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+    msg.exec_()
     pass
 
 def stopConnexion():
