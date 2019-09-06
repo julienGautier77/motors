@@ -1,8 +1,18 @@
 # motors
 
-motors module is a Python user interface for to control differnts motion controlors
+motors module is a Python user interface for to motion controlers
 
-test on windows only
+Controlers avaible :
+RSAI
+NewFocus
+SmartAct
+Newport
+TMCM
+pololu
+Arduino
+
+
+test on windows 32 bits only
 
 Requirements
 python 3.x
