@@ -123,6 +123,8 @@ class ONEMOTORGUI(QWidget) :
         self.buteNeg=[0,0,0]
         self.name=[0,0,0]
         
+        
+        
         for zzi in range(0,1):
             
             self.stepmotor[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/stepmotor")) #list of stepmotor values for unit conversion
@@ -683,7 +685,7 @@ if __name__ =='__main__':
     
     appli=QApplication(sys.argv)
     
-    mot5=ONEMOTORGUI( mot='testMot',motorTypeName0='test',nomWin='Control One Motor',showRef=False,unit=2,jogValue=1,parent=None)
+    mot5=ONEMOTORGUI( mot='Spherique_IR_Lat',motorTypeName0='RSAI',nomWin='Control One Motor',showRef=False,unit=2,jogValue=1,parent=None)
     mot5.show()
     mot5.startThread2()
     appli.exec_()

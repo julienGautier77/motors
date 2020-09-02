@@ -12,32 +12,46 @@ from PyQt5 import QtCore
 import sys
 from PyQt5.QtWidgets import QApplication,QWidget,QPushButton,QGridLayout
 from PyQt5.QtGui import QIcon
-import oneMotorGui
-
+import oneMotorGuiNew
+import pathlib,os
    
 class MainWin(QWidget) :
     def __init__(self):
-        super(MainWin, self).__init__()   
-        self.confA2V=QtCore.QSettings('fichiersConfig/configMoteurA2V.ini', QtCore.QSettings.IniFormat) # motor configuration  files
-        self.groups=self.confA2V.childGroups() # lecture de tous les moteurs
+        super(MainWin, self).__init__() 
+        p = pathlib.Path(__file__)
+        sepa=os.sep
+        self.configPath=str(p.parent / "fichiersConfig")+sepa
+        self.configMotName=self.configPath+'configMoteurRSAI.ini'
+        self.conf=QtCore.QSettings(self.configMotName, QtCore.QSettings.IniFormat)   
+        self.groups=self.conf.childGroups() # lecture de tous les moteurs
+        print(self.groups)
         self.motorListButton=list()
         self.motorListGui=list()
         self.setWindowTitle('Titre')
         self.setWindowIcon(QIcon("./LOA.png"))
         grid = QGridLayout()
+        
         for vi in self.groups:
+            #print(vi)
             # creation des boutons avec le nom
-            self.motorListButton.append(QPushButton(self.confA2V.value(vi+"/Name"),self))  
+            self.motorListButton.append(QPushButton(self.conf.value(vi+"/Name"),self))  
             # creation de widget oneMotorGui pour chaque moteurs
-            self.motorListGui.append(oneMotorGui.MOTORGUI(mot1=str(vi),motorTypeName='A2V'))
+            self.motorListGui.append(oneMotorGuiNew.ONEMOTORGUI(mot=str(vi),motorTypeName0='RSAI'))
             
         #creation des d'une matrice de point pour creer une grille    
         gridPos = [(0,0), (0,1), (0,2), (0,3), (1,0), (1,1), (1,2), (1,3),(2,0),(2,1),(2,2),(2,3)]
-            
+        print(len(self.motorListButton))
+        z=0
+        self.nbOfMotor=len(self.motorListButton)
+        for i in range(0,int(self.nbOfMotor/2)):
+            for j in range(0,int(self.nbOfMotor/2)):
+                if z<self.nbOfMotor:
+                    grid.addWidget(self.motorListButton[z], j, i)
+                z+=1
         j = 0
         for mm in self.motorListButton:
-            #ajout de chaque boutton dans la grille
-            grid.addWidget(self.motorListButton[j], gridPos[j][0], gridPos[j][1])
+            # #ajout de chaque boutton dans la grille
+            # grid.addWidget(self.motorListButton[j], gridPos[j][0], gridPos[j][1])
             
             #action de chaque bouton 
             mm.clicked.connect(lambda checked, j=j:self.open_widget(self.motorListGui[j]))
@@ -63,7 +77,7 @@ class MainWin(QWidget) :
 
     def closeEvent(self,event):
         print('close...')
-        exit  
+        event.accept() 
             
         
     
