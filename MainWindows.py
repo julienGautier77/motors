@@ -10,11 +10,14 @@ Created on Thu Feb  7 09:42:51 2019
 from PyQt5 import QtCore
 
 import sys
-from PyQt5.QtWidgets import QApplication,QWidget,QPushButton,QGridLayout
+from PyQt5.QtWidgets import QApplication,QWidget,QPushButton,QGridLayout,QVBoxLayout
 from PyQt5.QtGui import QIcon
 import oneMotorGuiNew
 import pathlib,os
-   
+import qdarkstyle
+from TirGui import TIRGUI
+
+
 class MainWin(QWidget) :
     def __init__(self):
         super(MainWin, self).__init__() 
@@ -29,7 +32,10 @@ class MainWin(QWidget) :
         self.motorListGui=list()
         self.setWindowTitle('Titre')
         self.setWindowIcon(QIcon("./LOA.png"))
+        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
         grid = QGridLayout()
+        vbox1=QVBoxLayout() 
+        self.tirWidget=TIRGUI()
         
         for vi in self.groups:
             #print(vi)
@@ -39,8 +45,8 @@ class MainWin(QWidget) :
             self.motorListGui.append(oneMotorGuiNew.ONEMOTORGUI(mot=str(vi),motorTypeName0='RSAI'))
             
         #creation des d'une matrice de point pour creer une grille    
-        gridPos = [(0,0), (0,1), (0,2), (0,3), (1,0), (1,1), (1,2), (1,3),(2,0),(2,1),(2,2),(2,3)]
-        print(len(self.motorListButton))
+        # gridPos = [(0,0), (0,1), (0,2), (0,3), (1,0), (1,1), (1,2), (1,3),(2,0),(2,1),(2,2),(2,3)]
+        # print(len(self.motorListButton))
         z=0
         self.nbOfMotor=len(self.motorListButton)
         for i in range(0,int(self.nbOfMotor/2)):
@@ -58,7 +64,9 @@ class MainWin(QWidget) :
             j+=1
         
         # ajout de la grille de bouton au widget proncipal
-        self.setLayout(grid)   
+        vbox1.addLayout(grid)
+        vbox1.addWidget(self.tirWidget)
+        self.setLayout(vbox1)   
        
     
     def open_widget(self,fene):
