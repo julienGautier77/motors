@@ -69,9 +69,9 @@ class THREEMOTORGUI(QWidget) :
         self.indexUnitFoc=unitFoc
         self.jogValue=jogValue
         self.jogValueFoc=jogValueFoc
-        self.LatWidget=ONEMOTORGUI(mot=self.motor[0],motorTypeName0=self.configMotName[0],nomWin='Control One Motor : ',showRef=False,unit=2)
-        self.VertWidget=ONEMOTORGUI(mot=self.motor[1],motorTypeName0=self.configMotName[1],nomWin='Control One Motor : ',showRef=False,unit=2)
-        self.FocWidget=ONEMOTORGUI(mot=self.motor[2],motorTypeName0=self.configMotName[2],nomWin='Control One Motor : ',showRef=False,unit=2)
+        self.LatWidget=ONEMOTORGUI(mot=self.motor[0],motorTypeName=self.motorTypeName[0],nomWin='Control One Motor : ',showRef=False,unit=2)
+        self.VertWidget=ONEMOTORGUI(mot=self.motor[1],motorTypeName=self.motorTypeName[1],nomWin='Control One Motor : ',showRef=False,unit=2)
+        self.FocWidget=ONEMOTORGUI(mot=self.motor[2],motorTypeName=self.motorTypeName[2],nomWin='Control One Motor : ',showRef=False,unit=2)
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
         self.version=__version__
         
@@ -152,23 +152,23 @@ class THREEMOTORGUI(QWidget) :
         self.threadFoc=PositionThread(mot=self.MOT[2],motorType=self.motorType[2]) # thread for displaying  position Foc
         self.threadFoc.POS.connect(self.PositionFoc)
         
-        self.setup()
+        
         ## initialisation of the jog value 
         if self.indexUnitFoc==0: #  step
             self.unitChangeFoc=1
             self.unitNameFoc='step'
             
         if self.indexUnitFoc==1: # micron
-            self.unitChangeFoc=float((1*self.stepmotor[0])) 
+            self.unitChangeFoc=float((1*self.stepmotor[2])) 
             self.unitNameFoc='um'
         if self.indexUnitFoc==2: #  mm 
-            self.unitChangeFoc=float((1000*self.stepmotor[0]))
+            self.unitChangeFoc=float((1000*self.stepmotor[2]))
             self.unitNameFoc='mm'
         if self.indexUnitFoc==3: #  ps  double passage : 1 microns=6fs
-            self.unitChangeFoc=float(1*self.stepmotor[0]/0.0066666666) 
+            self.unitChangeFoc=float(1*self.stepmotor[2]/0.0066666666) 
             self.unitNameFoc='ps'
         if self.indexUnitFoc==4: #  en degres
-            self.unitChangeFoc=1 *self.stepmotor[0]
+            self.unitChangeFoc=1 *self.stepmotor[2]
             self.unitNameFoc='°'    
         
         if self.indexUnit==0: # step
@@ -192,7 +192,7 @@ class THREEMOTORGUI(QWidget) :
         if self.unitChangeVert==0:
             self.unitChangeVert=1 #if / 0
         
-        
+        self.setup()
         self.unitFoc()
         self.unitTrans()
         
@@ -217,12 +217,13 @@ class THREEMOTORGUI(QWidget) :
         vbox1=QVBoxLayout() 
         hboxTitre=QHBoxLayout()
         self.nomTilt=QLabel(self.nomTilt)
-        
+        self.nomTilt.setStyleSheet("font: bold 20pt;color:yellow")
         hboxTitre.addWidget(self.nomTilt)
         
         self.unitTransBouton=QComboBox()
-        self.unitTransBouton.setMaximumWidth(80)
-        self.unitTransBouton.setMinimumWidth(80)
+        self.unitTransBouton.setMaximumWidth(100)
+        self.unitTransBouton.setMinimumWidth(100)
+        self.unitTransBouton.setStyleSheet("font: bold 12pt")
         self.unitTransBouton.addItem('Step')
         self.unitTransBouton.addItem('um')
         self.unitTransBouton.addItem('mm')
@@ -238,35 +239,45 @@ class THREEMOTORGUI(QWidget) :
         hbox1=QHBoxLayout()
         
         self.posLat=QPushButton('Lateral:')
-        self.posLat.setMaximumHeight(20)
+        self.posLat.setStyleSheet("font: 12pt")
+        self.posLat.setMaximumHeight(30)
         self.position_Lat=QLabel('12345667')
         self.position_Lat.setStyleSheet("font: bold 25pt" )
         self.position_Lat.setMaximumHeight(30)
         self.enPosition_Lat=QLineEdit('?')
-        self.enPosition_Lat.setMaximumWidth(50)
+        self.enPosition_Lat.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.enPosition_Lat.setMaximumWidth(70)
+        self.enPosition_Lat.setStyleSheet("font: bold 12pt")
         self.zeroButtonLat=QPushButton('Zero')
-        self.zeroButtonLat.setMaximumWidth(50)
+        self.zeroButtonLat.setMaximumWidth(30)
+        self.zeroButtonLat.setMinimumWidth(30)
         hLatBox.addWidget(self.posLat)
         hLatBox.addWidget(self.position_Lat)
         hLatBox.addWidget(self.enPosition_Lat)
         hLatBox.addWidget(self.zeroButtonLat)
-       
+        hLatBox.addSpacing(25)
+        
         hVertBox=QHBoxLayout()
         self.posVert=QPushButton('Vertical:')
-        self.posVert.setMaximumHeight(20)
+        self.posVert.setStyleSheet("font: 12pt")
+        self.posVert.setMaximumHeight(30)
         self.position_Vert=QLabel('1234556')
         self.position_Vert.setStyleSheet("font: bold 25pt" )
         self.position_Vert.setMaximumHeight(30)
         self.enPosition_Vert=QLineEdit('?')
-        self.enPosition_Vert.setMaximumWidth(50)
+        self.enPosition_Vert.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.enPosition_Vert.setMaximumWidth(70)
+        self.enPosition_Vert.setStyleSheet("font: bold 12pt")
         self.zeroButtonVert=QPushButton('Zero')
-        self.zeroButtonVert.setMaximumWidth(50)
+        self.zeroButtonVert.setMaximumWidth(30)
+        self.zeroButtonVert.setMinimumWidth(30)
         
         
         hVertBox.addWidget(self.posVert)
         hVertBox.addWidget(self.position_Vert)
         hVertBox.addWidget(self.enPosition_Vert)
         hVertBox.addWidget(self.zeroButtonVert)
+        hVertBox.addSpacing(25)
         
         vboxLatVert=QVBoxLayout() 
         vboxLatVert.addLayout(hLatBox)
@@ -277,37 +288,65 @@ class THREEMOTORGUI(QWidget) :
         grid_layout = QGridLayout()
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
-        self.haut=QPushButton('Up')
-        self.haut.setMinimumHeight(60)
+        self.haut=QPushButton()
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         
-        self.bas=QPushButton('Down')
-        self.bas.setMinimumHeight(60)
+        self.haut.setMaximumHeight(70)
+        self.haut.setMinimumWidth(70)
+        self.haut.setMaximumWidth(70)
+        self.haut.setMinimumHeight(70)
+        
+        self.bas=QPushButton()
+        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.bas.setMaximumHeight(70)
+        self.bas.setMinimumWidth(70)
+        self.bas.setMaximumWidth(70)
+        self.bas.setMinimumHeight(70)
+        
         self.gauche=QPushButton('Left')
-        self.gauche.setMinimumHeight(60)
-        self.gauche.setMinimumWidth(60)
+        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechegauche.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechegauche.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        
+        self.gauche.setMaximumHeight(70)
+        self.gauche.setMinimumWidth(70)
+        self.gauche.setMaximumWidth(70)
+        self.gauche.setMinimumHeight(70)
         self.droite=QPushButton('right')
-        self.droite.setMinimumHeight(60)
-        self.droite.setMinimumWidth(60)
+        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechedroite.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechedroite.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.droite.setMaximumHeight(70)
+        self.droite.setMinimumWidth(70)
+        self.droite.setMaximumWidth(70)
+        self.droite.setMinimumHeight(70)
+        
+        
         self.jogStep=QDoubleSpinBox()
-        self.jogStep.setMaximum(10000)
+        self.jogStep.setMaximum(1000)
+        self.jogStep.setStyleSheet("font: bold 12pt")
         self.jogStep.setValue(100)
+        self.jogStep.setMaximumWidth(120)
         self.unitChangeLat=1
     
         center=QHBoxLayout()
         center.addWidget(self.jogStep)
+        self.hautLayout=QHBoxLayout()
+        self.hautLayout.addWidget(self.haut)
+        self.basLayout=QHBoxLayout()
+        self.basLayout.addWidget(self.bas)
+        grid_layout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         
-        grid_layout.addWidget(self.haut, 0, 1)
-        grid_layout.addWidget(self.bas,2,1)
+        grid_layout.addLayout(self.hautLayout, 0, 1)
+        grid_layout.addLayout(self.basLayout,2,1)
         grid_layout.addWidget(self.gauche, 1, 0)
         grid_layout.addWidget(self.droite, 1, 2)
         grid_layout.addLayout(center,1,1)
+
         hbox1.addLayout(grid_layout)
         vbox1.addLayout(hbox1)     
+        vbox1.addSpacing(10)
         
         hboxFoc=QHBoxLayout()
         self.posFoc=QPushButton('Foc:')
-        self.posFoc.setMaximumHeight(20)
-        
+        self.posFoc.setMaximumHeight(30)
+        self.posFoc.setStyleSheet("font: bold 12pt")
         self.position_Foc=QLabel('1234567')
         self.position_Foc.setStyleSheet("font: bold 25pt" )
         self.position_Foc.setMaximumHeight(30)
@@ -317,12 +356,17 @@ class THREEMOTORGUI(QWidget) :
         self.unitFocBouton.addItem('mm')
         self.unitFocBouton.addItem('ps')
         self.unitFocBouton.setMinimumWidth(80)
+        self.unitFocBouton.setStyleSheet("font: bold 12pt")
         self.unitFocBouton.setCurrentIndex(self.indexUnitFoc)
         
         
         self.enPosition_Foc=QLineEdit()
         self.enPosition_Foc.setMaximumWidth(60)
+        self.enPosition_Foc.setStyleSheet("font: bold 12pt")
+        self.enPosition_Foc.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.zeroButtonFoc=QPushButton('Zero')
+        self.zeroButtonFoc.setMaximumWidth(30)
+        self.zeroButtonFoc.setMinimumWidth(30)
         
         hboxFoc.addWidget(self.posFoc)
         
@@ -330,28 +374,31 @@ class THREEMOTORGUI(QWidget) :
         hboxFoc.addWidget(self.unitFocBouton)
         hboxFoc.addWidget(self.enPosition_Foc)
         hboxFoc.addWidget(self.zeroButtonFoc)
+        hboxFoc.addSpacing(25)
         
-        self.moins=QPushButton(' - ')
-        self.moins.setMinimumWidth(60)
-        self.moins.setMinimumHeight(60)
+        self.moins=QPushButton()
+        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.moins.setMaximumWidth(70)
+        self.moins.setMinimumHeight(70)
         hboxFoc.addWidget(self.moins)
+        
         self.jogStep_2=QDoubleSpinBox()
         self.jogStep_2.setMaximum(10000)
+        self.jogStep_2.setStyleSheet("font: bold 12pt")
+        self.jogStep_2.setValue(self.jogValueFoc)
         
-        if self.indexUnitFoc==2 or self.indexUnitFoc==3:
-            self.jogStep_2.setValue(1)
-        else :
-            self.jogStep_2.setValue(100)
         hboxFoc.addWidget(self.jogStep_2)
          
         
-        self.plus=QPushButton(' + ')
-        self.plus.setMinimumWidth(60)
-        self.plus.setMinimumHeight(60)
+        self.plus=QPushButton()
+        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.plus.setMaximumWidth(70)
+        self.plus.setMinimumHeight(70)
     
         hboxFoc.addWidget(self.plus)
         
         vbox1.addLayout(hboxFoc)
+        vbox1.addSpacing(20)
         
         self.stopButton=QPushButton('STOP')
         self.stopButton.setStyleSheet("background-color: red")
@@ -374,10 +421,10 @@ class THREEMOTORGUI(QWidget) :
         grid_layoutRef.setHorizontalSpacing(4)
         grid_layoutRef.addWidget(self.REF1,0,0)
         grid_layoutRef.addWidget(self.REF2,0,1)
-        grid_layoutRef.addWidget(self.REF3,1,0)
-        grid_layoutRef.addWidget(self.REF4,1,1)
-        grid_layoutRef.addWidget(self.REF5,2,0)
-        grid_layoutRef.addWidget(self.REF6,2,1)
+        grid_layoutRef.addWidget(self.REF3,0,2)
+        grid_layoutRef.addWidget(self.REF4,1,0)
+        grid_layoutRef.addWidget(self.REF5,1,1)
+        grid_layoutRef.addWidget(self.REF6,1,2)
        
         self.widget6REF=QWidget()
         self.widget6REF.setLayout(grid_layoutRef)
@@ -447,20 +494,20 @@ class THREEMOTORGUI(QWidget) :
         eee=1   
         for absButton in self.absLatRef: 
             nbRef=str(eee)
-            absButton.setValue(int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))) # save reference lat  value
+            absButton.setValue(float(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))/self.unitChangeLat) # save reference lat  value
             #print('absButtonvalue',int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos")))
             absButton.editingFinished.connect(self.savRefLat) # sauv value
             eee+=1
         eee=1     
         for absButton in self.absVertRef: 
             nbRef=str(eee)
-            absButton.setValue(int(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))) #save reference vert value 
+            absButton.setValue(float(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))/self.unitChangeVert) #save reference vert value 
             absButton.editingFinished.connect(self.savRefVert) # save  value
             eee+=1
         eee=1     
         for absButton in self.absFocRef: 
             nbRef=str(eee)
-            absButton.setValue(int(self.conf[2].value(self.motor[2]+"/ref"+nbRef+"Pos"))) # save reference foc value
+            absButton.setValue(float(self.conf[2].value(self.motor[2]+"/ref"+nbRef+"Pos"))/self.unitChangeFoc) # save reference foc value
             absButton.editingFinished.connect(self.savRefFoc) #
             eee+=1
             
@@ -494,7 +541,7 @@ class THREEMOTORGUI(QWidget) :
             self.widget6REF.show()
             self.refShowId=False
             self.showRef.setText('Hide Ref')
-            self.setFixedSize(600,800)
+            self.setFixedSize(750,800)
             
             
         else:
@@ -504,7 +551,7 @@ class THREEMOTORGUI(QWidget) :
 
             self.showRef.setText('Show Ref')
 #            
-            self.setFixedSize(600,376)
+            self.setFixedSize(750,450)
            
             #self.updateGeometry()      
     
@@ -647,7 +694,7 @@ class THREEMOTORGUI(QWidget) :
         eee=1     
         for absButton in self.absFocRef: 
             nbRef=str(eee)
-            absButton.setValue(int(self.conf[2].value(self.motor[2]+"/ref"+nbRef+"Pos"))) # save reference foc value
+            absButton.setValue(float(self.conf[2].value(self.motor[2]+"/ref"+nbRef+"Pos"))/self.unitChangeFoc) # save reference foc value
             absButton.setSuffix(" %s" % self.unitNameFoc)
             eee+=1
         
@@ -656,7 +703,7 @@ class THREEMOTORGUI(QWidget) :
          unit change mot foc
         '''
         valueJog=self.jogStep.value()*self.unitChangeLat
-        print(valueJog)
+        
         
         self.indexUnit=self.unitTransBouton.currentIndex()
         if self.indexUnit==0: # step
@@ -688,13 +735,13 @@ class THREEMOTORGUI(QWidget) :
         eee=1   
         for absButton in self.absLatRef: 
             nbRef=str(eee)
-            absButton.setValue(int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))) # save reference lat  value
+            absButton.setValue(float(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))/self.unitChangeLat) # save reference lat  value
             absButton.setSuffix(" %s" % self.unitNameTrans)
             eee+=1
         eee=1     
         for absButton in self.absVertRef: 
             nbRef=str(eee)
-            absButton.setValue(int(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))) #save reference vert value 
+            absButton.setValue(float(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))/self.unitChangeVert) #save reference vert value 
             absButton.setSuffix(" %s" % self.unitNameTrans)
             eee+=1
         
@@ -717,7 +764,7 @@ class THREEMOTORGUI(QWidget) :
         a=a/self.unitChangeLat # value with unit changed
         self.position_Lat.setText(str(round(a,2))) 
         positionConnue_Lat=0 # 
-        precis=1
+        precis=5
         if self.motorTypeName[0]=='SmartAct':
             precis=10000
         for nbRefInt in range(1,7):
@@ -737,7 +784,7 @@ class THREEMOTORGUI(QWidget) :
         a=a/self.unitChangeVert # value  with unit changed
         self.position_Vert.setText(str(round(a,2))) 
         positionConnue_Vert=0 # 
-        precis=1
+        precis=5
         if self.motorTypeName[1]=='SmartAct':
             precis=10000
         for nbRefInt in range(1,7):
@@ -757,7 +804,7 @@ class THREEMOTORGUI(QWidget) :
         a=a/self.unitChangeFoc # 
         self.position_Foc.setText(str(round(a,2))) 
         positionConnue_Foc=0
-        precis=1
+        precis=5
         if self.motorTypeName[2]=='SmartAct':
             precis=10000
         for nbRefInt in range(1,7):
@@ -784,19 +831,19 @@ class THREEMOTORGUI(QWidget) :
               # print('ref',nbRef)
                self.conf[0].setValue(self.motor[0]+"/ref"+nbRef+"Pos",tposLat)
                self.conf[0].sync()
-               self.absLatRef[int(nbRef)-1].setValue(tposLat)
+               self.absLatRef[int(nbRef)-1].setValue(tposLat/self.unitChangeLat)
                print ("Position Lat saved")
                tposVert=self.MOT[1].position()
                
                self.conf[1].setValue(self.motor[1]+"/ref"+nbRef+"Pos",tposVert)
                self.conf[1].sync()
-               self.absVertRef[int(nbRef)-1].setValue(tposVert)
+               self.absVertRef[int(nbRef)-1].setValue(tposVert/self.unitChangeVert)
                print ("Position Vert saved")
                tposFoc=self.MOT[2].position()
                print('tposFoc',tposFoc)
                self.conf[2].setValue(self.motor[2]+"/ref"+nbRef+"Pos",tposFoc)
                self.conf[2].sync()
-               self.absFocRef[int(nbRef)-1].setValue(tposFoc)
+               self.absFocRef[int(nbRef)-1].setValue(tposFoc/self.unitChangeFoc)
                print ("Position Foc saved")
 #
     def ref(self):  
@@ -819,6 +866,7 @@ class THREEMOTORGUI(QWidget) :
                     self.MOT[i].stopMotor()
                 else :
                     self.MOT[i].move(vref)
+                    time.sleep(1)
 #
     def savName(self) :
         '''
@@ -859,7 +907,7 @@ class THREEMOTORGUI(QWidget) :
         '''
         sender=QtCore.QObject.sender(self)
         nbRefFoc=sender.objectName()[0] 
-        vrefFoc=int(self.absLatRef[int(nbRefFoc)-1].value()*self.unitChangeFoc)
+        vrefFoc=int(self.absFocRef[int(nbRefFoc)-1].value()*self.unitChangeFoc)
         self.conf[2].setValue(self.motor[2]+"/ref"+nbRefFoc+"Pos",vrefFoc)
         self.conf[2].sync()        
     
@@ -893,15 +941,27 @@ class REF3M(QWidget):
         self.vboxPos=QVBoxLayout()
         
         self.posText=QLineEdit('ref')
+        self.posText.setStyleSheet("font: bold 15pt")
+        self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.posText.setObjectName('%s'%self.id)
         self.vboxPos.addWidget(self.posText)
-        
-        self.take=QPushButton('Take')
+        self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("background-color: rgb(255,85,0)")
-        
-        self.Pos=QPushButton('Go')
-        self.Pos.setStyleSheet("background-color: rgb(85, 170, 255)")
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setMaximumWidth(30)
+        self.take.setMinimumWidth(30)
+        self.take.setMinimumHeight(30)
+        self.take.setMaximumHeight(30)
+        self.takeLayout=QHBoxLayout()
+        self.takeLayout.addWidget(self.take)
+        self.Pos=QPushButton()
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos.setMinimumHeight(40)
+        self.Pos.setMaximumHeight(40)
+        self.Pos.setMinimumWidth(40)
+        self.Pos.setMaximumWidth(40)
+        self.PosLayout=QHBoxLayout()
+        self.PosLayout.addWidget(self.Pos)
         self.Pos.setObjectName('%s'%self.id)
         
         LabeLatref=QLabel('Lat:')
@@ -923,10 +983,11 @@ class REF3M(QWidget):
         self.ABSFocref.setMinimum(-5000000000)
         
         grid_layoutPos = QGridLayout()
-        grid_layoutPos.setVerticalSpacing(0)
+        grid_layoutPos.setVerticalSpacing(5)
         grid_layoutPos.setHorizontalSpacing(10)
-        grid_layoutPos.addWidget(self.take,0,0)
-        grid_layoutPos.addWidget(self.Pos,0,1)
+        grid_layoutPos.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        grid_layoutPos.addLayout(self.takeLayout,0,0)
+        grid_layoutPos.addLayout(self.PosLayout,0,1)
         grid_layoutPos.addWidget(LabeLatref,1,0)
         grid_layoutPos.addWidget(self.ABSLatref,1,1)
         grid_layoutPos.addWidget(LabelVertref,2,0)
@@ -934,8 +995,10 @@ class REF3M(QWidget):
         grid_layoutPos.addWidget(LabelFocref,3,0)
         grid_layoutPos.addWidget(self.ABSFocref,3,1)
         self.vboxPos.addLayout(grid_layoutPos)
+#        self.vboxPos.setContentsMargins(-10,-10,-10,-10)
         self.wid.setStyleSheet("background-color: rgb(60, 77, 87)")
         self.wid.setLayout(self.vboxPos)
+#        self.setContentsMargins(-10,-10,-10,-10)
         mainVert=QVBoxLayout()
         mainVert.addWidget(self.wid)
         mainVert.setContentsMargins(0,0,0,0)
@@ -984,11 +1047,9 @@ class PositionThread(QtCore.QThread):
 
 
 if __name__ =='__main__':
-    motor0="testMot1"
-    motor1="testMot2"
-    motor2="testMot3"
+   
     appli=QApplication(sys.argv)
-    mot5=THREEMOTORGUI( motLat=motor0,motorTypeName0='test', motVert=motor1,motorTypeName1='test',motFoc=motor2,motorTypeName2='test',nomWin='Control 3 motors',nomTilt='Target',unit=1,unitFoc=2,jogValue=100,jogValueFoc=1)
+    mot5=motLat=THREEMOTORGUI( 'sample_Lat',motorTypeName0='RSAI', motVert='sample_Vert',motorTypeName1='RSAI',motFoc='sample_Foc',motorTypeName2='RSAI',nomWin='SAMPLE',nomTilt='SAMPLE',nomFoc='SAMPLE FOC')
     mot5.show()
     mot5.startThread2()
     appli.exec_()

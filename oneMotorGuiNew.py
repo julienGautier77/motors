@@ -40,14 +40,14 @@ class ONEMOTORGUI(QWidget) :
     fichier de config des moteurs : 'configMoteurRSAI.ini' 'configMoteurA2V.ini' 'configMoteurNewFocus.ini' 'configMoteurSmartAct.ini'
     """
 
-    def __init__(self, mot='',motorTypeName0='',nomWin='',showRef=False,unit=2,jogValue=1,parent=None):
+    def __init__(self, mot='',motorTypeName='',nomWin='One motor',showRef=False,unit=2,jogValue=1,parent=None):
        
         super(ONEMOTORGUI, self).__init__(parent)
         p = pathlib.Path(__file__)
         sepa=os.sep
         self.icon=str(p.parent) + sepa + 'icons' +sepa
         self.motor=[str(mot)]
-        self.motorTypeName=[motorTypeName0]
+        self.motorTypeName=[motorTypeName]
         self.motorType=[0]
         self.MOT=[0]
         self.configMotName=[0]
@@ -123,8 +123,6 @@ class ONEMOTORGUI(QWidget) :
         self.buteNeg=[0,0,0]
         self.name=[0,0,0]
         
-        
-        
         for zzi in range(0,1):
             
             self.stepmotor[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/stepmotor")) #list of stepmotor values for unit conversion
@@ -132,12 +130,13 @@ class ONEMOTORGUI(QWidget) :
             self.buteNeg[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/buteeneg"))
             self.name[zzi]=str(self.conf[zzi].value(self.motor[zzi]+"/Name"))
         
-        self.setWindowTitle(nomWin+' : '+ self.name[0]+'                     V.'+str(self.version))
+        self.setWindowTitle(nomWin+' : '+ self.name[0]+'             V.'+str(self.version))
         
         self.thread=PositionThread(mot=self.MOT[0],motorType=self.motorType[0]) # thread for displaying position
         self.thread.POS.connect(self.Position)
         
-        self.setup()
+        
+        
         ## initialisation of the jog value 
         if self.indexUnit==0: #  step
             self.unitChange=1
@@ -155,8 +154,9 @@ class ONEMOTORGUI(QWidget) :
         if self.indexUnit==4: #  en degres
             self.unitChange=1 *self.stepmotor[0]
             self.unitName='°'    
-        
+        self.setup()
         self.unit()
+        
         
     def startThread2(self):
         self.thread.ThreadINIT()
@@ -166,16 +166,16 @@ class ONEMOTORGUI(QWidget) :
         
     def setup(self):
         
-        
         vbox1=QVBoxLayout() 
         hboxTitre=QHBoxLayout()
         self.nom=QLabel(self.name[0])
-        self.nom.setStyleSheet("font: bold 30pt")
+        self.nom.setStyleSheet("font: bold 20pt;color:yellow")
         hboxTitre.addWidget(self.nom)
         
         self.enPosition=QLineEdit()
         #self.enPosition.setMaximumWidth(50)
         self.enPosition.setStyleSheet("font: bold 15pt")
+        self.enPosition.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         hboxTitre.addWidget(self.enPosition)
         
         vbox1.addLayout(hboxTitre)
@@ -184,7 +184,7 @@ class ONEMOTORGUI(QWidget) :
         hbox0=QHBoxLayout()
         self.position=QLabel('1234567')
         self.position.setMaximumWidth(300)
-        self.position.setStyleSheet("font: bold 50pt" )
+        self.position.setStyleSheet("font: bold 40pt" )
         
         self.unitBouton=QComboBox()
         self.unitBouton.addItem('Step')
@@ -194,7 +194,9 @@ class ONEMOTORGUI(QWidget) :
         self.unitBouton.addItem('°')
         self.unitBouton.setMaximumWidth(100)
         self.unitBouton.setMinimumWidth(100)
+        self.unitBouton.setStyleSheet("font: bold 12pt")
         self.unitBouton.setCurrentIndex(self.indexUnit)
+        
         
         self.zeroButton=QPushButton('Zero')
         self.zeroButton.setMaximumWidth(50)
@@ -206,41 +208,53 @@ class ONEMOTORGUI(QWidget) :
         #vbox1.addSpacing(10)
         
         hboxAbs=QHBoxLayout()
-        absolueLabel=QLabel('Absolue mvt')
-        absolueLabel.setStyleSheet("background-color: green")
+        absolueLabel=QLabel('Absolue mouvement')
+#        absolueLabel.setStyleSheet("background-color: green")
         self.MoveStep=QDoubleSpinBox()
         self.MoveStep.setMaximum(1000000)
         self.MoveStep.setMinimum(-1000000)
-        self.MoveStep.setStyleSheet("background-color: green")
+        #self.MoveStep.setStyleSheet("background-color: green")
         
-        self.absMvtButton=QPushButton('Go')
-        self.absMvtButton.setStyleSheet("background-color: green")
+        self.absMvtButton=QPushButton()
+        self.absMvtButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.absMvtButton.setMinimumHeight(50)
+        self.absMvtButton.setMaximumHeight(50)
+        self.absMvtButton.setMinimumWidth(50)
+        self.absMvtButton.setMaximumWidth(50)
+        #self.absMvtButton.setStyleSheet("background-color: green")
         hboxAbs.addWidget(absolueLabel)
         hboxAbs.addWidget(self.MoveStep)
         hboxAbs.addWidget(self.absMvtButton)
         vbox1.addLayout(hboxAbs)
-        
+        vbox1.addSpacing(10)
         hbox1=QHBoxLayout()
-        self.moins=QPushButton(' - ')
-        self.moins.setMaximumWidth(70)
-        self.moins.setMinimumHeight(70)
-        self.moins.setStyleSheet("border-radius:20px")
-        hbox1.addWidget(self.moins)
+        self.moins=QPushButton()
+        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         
+        self.moins.setMinimumHeight(70)
+        self.moins.setMaximumHeight(70)
+        self.moins.setMinimumWidth(70)
+        self.moins.setMaximumWidth(70)
+        
+        #self.moins.setStyleSheet("border-radius:20px")
+        hbox1.addWidget(self.moins)
         
         self.jogStep=QDoubleSpinBox()
         self.jogStep.setMaximum(10000)
-        self.jogStep.setMaximumWidth(100)
-        
+        self.jogStep.setMaximumWidth(130)
+        self.jogStep.setStyleSheet("font: bold 12pt")
         self.jogStep.setValue(self.jogValue)
   
         hbox1.addWidget(self.jogStep)
          
         
-        self.plus=QPushButton(' + ')
-        self.plus.setMaximumWidth(70)
+        self.plus=QPushButton()
+        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.plus.setMinimumHeight(70)
-        self.plus.setStyleSheet("border-radius:20px")
+        self.plus.setMaximumHeight(70)
+        self.plus.setMinimumWidth(70)
+        self.plus.setMaximumWidth(70)
+        #self.plus.setStyleSheet("border-radius:20px")
         hbox1.addWidget(self.plus)
         
         vbox1.addLayout(hbox1)
@@ -248,24 +262,26 @@ class ONEMOTORGUI(QWidget) :
         vbox1.addSpacing(10)
         
         hbox2=QHBoxLayout()
-        self.stopButton=QPushButton('STOP')
-        self.stopButton.setStyleSheet("border-radius:20px;background-color: red")
-        self.stopButton.setMinimumHeight(50)
-        #self.stopButton.setMinimumWidth(80)
+        self.stopButton=QPushButton()
+        self.stopButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        #self.stopButton.setStyleSheet("border-radius:20px;background-color: red")
+        self.stopButton.setMaximumHeight(70)
+        self.stopButton.setMaximumWidth(70)
+        self.stopButton.setMinimumHeight(70)
+        self.stopButton.setMinimumWidth(70)
         hbox2.addWidget(self.stopButton)
         vbox2=QVBoxLayout()
         
         self.showRef=QPushButton('Show Ref')
-        self.showRef.setMaximumWidth(70)
+        self.showRef.setMaximumWidth(90)
         vbox2.addWidget(self.showRef)
         self.scan=QPushButton('Scan')
-        self.scan.setMaximumWidth(70)
+        self.scan.setMaximumWidth(90)
         vbox2.addWidget(self.scan)
         hbox2.addLayout(vbox2)
         
         vbox1.addLayout(hbox2)
-        
-        
+        vbox1.addSpacing(10)
         
         self.REF1 = REF1M(num=1)
         self.REF2 = REF1M(num=2)
@@ -287,8 +303,9 @@ class ONEMOTORGUI(QWidget) :
         self.widget6REF=QWidget()
         self.widget6REF.setLayout(grid_layoutRef)
         vbox1.addWidget(self.widget6REF)
-        
+       # vbox1.setContentsMargins(0,0,0,0)
         self.setLayout(vbox1)
+        
         
         self.absRef=[self.REF1.ABSref,self.REF2.ABSref,self.REF3.ABSref,self.REF4.ABSref,self.REF5.ABSref,self.REF6.ABSref] 
         self.posText=[self.REF1.posText,self.REF2.posText,self.REF3.posText,self.REF4.posText,self.REF5.posText,self.REF6.posText]
@@ -332,7 +349,7 @@ class ONEMOTORGUI(QWidget) :
         eee=1   
         for absButton in self.absRef: 
             nbRef=str(eee)
-            absButton.setValue(int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))) # save reference value
+            absButton.setValue(float(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))/self.unitChange) # save reference value
             absButton.editingFinished.connect(self.savRef) # sauv value
             eee+=1
        
@@ -364,15 +381,14 @@ class ONEMOTORGUI(QWidget) :
             self.widget6REF.show()
             self.refShowId=False
             self.showRef.setText('Hide Ref')
-            self.setFixedSize(429,673)
-            
-            
+            self.setFixedSize(430,800)
+             
         else:
             #print(self.geometry())
-            self.resize(368, 345)
+            
             self.widget6REF.hide()
             self.refShowId=True
-            self.setGeometry(QRect(107, 75, 429, 315))
+            #self.setGeometry(QRect(107, 75, 429, 315))
             #self.setMaximumSize(368, 345)
             self.showRef.setText('Show Ref')
 #            print(self.sizeHint())
@@ -380,11 +396,15 @@ class ONEMOTORGUI(QWidget) :
 #            print(self.sizeHint())
 #            self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
             #self.setMaximumSize(300,300)
-            self.setFixedSize(429,315)
+            self.setFixedSize(430,380)
            
             #self.updateGeometry()
     
     def MOVE(self):
+        '''
+        absolue mouvment
+        '''
+        
         a=float(self.MoveStep.value())
         a=float(a*self.unitChange) # changement d unite
         if a<self.buteNeg[0] :
@@ -473,7 +493,7 @@ class ONEMOTORGUI(QWidget) :
         eee=1
         for absButton in self.absRef: 
             nbRef=str(eee)
-            absButton.setValue(int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))/self.unitChange)
+            absButton.setValue(float(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))/self.unitChange)
             absButton.setSuffix(" %s" % self.unitName)
             eee+=1
         
@@ -496,7 +516,7 @@ class ONEMOTORGUI(QWidget) :
         a=a/self.unitChange # value with unit changed
         self.position.setText(str(round(a,2))) 
         positionConnue=0 # 
-        precis=1
+        precis=5
         if self.motorTypeName[0]=='SmartAct':
             precis=10000
         for nbRefInt in range(1,7):
@@ -600,19 +620,32 @@ class REF1M(QWidget):
         self.vboxPos=QVBoxLayout()
         
         self.posText=QLineEdit('ref')
+        self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.posText.setStyleSheet("font: bold 15pt")
         self.posText.setObjectName('%s'%self.id)
-        self.posText.setMaximumWidth(80)
+#        self.posText.setMaximumWidth(80)
         self.vboxPos.addWidget(self.posText)
         
-        self.take=QPushButton('Take')
+        self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("background-color: rgb(255,85,0)")
-        self.take.setMaximumWidth(80)
-        self.Pos=QPushButton('Go')
-        self.Pos.setMaximumWidth(60)
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setMaximumWidth(30)
+        self.take.setMinimumWidth(30)
+        self.take.setMinimumHeight(30)
+        self.take.setMaximumHeight(30)
+        self.takeLayout=QHBoxLayout()
+        self.takeLayout.addWidget(self.take)
+        self.Pos=QPushButton()
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos.setMinimumHeight(40)
+        self.Pos.setMaximumHeight(40)
+        self.Pos.setMinimumWidth(40)
+        self.Pos.setMaximumWidth(40)
+        self.PosLayout=QHBoxLayout()
+        self.PosLayout.addWidget(self.Pos)
         self.Pos.setObjectName('%s'%self.id)
-        self.Pos.setStyleSheet("background-color: rgb(85, 170, 255)")
-        Labelref=QLabel('Pos:')
+        #○self.Pos.setStyleSheet("background-color: rgb(85, 170, 255)")
+        Labelref=QLabel('Pos :')
         Labelref.setMaximumWidth(30)
         Labelref.setStyleSheet("font: 9pt" )
         self.ABSref=QDoubleSpinBox()
@@ -624,10 +657,11 @@ class REF1M(QWidget):
         self.ABSref.setStyleSheet("font: 9pt" )
         
         grid_layoutPos = QGridLayout()
-        grid_layoutPos.setVerticalSpacing(0)
-        grid_layoutPos.setHorizontalSpacing(5)
-        grid_layoutPos.addWidget(self.take,0,0)
-        grid_layoutPos.addWidget(self.Pos,0,1)
+        grid_layoutPos.setVerticalSpacing(5)
+        grid_layoutPos.setHorizontalSpacing(10)
+        grid_layoutPos.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        grid_layoutPos.addLayout(self.takeLayout,0,0)
+        grid_layoutPos.addLayout(self.PosLayout,0,1)
         grid_layoutPos.addWidget(Labelref,1,0)
         grid_layoutPos.addWidget(self.ABSref,1,1)
         
@@ -685,7 +719,7 @@ if __name__ =='__main__':
     
     appli=QApplication(sys.argv)
     
-    mot5=ONEMOTORGUI( mot='Spherique_IR_Lat',motorTypeName0='RSAI',nomWin='Control One Motor',showRef=False,unit=2,jogValue=1,parent=None)
+    mot5=ONEMOTORGUI( mot='Spherique_IR_Lat',motorTypeName='RSAI',showRef=False,unit=2,jogValue=1)
     mot5.show()
     mot5.startThread2()
     appli.exec_()

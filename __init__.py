@@ -6,5 +6,5 @@ Created on Mon May  6 09:39:50 2019
 @author: juliengautier
 """
 
-__version__=2019.09
+__version__=2020.09
 __author__='Julien Gautier LOA'

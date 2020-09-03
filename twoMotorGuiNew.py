@@ -58,8 +58,9 @@ class TWOMOTORGUI(QWidget) :
         self.indexUnit=unit
         self.nomTilt=nomTilt
         self.jogValue=jogValue
-        self.LatWidget=ONEMOTORGUI(mot=self.motor[0],motorTypeName0=self.configMotName[0],nomWin='Control One Motor : ',showRef=False,unit=2)
-        self.VertWidget=ONEMOTORGUI(mot=self.motor[1],motorTypeName0=self.configMotName[1],nomWin='Control One Motor : ',showRef=False,unit=2)
+        
+        self.LatWidget=ONEMOTORGUI(mot=self.motor[0],motorTypeName=self.motorTypeName[0],nomWin='Control One Motor : ',showRef=False,unit=2)
+        self.VertWidget=ONEMOTORGUI(mot=self.motor[1],motorTypeName=self.motorTypeName[1],nomWin='Control One Motor : ',showRef=False,unit=2)
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
         self.version=__version__
         
@@ -128,7 +129,7 @@ class TWOMOTORGUI(QWidget) :
             self.name[zzi]=str(self.conf[zzi].value(self.motor[zzi]+"/Name"))
         
         
-        self.setWindowTitle(nomWin+'                     V.'+str(self.version))#+' : '+ self.name[0])
+        self.setWindowTitle(nomWin+'                V.'+str(self.version))#+' : '+ self.name[0])
         
         self.threadLat=PositionThread(mot=self.MOT[0],motorType=self.motorType[0]) # thread for displaying position Lat
         self.threadLat.POS.connect(self.PositionLat)
@@ -138,26 +139,32 @@ class TWOMOTORGUI(QWidget) :
         
        
         
-        self.setup()
+        
         # initialisation jogstep value
         
-        if self.indexUnit==0: #  step
+        if self.indexUnit==0: # step
             self.unitChangeLat=1
-            self.unitName='step'
-            
+            self.unitChangeVert=1
+            self.unitNameTrans='step'
         if self.indexUnit==1: # micron
-            self.unitChangeLat=float((1*self.stepmotor[0])) 
-            self.unitName='um'
-        if self.indexUnit==2: #  mm 
+            self.unitChangeLat=float((1*self.stepmotor[0]))  
+            self.unitChangeVert=float((1*self.stepmotor[1]))  
+            self.unitNameTrans='um'
+        if self.indexUnit==2: 
             self.unitChangeLat=float((1000*self.stepmotor[0]))
-            self.unitName='mm'
-        if self.indexUnit==3: #  ps  double passage : 1 microns=6fs
-            self.unitChangeLat=float(1*self.stepmotor[0]/0.0066666666) 
-            self.unitName='ps'
-        if self.indexUnit==4: #  en degres
-            self.unitChangeLat=1 *self.stepmotor[0]
-            self.unitName='°'    
+            self.unitChangeVert=float((1000*self.stepmotor[1]))
+            self.unitNameTrans='mm'
+        if self.indexUnit==3: #  ps  en compte le double passage : 1 microns=6fs
+            self.unitChangeLat=float(1*self.stepmotor[0]/0.0066666666)  
+            self.unitChangeVert=float(1*self.stepmotor[1]/0.0066666666)  
+            self.unitNameTrans='ps'
+        if self.unitChangeLat==0:
+            self.unitChangeLat=1 # if / par 0
+        if self.unitChangeVert==0:
+            self.unitChangeVert=1 #if / 0
         
+        
+        self.setup()
         self.unitTrans()
         
    
@@ -176,12 +183,13 @@ class TWOMOTORGUI(QWidget) :
         vbox1=QVBoxLayout() 
         hboxTitre=QHBoxLayout()
         self.nomTilt=QLabel(self.nomTilt)
-        
+        self.nomTilt.setStyleSheet("font: bold 20pt;color:yellow")
         hboxTitre.addWidget(self.nomTilt)
         
         self.unitTransBouton=QComboBox()
-        self.unitTransBouton.setMaximumWidth(80)
-        self.unitTransBouton.setMinimumWidth(80)
+        self.unitTransBouton.setMaximumWidth(100)
+        self.unitTransBouton.setMinimumWidth(100)
+        self.unitTransBouton.setStyleSheet("font: bold 12pt")
         self.unitTransBouton.addItem('Step')
         self.unitTransBouton.addItem('um')
         self.unitTransBouton.addItem('mm')
@@ -198,14 +206,17 @@ class TWOMOTORGUI(QWidget) :
         hbox1=QHBoxLayout()
         
         self.posLat=QPushButton('Lateral:')
-        self.posLat.setMaximumHeight(20)
+        self.posLat.setStyleSheet("font: 12pt")
+        self.posLat.setMaximumHeight(30)
         self.position_Lat=QLabel('12345667')
         self.position_Lat.setStyleSheet("font: bold 25pt" )
         self.position_Lat.setMaximumHeight(30)
         self.enPosition_Lat=QLineEdit('?')
-        self.enPosition_Lat.setMaximumWidth(50)
+        self.enPosition_Lat.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.enPosition_Lat.setMaximumWidth(70)
+        self.enPosition_Lat.setStyleSheet("font: bold 15pt")
         self.zeroButtonLat=QPushButton('Zero')
-        self.zeroButtonLat.setMaximumWidth(50)
+        self.zeroButtonLat.setMaximumWidth(30)
         hLatBox.addWidget(self.posLat)
         hLatBox.addWidget(self.position_Lat)
         hLatBox.addWidget(self.enPosition_Lat)
@@ -213,12 +224,15 @@ class TWOMOTORGUI(QWidget) :
        
         hVertBox=QHBoxLayout()
         self.posVert=QPushButton('Vertical:')
+        self.posVert.setStyleSheet("font: 12pt")
         self.posVert.setMaximumHeight(20)
         self.position_Vert=QLabel('1234556')
         self.position_Vert.setStyleSheet("font: bold 25pt" )
         self.position_Vert.setMaximumHeight(30)
         self.enPosition_Vert=QLineEdit('?')
-        self.enPosition_Vert.setMaximumWidth(50)
+        self.enPosition_Vert.setMaximumWidth(80)
+        self.enPosition_Vert.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.enPosition_Vert.setStyleSheet("font: bold 15pt")
         self.zeroButtonVert=QPushButton('Zero')
         self.zeroButtonVert.setMaximumWidth(50)
         
@@ -237,26 +251,53 @@ class TWOMOTORGUI(QWidget) :
         grid_layout = QGridLayout()
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
-        self.haut=QPushButton('Up')
-        self.haut.setMinimumHeight(60)
+        self.haut=QPushButton()
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         
-        self.bas=QPushButton('Down')
-        self.bas.setMinimumHeight(60)
+        self.haut.setMaximumHeight(70)
+        self.haut.setMinimumWidth(70)
+        self.haut.setMaximumWidth(70)
+        self.haut.setMinimumHeight(70)
+        
+        self.bas=QPushButton()
+        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.bas.setMaximumHeight(70)
+        self.bas.setMinimumWidth(70)
+        self.bas.setMaximumWidth(70)
+        self.bas.setMinimumHeight(70)
+        
         self.gauche=QPushButton('Left')
-        self.gauche.setMinimumHeight(60)
-        self.gauche.setMinimumWidth(60)
+        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechegauche.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechegauche.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        
+        self.gauche.setMaximumHeight(70)
+        self.gauche.setMinimumWidth(70)
+        self.gauche.setMaximumWidth(70)
+        self.gauche.setMinimumHeight(70)
         self.droite=QPushButton('right')
-        self.droite.setMinimumHeight(60)
-        self.droite.setMinimumWidth(60)
+        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechedroite.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechedroite.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.droite.setMaximumHeight(70)
+        self.droite.setMinimumWidth(70)
+        self.droite.setMaximumWidth(70)
+        self.droite.setMinimumHeight(70)
+        
         
         self.jogStep=QDoubleSpinBox()
-        self.jogStep.setMaximum(10000)
-        self.jogStep.setValue(self.jogValue)
+        self.jogStep.setMaximum(1000)
+        self.jogStep.setStyleSheet("font: bold 12pt")
+        self.jogStep.setValue(100)
+        self.jogStep.setMaximumWidth(120)
+        self.unitChangeLat=1
+    
         center=QHBoxLayout()
         center.addWidget(self.jogStep)
+        self.hautLayout=QHBoxLayout()
+        self.hautLayout.addWidget(self.haut)
+        self.basLayout=QHBoxLayout()
+        self.basLayout.addWidget(self.bas)
+        grid_layout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         
-        grid_layout.addWidget(self.haut, 0, 1)
-        grid_layout.addWidget(self.bas,2,1)
+        grid_layout.addLayout(self.hautLayout, 0, 1)
+        grid_layout.addLayout(self.basLayout,2,1)
         grid_layout.addWidget(self.gauche, 1, 0)
         grid_layout.addWidget(self.droite, 1, 2)
         grid_layout.addLayout(center,1,1)
@@ -286,10 +327,10 @@ class TWOMOTORGUI(QWidget) :
         grid_layoutRef.setHorizontalSpacing(4)
         grid_layoutRef.addWidget(self.REF1,0,0)
         grid_layoutRef.addWidget(self.REF2,0,1)
-        grid_layoutRef.addWidget(self.REF3,1,0)
-        grid_layoutRef.addWidget(self.REF4,1,1)
-        grid_layoutRef.addWidget(self.REF5,2,0)
-        grid_layoutRef.addWidget(self.REF6,2,1)
+        grid_layoutRef.addWidget(self.REF3,0,2)
+        grid_layoutRef.addWidget(self.REF4,1,0)
+        grid_layoutRef.addWidget(self.REF5,1,1)
+        grid_layoutRef.addWidget(self.REF6,1,2)
        
         self.widget6REF=QWidget()
         self.widget6REF.setLayout(grid_layoutRef)
@@ -350,13 +391,13 @@ class TWOMOTORGUI(QWidget) :
         eee=1   
         for absButton in self.absLatRef: 
             nbRef=str(eee)
-            absButton.setValue(int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))) # save reference lat  value
+            absButton.setValue(int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))/self.unitChangeLat) # save reference lat  value
             absButton.editingFinished.connect(self.savRefLat) # sauv value
             eee+=1
         eee=1     
         for absButton in self.absVertRef: 
             nbRef=str(eee)
-            absButton.setValue(int(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))) #save reference vert value 
+            absButton.setValue(int(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))/self.unitChangeVert) #save reference vert value 
             absButton.editingFinished.connect(self.savRefVert) # save  value
             eee+=1
             
@@ -389,7 +430,7 @@ class TWOMOTORGUI(QWidget) :
             self.widget6REF.show()
             self.refShowId=False
             self.showRef.setText('Hide Ref')
-            self.setFixedSize(600,800)
+            self.setFixedSize(650,800)
             
             
         else:
@@ -397,7 +438,7 @@ class TWOMOTORGUI(QWidget) :
             self.widget6REF.hide()
             self.refShowId=True
             self.showRef.setText('Show Ref')
-            self.setFixedSize(600,376)
+            self.setFixedSize(650,376)
             #self.updateGeometry()      
 
     def gMove(self):
@@ -518,13 +559,13 @@ class TWOMOTORGUI(QWidget) :
         eee=1   
         for absButton in self.absLatRef: 
             nbRef=str(eee)
-            absButton.setValue(int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))) # save reference lat  value
+            absButton.setValue(int(self.conf[0].value(self.motor[0]+"/ref"+nbRef+"Pos"))/self.unitChangeLat) # save reference lat  value
             absButton.setSuffix(" %s" % self.unitNameTrans)
             eee+=1
         eee=1     
         for absButton in self.absVertRef: 
             nbRef=str(eee)
-            absButton.setValue(int(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))) #save reference vert value 
+            absButton.setValue(int(self.conf[1].value(self.motor[1]+"/ref"+nbRef+"Pos"))/self.unitChangeVert) #save reference vert value 
             absButton.setSuffix(" %s" % self.unitNameTrans)
             eee+=1
         
@@ -593,13 +634,13 @@ class TWOMOTORGUI(QWidget) :
               # print('ref',nbRef)
                self.conf[0].setValue(self.motor[0]+"/ref"+nbRef+"Pos",tposLat)
                self.conf[0].sync()
-               self.absLatRef[int(nbRef)-1].setValue(tposLat)
+               self.absLatRef[int(nbRef)-1].setValue(tposLat/self.unitChangeLat)
                print ("Position Lat saved")
                tposVert=self.MOT[1].position()
                
                self.conf[1].setValue(self.motor[1]+"/ref"+nbRef+"Pos",tposVert)
                self.conf[1].sync()
-               self.absVertRef[int(nbRef)-1].setValue(tposVert)
+               self.absVertRef[int(nbRef)-1].setValue(tposVert/self.unitChangeVert)
                print ("Position Vert saved")
                
 
@@ -612,7 +653,7 @@ class TWOMOTORGUI(QWidget) :
         reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
         if reply == QMessageBox.Yes:
             nbRef=str(sender.objectName()[0])
-            for i in range (0,3):
+            for i in range (0,2):
                 print(i)
                 vref=int(self.conf[i].value(self.motor[i]+"/ref"+nbRef+"Pos"))
                 if vref<self.buteNeg[i] :
@@ -623,7 +664,7 @@ class TWOMOTORGUI(QWidget) :
                     self.MOT[i].stopMotor()
                 else :
                     self.MOT[i].move(vref)
-
+                    time.sleep(0.5)
     def savName(self) :
         '''
         Save reference name
@@ -687,15 +728,27 @@ class REF2M(QWidget):
         self.vboxPos=QVBoxLayout()
         
         self.posText=QLineEdit('ref')
+        self.posText.setStyleSheet("font: bold 15pt")
+        self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.posText.setObjectName('%s'%self.id)
         self.vboxPos.addWidget(self.posText)
-        
-        self.take=QPushButton('Take')
+        self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("background-color: rgb(255,85,0)")
-        
-        self.Pos=QPushButton('Go')
-        self.Pos.setStyleSheet("background-color: rgb(85, 170, 255)")
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setMaximumWidth(30)
+        self.take.setMinimumWidth(30)
+        self.take.setMinimumHeight(30)
+        self.take.setMaximumHeight(30)
+        self.takeLayout=QHBoxLayout()
+        self.takeLayout.addWidget(self.take)
+        self.Pos=QPushButton()
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos.setMinimumHeight(40)
+        self.Pos.setMaximumHeight(40)
+        self.Pos.setMinimumWidth(40)
+        self.Pos.setMaximumWidth(40)
+        self.PosLayout=QHBoxLayout()
+        self.PosLayout.addWidget(self.Pos)
         self.Pos.setObjectName('%s'%self.id)
         
         LabeLatref=QLabel('Lat:')
@@ -711,10 +764,10 @@ class REF2M(QWidget):
         self.ABSVertref.setMinimum(-5000000000)
        
         grid_layoutPos = QGridLayout()
-        grid_layoutPos.setVerticalSpacing(0)
+        grid_layoutPos.setVerticalSpacing(5)
         grid_layoutPos.setHorizontalSpacing(10)
-        grid_layoutPos.addWidget(self.take,0,0)
-        grid_layoutPos.addWidget(self.Pos,0,1)
+        grid_layoutPos.addLayout(self.takeLayout,0,0)
+        grid_layoutPos.addLayout(self.PosLayout,0,1)
         grid_layoutPos.addWidget(LabeLatref,1,0)
         grid_layoutPos.addWidget(self.ABSLatref,1,1)
         grid_layoutPos.addWidget(LabelVertref,2,0)
@@ -770,11 +823,12 @@ class PositionThread(QtCore.QThread):
 
 
 if __name__ =='__main__':
-    motor0="testMot1"
-    motor1="testMot2"
+    motor0="Cible_Trans_Lat"
+    motor1="Cible_Trans_Vert"
     
     appli=QApplication(sys.argv)
-    mot5=TWOMOTORGUI( motLat=motor0,motorTypeName0='test', motVert=motor1,motorTypeName1='test',nomWin='Control 2 motors',nomTilt='Cible',showRef=False,unit=1,jogValue=100)
+    mot5=TWOMOTORGUI(motor0,'RSAI',motor1,'RSAI',nomWin='Tilt motor name',nomTilt='Tilt') # croix XUV
+    
     mot5.show()
     mot5.startThread2()
     appli.exec_()

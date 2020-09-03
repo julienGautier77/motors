@@ -45,8 +45,6 @@ class MainWin(QWidget) :
             self.motorListGui.append(oneMotorGuiNew.ONEMOTORGUI(mot=str(vi),motorTypeName0='RSAI'))
             
         #creation des d'une matrice de point pour creer une grille    
-        # gridPos = [(0,0), (0,1), (0,2), (0,3), (1,0), (1,1), (1,2), (1,3),(2,0),(2,1),(2,2),(2,3)]
-        # print(len(self.motorListButton))
         z=0
         self.nbOfMotor=len(self.motorListButton)
         for i in range(0,int(self.nbOfMotor/2)):
@@ -54,6 +52,7 @@ class MainWin(QWidget) :
                 if z<self.nbOfMotor:
                     grid.addWidget(self.motorListButton[z], j, i)
                 z+=1
+            
         j = 0
         for mm in self.motorListButton:
             # #ajout de chaque boutton dans la grille
@@ -67,7 +66,7 @@ class MainWin(QWidget) :
         vbox1.addLayout(grid)
         vbox1.addWidget(self.tirWidget)
         self.setLayout(vbox1)   
-       
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
     
     def open_widget(self,fene):
         """ ouverture widget suplementaire 

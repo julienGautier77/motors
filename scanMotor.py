@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDou
 from PyQt5.QtWidgets import QComboBox,QCheckBox,QLabel
 from PyQt5.QtGui import QIcon
 
-
+import tirSalleJaune as tirSJ
 import sys,time,os
 import qdarkstyle
 import numpy as np
@@ -36,7 +36,7 @@ class SCAN(QWidget):
         self.conf=QtCore.QSettings(self.configMotName, QtCore.QSettings.IniFormat)
         self.indexUnit=1
         self.name=str(self.conf.value(self.motor+"/Name"))
-        self.stepmotor=1#float(self.conf.value(self.motor+"/stepmotor"))
+        self.stepmotor=float(self.conf.value(self.motor+"/stepmotor"))
         self.setup()
         self.actionButton()
         self.unit()
@@ -91,6 +91,7 @@ class SCAN(QWidget):
         self.lab_ini = QLabel('ini value')
         self.val_ini =QDoubleSpinBox()
         self.val_ini.setMaximum(10000)
+        self.val_ini.setMinimum(-10000)
         
         self.lab_fin = QLabel('Final value')
         self.val_fin =QDoubleSpinBox()
@@ -170,13 +171,25 @@ class SCAN(QWidget):
         self.but_Shoot.setEnabled(False)
         self.but_stop.setEnabled(True)
         self.but_stop.setStyleSheet("border-radius:20px;background-color: red")
+        a=tirSJ.Tir()
+        print(a)
+        
+        if a==0 or a=="":
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText("Not connected !")
+            msg.setInformativeText("Please connect !!")
+            msg.setWindowTitle("Warning ...")
+            msg.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+            msg.exec_()
+       
         
         
     def stopScan(self):
         self.threadScan.stopThread()
         self.threadShoot.stopThread()
         
-        self.MOT.stopMot()
+        self.MOT.stopMotor()
         self.lab_nbr_step.setEnabled(True)
         self.val_nbr_step.setEnabled(True)
         self.lab_step.setEnabled(True)
@@ -334,19 +347,21 @@ class ThreadScan(QtCore.QThread):
         self.vfin=self.parent.vFin*self.parent.unitChange
         self.step=self.parent.vStep*self.parent.unitChange
         
-        
+        self.val_time=self.parent.val_time.value()
+        print('timeouts',self.val_time)
         self.parent.MOT.move(self.vini)
         
         b=self.parent.MOT.position()
-#        while b!=self.vini:
-#            if self.stop==True:
-#                break
-#            else:	
-#                time.sleep(1)
-#                b=self.parent.MOT.position()
+        while b!=self.vini:
+            if self.stop==True:
+                break
+            else:	
+                time.sleep(1)
+                b=self.parent.MOT.position()
         time.sleep(0.5)
+        print(self.vini,self.vfin,self.step)
         movement=np.arange(self.vini+self.step,self.vfin+self.step,self.step)
-        print (movement,"start scan")
+        print (movement,"start scan",self.parent.unitChange)
         nb=0
         for mv in movement:
             
@@ -357,24 +372,33 @@ class ThreadScan(QtCore.QThread):
                 self.parent.MOT.move(mv)
                 b=self.parent.MOT.position()
                 b=int(b)
-#                while True:
-#                    if self.stop==True:
-#                        break
-#                    else :
-#                        b=self.parent.MOT.position()
-#                        print (b,mv)
-#                        if b==mv:
-#                            print( "position reached")
-#                           break
+                while True:
+                    if self.stop==True:
+                        break
+                    else :
+                        b=self.parent.MOT.position()
+                        print (b,mv)
+                        if b==mv:
+                            print( "position reached")
+                            break
                 
                 for nu in range (0,int(self.parent.val_nbTir.value())):
                     nb+=1
-                    print( "tir...",nu)
-                    time.sleep(self.parent.val_time.value())
-                    nbstepdone=nb
-                    print('stepfait',nbstepdone)
-                    self.nbRemain.emit(nbstepdone)
+                    print('tir')
                     
+                    a=tirSJ.Tir()
+                    print(a)
+                    if a==0 or a=="":
+                        msg = QMessageBox()
+                        msg.setIcon(QMessageBox.Critical)
+                        msg.setText("Not connected !")
+                        msg.setInformativeText("Please connect !!")
+                        msg.setWindowTitle("Warning ...")
+                        msg.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+                        msg.exec_()
+                        
+                    print('wait',self.val_time)
+                    time.sleep(self.val_time)
         print ("fin du scan")
 
     def stopThread(self):
