@@ -4,14 +4,15 @@ Created on Mon Apr  1 11:16:50 2019
 
 @author: sallejaune
 """
-#%%Import
+
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit
+from PyQt5.QtWidgets import QApplication,QSizePolicy
+
+from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit,QToolButton
 from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
 from PyQt5.QtWidgets import QComboBox,QLabel
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QRect
+from PyQt5.QtCore import QRect,QSize
 
 import sys,time,os
 import qdarkstyle
@@ -45,7 +46,8 @@ class ONEMOTORGUI(QWidget) :
         super(ONEMOTORGUI, self).__init__(parent)
         p = pathlib.Path(__file__)
         sepa=os.sep
-        self.icon=str(p.parent) + sepa + 'icons' +sepa
+        self.icon=str(p.parent) + sepa + 'icons' +sepa+'LOA.png'
+        
         self.motor=[str(mot)]
         self.motorTypeName=[motorTypeName]
         self.motorType=[0]
@@ -59,7 +61,7 @@ class ONEMOTORGUI(QWidget) :
         self.indexUnit=unit
         self.jogValue=jogValue
         self.version=__version__
-        self.setWindowIcon(QIcon(self.icon+'LOA.png'))
+        self.setWindowIcon(QIcon(self.icon))
         
         
         for zi in range (0,1): #  list configuration et motor types 
@@ -221,6 +223,7 @@ class ONEMOTORGUI(QWidget) :
         self.absMvtButton.setMaximumHeight(50)
         self.absMvtButton.setMinimumWidth(50)
         self.absMvtButton.setMaximumWidth(50)
+        self.absMvtButton.setToolTip('Go to absolute position')
         #self.absMvtButton.setStyleSheet("background-color: green")
         hboxAbs.addWidget(absolueLabel)
         hboxAbs.addWidget(self.MoveStep)
@@ -536,7 +539,7 @@ class ONEMOTORGUI(QWidget) :
         
         nbRef=str(sender.objectName()[0])
         
-        reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
+        reply=QMessageBox.question(None,'Save Position ?',"Do you want to SAVE this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
         if reply == QMessageBox.Yes:
                tpos=float(self.MOT[0].position())
                
@@ -553,7 +556,7 @@ class ONEMOTORGUI(QWidget) :
         Fait bouger le moteur a la valeur de reference en step : bouton Go 
         '''
         sender=QtCore.QObject.sender(self)
-        reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
+        reply=QMessageBox.question(None,'GO to this Position ?',"Do you want to GO to this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
         if reply == QMessageBox.Yes:
             nbRef=str(sender.objectName()[0])
             for i in range (0,1):
@@ -613,7 +616,9 @@ class ONEMOTORGUI(QWidget) :
 class REF1M(QWidget):
     
     def __init__(self,num=0, parent=None):
+        
         super(REF1M, self).__init__()
+        
         self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
         self.wid=QWidget()
         self.id=num
@@ -623,26 +628,33 @@ class REF1M(QWidget):
         self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.posText.setStyleSheet("font: bold 15pt")
         self.posText.setObjectName('%s'%self.id)
-#        self.posText.setMaximumWidth(80)
+        #self.posText.setMaximumWidth(200)
+        self.vboxPos.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.vboxPos.addWidget(self.posText)
         
-        self.take=QPushButton()
+        self.take=QToolButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
-        self.take.setMaximumWidth(30)
-        self.take.setMinimumWidth(30)
-        self.take.setMinimumHeight(30)
-        self.take.setMaximumHeight(30)
-        self.takeLayout=QHBoxLayout()
-        self.takeLayout.addWidget(self.take)
-        self.Pos=QPushButton()
-        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setStyleSheet("QToolButton:!pressed{image: url(./Icons/pin.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/pin.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setMaximumWidth(40)
+        self.take.setMinimumWidth(40)
+        
+        self.take.setMinimumHeight(40)
+        self.take.setMaximumHeight(40)
+        self.take.setToolTip('Take position reference')
+        #self.take.setFixedSize(QSize(20,20))
+        # self.takeLayout=QHBoxLayout()
+        # self.takeLayout.addWidget(self.take)
+        #self.take.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.Pos=QToolButton()
+        self.Pos.setStyleSheet("QToolButton:!pressed{image: url(./Icons/go.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/go.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)
         self.Pos.setMinimumWidth(40)
         self.Pos.setMaximumWidth(40)
-        self.PosLayout=QHBoxLayout()
-        self.PosLayout.addWidget(self.Pos)
+        self.Pos.setToolTip('Go to reference position' )
+        # self.Pos.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        # self.PosLayout=QHBoxLayout()
+        # self.takeLayout.addWidget(self.Pos)
         self.Pos.setObjectName('%s'%self.id)
         #○self.Pos.setStyleSheet("background-color: rgb(85, 170, 255)")
         Labelref=QLabel('Pos :')
@@ -657,11 +669,11 @@ class REF1M(QWidget):
         self.ABSref.setStyleSheet("font: 9pt" )
         
         grid_layoutPos = QGridLayout()
-        grid_layoutPos.setVerticalSpacing(5)
-        grid_layoutPos.setHorizontalSpacing(10)
+        grid_layoutPos.setVerticalSpacing(25)
+        grid_layoutPos.setHorizontalSpacing(20)
         grid_layoutPos.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-        grid_layoutPos.addLayout(self.takeLayout,0,0)
-        grid_layoutPos.addLayout(self.PosLayout,0,1)
+        grid_layoutPos.addWidget(self.take,0,0)
+        grid_layoutPos.addWidget(self.Pos,0,1)
         grid_layoutPos.addWidget(Labelref,1,0)
         grid_layoutPos.addWidget(self.ABSref,1,1)
         
@@ -672,7 +684,7 @@ class REF1M(QWidget):
         self.wid.setLayout(self.vboxPos)
         mainVert=QVBoxLayout()
         mainVert.addWidget(self.wid)
-        mainVert.setContentsMargins(0,0,0,0)
+        mainVert.setContentsMargins(1,1,1,1)
         self.setLayout(mainVert)
 
 
@@ -712,14 +724,12 @@ class PositionThread(QtCore.QThread):
         self.terminate()
         
 
-#%%#####################################################################
-
-
 if __name__ =='__main__':
     
     appli=QApplication(sys.argv)
     
     mot5=ONEMOTORGUI( mot='Spherique_IR_Lat',motorTypeName='RSAI',showRef=False,unit=2,jogValue=1)
+   # mot5=REF1M(1)#
     mot5.show()
     mot5.startThread2()
     appli.exec_()

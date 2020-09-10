@@ -4,9 +4,14 @@
 Created on Thu Feb  7 09:42:51 2019
 
 @author: juliengautier
+
+
+create button and control all the motors in the .ini file
+
+
 """
 
-#%%
+
 from PyQt5 import QtCore
 
 import sys
@@ -19,30 +24,38 @@ from TirGui import TIRGUI
 
 
 class MainWin(QWidget) :
-    def __init__(self):
+    def __init__(self,shoot=True,title='Motors Control',configFile='configMoteurRSAI.ini'):
         super(MainWin, self).__init__() 
         p = pathlib.Path(__file__)
         sepa=os.sep
+        
+       
+        self.icon=str(p.parent) + sepa + 'icons' +sepa
+        
+        self.shoot=shoot
         self.configPath=str(p.parent / "fichiersConfig")+sepa
-        self.configMotName=self.configPath+'configMoteurRSAI.ini'
+        self.configMotName=self.configPath+configFile
         self.conf=QtCore.QSettings(self.configMotName, QtCore.QSettings.IniFormat)   
         self.groups=self.conf.childGroups() # lecture de tous les moteurs
+        print('motor in file : ',self.configMotName)
         print(self.groups)
         self.motorListButton=list()
         self.motorListGui=list()
-        self.setWindowTitle('Titre')
-        self.setWindowIcon(QIcon("./LOA.png"))
+        self.setWindowTitle(title)
+        self.setWindowIcon(QIcon(self.icon+'LOA.png'))
+        
         self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
         grid = QGridLayout()
         vbox1=QVBoxLayout() 
-        self.tirWidget=TIRGUI()
+        
+        print('Please wait ...')
         
         for vi in self.groups:
             #print(vi)
             # creation des boutons avec le nom
             self.motorListButton.append(QPushButton(self.conf.value(vi+"/Name"),self))  
             # creation de widget oneMotorGui pour chaque moteurs
-            self.motorListGui.append(oneMotorGuiNew.ONEMOTORGUI(mot=str(vi),motorTypeName0='RSAI'))
+            self.motorListGui.append(oneMotorGuiNew.ONEMOTORGUI(mot=str(vi),motorTypeName='RSAI'))
             
         #creation des d'une matrice de point pour creer une grille    
         z=0
@@ -58,13 +71,16 @@ class MainWin(QWidget) :
             # #ajout de chaque boutton dans la grille
             # grid.addWidget(self.motorListButton[j], gridPos[j][0], gridPos[j][1])
             
-            #action de chaque bouton 
+            #action de chaque bouton : open a new widget for onemotor control
             mm.clicked.connect(lambda checked, j=j:self.open_widget(self.motorListGui[j]))
             j+=1
         
         # ajout de la grille de bouton au widget proncipal
         vbox1.addLayout(grid)
-        vbox1.addWidget(self.tirWidget)
+        if self.shoot==True: # to add shoot button in salle Jaune
+            self.tirWidget=TIRGUI()
+            vbox1.addWidget(self.tirWidget)
+            
         self.setLayout(vbox1)   
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
     
@@ -91,6 +107,6 @@ class MainWin(QWidget) :
 if __name__ == "__main__":
     appli = QApplication(sys.argv) 
     
-    e = MainWin()
+    e = MainWin(shoot=False)
     e.show()
     appli.exec_()
