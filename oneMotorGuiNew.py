@@ -47,7 +47,7 @@ class ONEMOTORGUI(QWidget) :
         p = pathlib.Path(__file__)
         sepa=os.sep
         self.icon=str(p.parent) + sepa + 'icons' +sepa+'LOA.png'
-        
+        print(self.icon)
         self.motor=[str(mot)]
         self.motorTypeName=[motorTypeName]
         self.motorType=[0]
@@ -61,6 +61,7 @@ class ONEMOTORGUI(QWidget) :
         self.indexUnit=unit
         self.jogValue=jogValue
         self.version=__version__
+        self.icon='./icons/LOA.png'
         self.setWindowIcon(QIcon(self.icon))
         
         
@@ -218,7 +219,7 @@ class ONEMOTORGUI(QWidget) :
         #self.MoveStep.setStyleSheet("background-color: green")
         
         self.absMvtButton=QPushButton()
-        self.absMvtButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.absMvtButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;}""QPushButton:pressed{image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.absMvtButton.setMinimumHeight(50)
         self.absMvtButton.setMaximumHeight(50)
         self.absMvtButton.setMinimumWidth(50)
@@ -232,7 +233,7 @@ class ONEMOTORGUI(QWidget) :
         vbox1.addSpacing(10)
         hbox1=QHBoxLayout()
         self.moins=QPushButton()
-        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;}""QPushButton:pressed{image: url(./Icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         
         self.moins.setMinimumHeight(70)
         self.moins.setMaximumHeight(70)
@@ -252,7 +253,7 @@ class ONEMOTORGUI(QWidget) :
          
         
         self.plus=QPushButton()
-        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/plusBleu.png);background-color: rgb(0, 0, 0,0) }""QPushButton:pressed{image: url(./Icons/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.plus.setMinimumHeight(70)
         self.plus.setMaximumHeight(70)
         self.plus.setMinimumWidth(70)
@@ -266,7 +267,7 @@ class ONEMOTORGUI(QWidget) :
         
         hbox2=QHBoxLayout()
         self.stopButton=QPushButton()
-        self.stopButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.stopButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;}""QPushButton:pressed{image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         #self.stopButton.setStyleSheet("border-radius:20px;background-color: red")
         self.stopButton.setMaximumHeight(70)
         self.stopButton.setMaximumWidth(70)
@@ -646,7 +647,7 @@ class REF1M(QWidget):
         # self.takeLayout.addWidget(self.take)
         #self.take.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.Pos=QToolButton()
-        self.Pos.setStyleSheet("QToolButton:!pressed{image: url(./Icons/go.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/go.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos.setStyleSheet("QToolButton:!pressed{image: url(./Icons/go2.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/go2.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)
         self.Pos.setMinimumWidth(40)
