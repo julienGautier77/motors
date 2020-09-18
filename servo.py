@@ -6,7 +6,6 @@ python 3.X and PyQt5
 Created on Wed Feb 28 14:46:32 2018
 """
 
-#%% import
 
 from serial import Serial,serialutil
 from PyQt5.QtWidgets import QApplication
@@ -14,7 +13,6 @@ from PyQt5.QtCore import QSettings
 from PyQt5 import uic
 import time,sys
 
-#%% connexion
 portServo=('com18')
 ser=Serial()
 try:
@@ -35,6 +33,7 @@ except serialutil.SerialException :
     az.show()
     ap.exec_()
     pass
+
 def stopConnexion():
     try :
         ser.close()
@@ -111,10 +110,7 @@ class MOTORSERVO():
         self.move(self.posIN)
         if self.servoType=="ServoOld": 
             time.sleep(3)
-            
-            
-            
-#%%
+
 if __name__ == "__main__":
     print("test")
     ser='Servo'+str(0)
