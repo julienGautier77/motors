@@ -52,7 +52,8 @@ class SCAN(QWidget):
         self.vbox=QVBoxLayout()
         hboxTitre=QHBoxLayout()
         self.nom=QLabel(self.name)
-        self.nom.setStyleSheet("font: bold 30pt")
+        
+        self.nom.setStyleSheet("font: bold 30pt;color:yellow")
         hboxTitre.addWidget(self.nom)
         self.vbox.addLayout(hboxTitre)
         

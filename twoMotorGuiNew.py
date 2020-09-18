@@ -4,9 +4,9 @@ Created on Mon Apr  1 11:16:50 2019
 
 @author: sallejaune
 """
-#%%Import
+
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication,QStyle
+from PyQt5.QtWidgets import QApplication,QStyle,QToolButton
 from PyQt5.QtWidgets import QWidget,QMessageBox,QSpinBox,QLineEdit,QFrame
 from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushButton,QGridLayout,QTextEdit,QDoubleSpinBox
 from PyQt5.QtWidgets import QInputDialog,QComboBox,QSlider,QCheckBox,QLabel,QSizePolicy,QLineEdit,QPlainTextEdit,QMessageBox,QMenu
@@ -251,15 +251,15 @@ class TWOMOTORGUI(QWidget) :
         grid_layout = QGridLayout()
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
-        self.haut=QPushButton()
-        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         
+        self.haut=QPushButton('up')
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.haut.setMaximumHeight(70)
         self.haut.setMinimumWidth(70)
         self.haut.setMaximumWidth(70)
         self.haut.setMinimumHeight(70)
         
-        self.bas=QPushButton()
+        self.bas=QPushButton('down')
         self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.bas.setMaximumHeight(70)
         self.bas.setMinimumWidth(70)
@@ -306,8 +306,14 @@ class TWOMOTORGUI(QWidget) :
         
         
         
-        self.stopButton=QPushButton('STOP')
-        self.stopButton.setStyleSheet("background-color: red")
+        self.stopButton=QPushButton()
+        self.stopButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;}""QPushButton:pressed{image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.stopButton.setMaximumHeight(70)
+        self.stopButton.setMaximumWidth(70)
+        self.stopButton.setMinimumHeight(70)
+        self.stopButton.setMinimumWidth(70)
+        self.stopButton.setToolTip('Stop Motors')
+        
         hbox3=QHBoxLayout()
         hbox3.addWidget(self.stopButton)
         self.showRef=QPushButton('Show Ref')
@@ -732,17 +738,18 @@ class REF2M(QWidget):
         self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.posText.setObjectName('%s'%self.id)
         self.vboxPos.addWidget(self.posText)
-        self.take=QPushButton()
+        self.take=QToolButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
-        self.take.setMaximumWidth(30)
-        self.take.setMinimumWidth(30)
-        self.take.setMinimumHeight(30)
-        self.take.setMaximumHeight(30)
+        self.take.setStyleSheet("QToolButton:!pressed{border-image: url(./Icons/pin.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/pin.png);background-color: rgb(0, 0, 0,0) }")
+        self.take.setMaximumWidth(40)
+        self.take.setMinimumWidth(40)
+        self.take.setMinimumHeight(40)
+        self.take.setMaximumHeight(40)
+        self.take.setToolTip('Take position reference')
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
-        self.Pos=QPushButton()
-        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos=QToolButton()
+        self.Pos.setStyleSheet("QToolButton:!pressed{border-image: url(./Icons/go2.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/go2.png);background-color: rgb(0, 0, 0,0) }")
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)
         self.Pos.setMinimumWidth(40)
@@ -750,6 +757,7 @@ class REF2M(QWidget):
         self.PosLayout=QHBoxLayout()
         self.PosLayout.addWidget(self.Pos)
         self.Pos.setObjectName('%s'%self.id)
+        self.Pos.setToolTip('Go to reference position' )
         
         LabeLatref=QLabel('Lat:')
         self.ABSLatref=QDoubleSpinBox()
@@ -818,8 +826,6 @@ class PositionThread(QtCore.QThread):
         time.sleep(0.1)
         self.terminate()
         
-
-#%%#####################################################################
 
 
 if __name__ =='__main__':

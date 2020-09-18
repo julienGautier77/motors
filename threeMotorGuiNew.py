@@ -4,9 +4,9 @@ Created on Mon Apr  1 11:16:50 2019
 
 @author: sallejaune
 """
-#%%Import
+
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit
+from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit,QToolButton
 from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
 from PyQt5.QtWidgets import QComboBox,QLabel
 from PyQt5.QtGui import QIcon
@@ -288,30 +288,30 @@ class THREEMOTORGUI(QWidget) :
         grid_layout = QGridLayout()
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
-        self.haut=QPushButton()
-        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.haut=QPushButton('up')
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         
         self.haut.setMaximumHeight(70)
         self.haut.setMinimumWidth(70)
         self.haut.setMaximumWidth(70)
         self.haut.setMinimumHeight(70)
         
-        self.bas=QPushButton()
-        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.bas=QPushButton('down')
+        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.bas.setMaximumHeight(70)
         self.bas.setMinimumWidth(70)
         self.bas.setMaximumWidth(70)
         self.bas.setMinimumHeight(70)
         
         self.gauche=QPushButton('Left')
-        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechegauche.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechegauche.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechegauche.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechegauche.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         
         self.gauche.setMaximumHeight(70)
         self.gauche.setMinimumWidth(70)
         self.gauche.setMaximumWidth(70)
         self.gauche.setMinimumHeight(70)
         self.droite=QPushButton('right')
-        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechedroite.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechedroite.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechedroite.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechedroite.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.droite.setMaximumHeight(70)
         self.droite.setMinimumWidth(70)
         self.droite.setMaximumWidth(70)
@@ -377,7 +377,7 @@ class THREEMOTORGUI(QWidget) :
         hboxFoc.addSpacing(25)
         
         self.moins=QPushButton()
-        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;}""QPushButton:pressed{image: url(./Icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.moins.setMaximumWidth(70)
         self.moins.setMinimumHeight(70)
         hboxFoc.addWidget(self.moins)
@@ -391,7 +391,7 @@ class THREEMOTORGUI(QWidget) :
          
         
         self.plus=QPushButton()
-        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/plusBleu.png);background-color: rgb(0, 0, 0,0) }""QPushButton:pressed{image: url(./Icons/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.plus.setMaximumWidth(70)
         self.plus.setMinimumHeight(70)
     
@@ -400,8 +400,14 @@ class THREEMOTORGUI(QWidget) :
         vbox1.addLayout(hboxFoc)
         vbox1.addSpacing(20)
         
-        self.stopButton=QPushButton('STOP')
-        self.stopButton.setStyleSheet("background-color: red")
+        self.stopButton=QPushButton()
+        self.stopButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;}""QPushButton:pressed{image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.stopButton.setMaximumHeight(70)
+        self.stopButton.setMaximumWidth(70)
+        self.stopButton.setMinimumHeight(70)
+        self.stopButton.setMinimumWidth(70)
+        self.stopButton.setToolTip('Stop Motors')
+        
         hbox3=QHBoxLayout()
         hbox3.addWidget(self.stopButton)
         self.showRef=QPushButton('Show Ref')
@@ -541,7 +547,7 @@ class THREEMOTORGUI(QWidget) :
             self.widget6REF.show()
             self.refShowId=False
             self.showRef.setText('Hide Ref')
-            self.setFixedSize(750,800)
+            self.setFixedSize(750,1000)
             
             
         else:
@@ -945,22 +951,26 @@ class REF3M(QWidget):
         self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.posText.setObjectName('%s'%self.id)
         self.vboxPos.addWidget(self.posText)
-        self.take=QPushButton()
+        self.take=QToolButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
-        self.take.setMaximumWidth(30)
-        self.take.setMinimumWidth(30)
-        self.take.setMinimumHeight(30)
-        self.take.setMaximumHeight(30)
+        self.take.setStyleSheet("QToolButton:!pressed{image: url(./Icons/pin.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/pin.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setMaximumWidth(40)
+        self.take.setMinimumWidth(40)
+        self.take.setMinimumHeight(40)
+        self.take.setMaximumHeight(40)
+        self.take.setToolTip('Take position reference')
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
-        self.Pos=QPushButton()
-        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.takeLayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        
+        self.Pos=QToolButton()
+        self.Pos.setStyleSheet("QToolButton:!pressed{image: url(./Icons/go2.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/go2.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)
         self.Pos.setMinimumWidth(40)
         self.Pos.setMaximumWidth(40)
         self.PosLayout=QHBoxLayout()
+        self.Pos.setToolTip('Go to reference position' )
         self.PosLayout.addWidget(self.Pos)
         self.Pos.setObjectName('%s'%self.id)
         
@@ -983,7 +993,7 @@ class REF3M(QWidget):
         self.ABSFocref.setMinimum(-5000000000)
         
         grid_layoutPos = QGridLayout()
-        grid_layoutPos.setVerticalSpacing(5)
+        grid_layoutPos.setVerticalSpacing(20)
         grid_layoutPos.setHorizontalSpacing(10)
         grid_layoutPos.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         grid_layoutPos.addLayout(self.takeLayout,0,0)
@@ -1042,8 +1052,6 @@ class PositionThread(QtCore.QThread):
         time.sleep(0.1)
         self.terminate()
         
-
-#%%#####################################################################
 
 
 if __name__ =='__main__':

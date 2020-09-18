@@ -47,7 +47,7 @@ class ONEMOTORGUI(QWidget) :
         p = pathlib.Path(__file__)
         sepa=os.sep
         self.icon=str(p.parent) + sepa + 'icons' +sepa+'LOA.png'
-        print(self.icon)
+        #print(self.icon)
         self.motor=[str(mot)]
         self.motorTypeName=[motorTypeName]
         self.motorType=[0]
@@ -273,6 +273,7 @@ class ONEMOTORGUI(QWidget) :
         self.stopButton.setMaximumWidth(70)
         self.stopButton.setMinimumHeight(70)
         self.stopButton.setMinimumWidth(70)
+        self.stopButton.setToolTip('Stop Motor')
         hbox2.addWidget(self.stopButton)
         vbox2=QVBoxLayout()
         
