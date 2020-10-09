@@ -19,8 +19,8 @@ import time
 
 #%% rack initialisation et connexion des racks
 
-portA='com7' # USB n1
-portB='com10' #USB n2
+portA='com4' # USB n1
+portB='com5' #USB n2
 
 mysA=Serial()
 mysB=Serial()

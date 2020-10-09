@@ -37,12 +37,19 @@ class SERVOWIN(QWidget):
             self.configMotName=self.configPath+configFile
             self.conf=QtCore.QSettings(self.configMotName, QtCore.QSettings.IniFormat)   
             self.groups=self.conf.childGroups() # lecture de tous les moteurs
-            print('servo in ini   file : ',self.configMotName)
-            print(self.groups)
+            # print('servo in ini   file : ',self.configMotName)
+            # print(self.groups)
             
             self.motorListButton=list()
             self.motorListGui=list()
+            self.nameMotor=list()
+            self.setup()
+            self.iniPolulu()
+            # self.poluluAction()
             
+            
+    def setup(self):
+        
             self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
             grid = QGridLayout()
             vbox1=QVBoxLayout() 
@@ -53,51 +60,59 @@ class SERVOWIN(QWidget):
                 # creation des boutons avec le nom
                 self.motorListButton.append(QPushButton(self.conf.value(vi+"/Name"),self))  
                 # creation de widget oneMotorGui pour chaque moteurs
-                self.motorListGui.append(servo.MOTORSERVO(mot=str(vi),motorTypeName='RSAI'))
-                
+                self.motorListGui.append(servo.MOTORSERVO(mot1=str(vi)))
+                self.nameMotor.append(self.conf.value(vi+"/Name"))
+             
             #creation des d'une matrice de point pour creer une grille    
             z=0
             self.nbOfMotor=len(self.motorListButton)
+            # print(self.nbOfMotor)
+            # print(self.motorListButton)
             for i in range(0,int(self.nbOfMotor/2)):
                 for j in range(0,int(self.nbOfMotor/2)):
                     if z<self.nbOfMotor:
                         grid.addWidget(self.motorListButton[z], j, i)
+                        # print(z,i,j)
                     z+=1
                 
-            j = 0
-            for mm in self.motorListButton:
-                # #ajout de chaque boutton dans la grille
-                # grid.addWidget(self.motorListButton[j], gridPos[j][0], gridPos[j][1])
-                
-                #action de chaque bouton : open a new widget for onemotor control
-                mm.clicked.connect(lambda checked, j=j:self.open_widget(self.motorListGui[j]))
-                j+=1
             
-            # ajout de la grille de bouton au widget proncipal
+            # # ajout de la grille de bouton au widget proncipal
             vbox1.addLayout(grid)
-            if self.shoot==True: # to add shoot button in salle Jaune
-                self.tirWidget=TIRGUI()
-                vbox1.addWidget(self.tirWidget)
-                
             self.setLayout(vbox1)   
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-    
-    def open_widget(self,fene):
-        """ ouverture widget suplementaire 
-        """
-
-        if fene.isWinOpen==False:
-            fene.setup
-            fene.isWinOpen=True
             
-            fene.show()
+            j = 0
+            for mm in self.motorListButton:
+              
+                #action de chaque bouton : open a new widget for onemotor control
+                mm.clicked.connect(lambda checked, j=j:self.actionPush(self.motorListGui[j],j))
+                j+=1
+        
+    def actionPush(self,nbServo,nbButton):
+        j=nbButton
+        # print(nbServo.posOFF,j)
+        button=self.motorListButton[j]
+        
+        
+        if  nbServo.posOFF-100<int(nbServo.position())<nbServo.posOFF+100:
+            # print('on va en IN')
+            nbServo.goPositionIN()
+            nbServo.setPosition(nbServo.posIN)
+            button.setStyleSheet("background-color: green")
+            button.setText(self.nameMotor[j]+' :   (IN)')   
         else:
-            fene.activateWindow()
-            fene.raise_()
-            fene.showNormal()
-
+            # print('on va en off')
+            nbServo.goPositionOFF()
+            nbServo.setPosition(nbServo.posOFF)
+            button.setStyleSheet("background-color:red")
+            button.setText(self.nameMotor[j]+' (OUT)')
+            
+        time.sleep(1)
+        nbServo.stopMotor()
+        
     def closeEvent(self,event):
         print('close...')
+        servo.stopConnexion()
         event.accept() 
             
 
@@ -105,43 +120,22 @@ class SERVOWIN(QWidget):
             """
             initialisation des polulu
             """
-            self.Centreur=[]      
-            self.Polulu=[]
-            print("polulu intialisation..." )
-            for i in range(0,12) :
-                self.Polulu.append(servo.MOTORSERVO('Servo'+str(i)))
-                self.Polulu[i].goPositionIN()
-                self.Polulu[i].setPosition(self.Polulu[i].posIN)
-                time.sleep(0.2)
-                self.Centreur.append(self.win.findChildren(QPushButton, "centreur" +str(i)))
+            print('initialisation ...')
+            print('servo motor go to position in : ')
+            for mot in self.motorListGui:
                 
-            for i in  [0,1,2,3,4,5,6,8,9]: #♥ il manque le centreur 7
-                self.Centreur[i][0].setStyleSheet("background-color: red")
-                self.Centreur[i][0].setText('IN')
-                self.Centreur[i][0].clicked.connect(self.poluluAction)
-          
-    def poluluAction(self):
-        """
-        definition des actions des boutons des polulu
-        """
-        nCentreur=int(self.win.sender().objectName()[8])
-        
-        if  self.Polulu[nCentreur].posOFF-100<self.Polulu[nCentreur].position()<self.Polulu[nCentreur].posOFF+100:
-            print('on va en IN')
-            self.Polulu[nCentreur].goPositionIN()
-            self.Polulu[nCentreur].setPosition(self.Polulu[nCentreur].posIN)
-            self.Centreur[nCentreur][0].setStyleSheet("background-color: red")
-            self.Centreur[nCentreur][0].setText('IN')   
-        else:
-            print('on va en off')
-            self.Polulu[nCentreur].goPositionOFF()
-            self.Polulu[nCentreur].setPosition(self.Polulu[nCentreur].posOFF)
-            self.Centreur[nCentreur][0].setStyleSheet("background-color:green")
-            self.Centreur[nCentreur][0].setText('OUT')
-            
-        time.sleep(1)
-        self.Polulu[nCentreur].stopMotor()
-        
+                mot.goPositionIN()
+                time.sleep(0.3)
+                mot.setPosition(mot.posIN)
+                j=0
+                print('...',end='')
+            for but in self.motorListButton:
+                but.setStyleSheet("background-color: green")
+                but.setText(self.nameMotor[j]+'  (IN)')
+                j+=1
+            print()
+            print('done') 
+           
    
 if __name__ == "__main__":
     appli = QApplication(sys.argv) 

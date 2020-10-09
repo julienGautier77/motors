@@ -13,7 +13,7 @@ from PyQt5.QtCore import QSettings
 from PyQt5 import uic
 import time,sys
 
-portServo=('com18')
+portServo=('com4')
 ser=Serial()
 try:
     ser.port=portServo
@@ -27,7 +27,7 @@ try:
     print("polulu servo motors connected on port:...",portServo)
     
 except serialutil.SerialException :
-    print ('the port is already open')
+    print ('the port is already open or polulu not connect ')
     ap=QApplication(sys.argv)
     az=uic.loadUi('attention.ui')
     az.show()
@@ -37,7 +37,7 @@ except serialutil.SerialException :
 def stopConnexion():
     try :
         ser.close()
-        print('servo closed')
+        print('port : ' + portServo+ ' closed')
     except:
        pass
 
@@ -107,11 +107,12 @@ class MOTORSERVO():
             time.sleep(3)  
         
     def goPositionIN(self):
+        # print('go in')
         self.move(self.posIN)
         if self.servoType=="ServoOld": 
             time.sleep(3)
 
 if __name__ == "__main__":
     print("test")
-    ser='Servo'+str(0)
-    SERVO1=MOTORSERVO(ser)
+    serv='a'
+    SERVO1=MOTORSERVO(serv)

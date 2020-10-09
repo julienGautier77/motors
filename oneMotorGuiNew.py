@@ -214,8 +214,8 @@ class ONEMOTORGUI(QWidget) :
         absolueLabel=QLabel('Absolue mouvement')
 #        absolueLabel.setStyleSheet("background-color: green")
         self.MoveStep=QDoubleSpinBox()
-        self.MoveStep.setMaximum(1000000)
-        self.MoveStep.setMinimum(-1000000)
+        self.MoveStep.setMaximum(100000000)
+        self.MoveStep.setMinimum(-100000000)
         #self.MoveStep.setStyleSheet("background-color: green")
         
         self.absMvtButton=QPushButton()
@@ -244,7 +244,7 @@ class ONEMOTORGUI(QWidget) :
         hbox1.addWidget(self.moins)
         
         self.jogStep=QDoubleSpinBox()
-        self.jogStep.setMaximum(10000)
+        self.jogStep.setMaximum(1000000)
         self.jogStep.setMaximumWidth(130)
         self.jogStep.setStyleSheet("font: bold 12pt")
         self.jogStep.setValue(self.jogValue)
@@ -730,7 +730,7 @@ if __name__ =='__main__':
     
     appli=QApplication(sys.argv)
     
-    mot5=ONEMOTORGUI( mot='Spherique_IR_Lat',motorTypeName='RSAI',showRef=False,unit=2,jogValue=1)
+    mot5=ONEMOTORGUI( mot='moteur0B',motorTypeName='A2V',showRef=False,unit=2,jogValue=1)
    # mot5=REF1M(1)#
     mot5.show()
     mot5.startThread2()
