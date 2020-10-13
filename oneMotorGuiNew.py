@@ -81,6 +81,7 @@ class ONEMOTORGUI(QWidget) :
                  
             elif self.motorTypeName[zi]=='A2V':
                  self.configMotName[zi]=self.configPath+'configMoteurA2V.ini'
+                 
                  import moteurA2V  as A2V
                  self.motorType[zi]=A2V
                  self.MOT[zi]=self.motorType[zi].MOTORA2V(self.motor[zi])
@@ -118,7 +119,7 @@ class ONEMOTORGUI(QWidget) :
                 print(self.configMotName[zi])
                 
             self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.IniFormat) # fichier config motor fichier .ini
-       
+           
         self.scanWidget=SCAN(MOT=self.MOT[0],motor=self.motor[0],configMotName=self.configMotName[0]) # for the scan
         
         self.stepmotor=[0,0,0]
@@ -429,11 +430,9 @@ class ONEMOTORGUI(QWidget) :
         a=float(self.jogStep.value())
         a=float(a*self.unitChange)
         b=self.MOT[0].position()
-        if b+a<self.buteNeg[0] :
-            print( "STOP : positive switch")
-            self.MOT[0].stopMotor()
-        elif b+a>self.butePos[0] :
-            print( "STOP :  Negative switch")
+        
+        if b+a>self.butePos[0] :
+            print( "STOP :  positive switch")
             self.MOT[0].stopMotor()
         else :
             self.MOT[0].rmove(a)
@@ -446,11 +445,9 @@ class ONEMOTORGUI(QWidget) :
         a=float(a*self.unitChange)
         b=self.MOT[0].position()
         if b-a<self.buteNeg[0] :
-            print( "STOP : positive switch")
-            self.MOT[0].stopMotor()
-        elif b-a>self.butePos[0] :
             print( "STOP : negative switch")
             self.MOT[0].stopMotor()
+        
         else :
             self.MOT[0].rmove(-a)
 
