@@ -80,6 +80,12 @@ class ONEMOTOR(QWidget) :
              import moteurArduino as arduino
              self.motorType=arduino
              self.MOT=self.motorType.MOTORARDUINO(self.motor)
+        
+        elif self.motorTypeName=='Apt':
+             self.configMotName='configMoteurApt.ini'
+             import moteurApt as apt
+             self.motorType=apt
+             self.MOT=self.motorType.MOTORAPT(self.motor)
              
         else:
             print('Error config motor Type name')

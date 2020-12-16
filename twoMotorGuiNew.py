@@ -106,7 +106,13 @@ class TWOMOTORGUI(QWidget) :
                 import moteurArduino as arduino
                 self.motorType[zi]=arduino
                 self.MOT[zi]=self.motorType[zi].MOTORARDUINO(self.motor[zi])
-                
+            
+            elif self.motorTypeName[zi]=='Apt':
+                self.configMotName[zi]=self.configPath+'configMoteurApt.ini'
+                import moteurApt as apt
+                self.motorType[zi]=apt
+                self.MOT[zi]=self.motorType[zi].MOTORAPT(self.motor[zi])    
+            
             else:
                 print('Error config motor Type name')
                 self.configMotName[zi]=self.configPath+'configMoteurTest.ini'

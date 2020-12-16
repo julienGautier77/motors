@@ -109,7 +109,13 @@ class ONEMOTORGUI(QWidget) :
                 import moteurArduino as arduino
                 self.motorType[zi]=arduino
                 self.MOT[zi]=self.motorType[zi].MOTORARDUINO(self.motor[zi])
-             
+            
+            elif self.motorTypeName[zi]=='Apt':
+                self.configMotName[zi]=self.configPath+'configMoteurApt.ini'
+                import moteurApt as apt
+                self.motorType[zi]=apt
+                self.MOT[zi]=self.motorType[zi].MOTORAPT(self.motor[zi])
+            
             else:
                 print('Error config motor Type name')
                 self.configMotName[zi]=self.configPath+'configMoteurTest.ini'
@@ -435,6 +441,7 @@ class ONEMOTORGUI(QWidget) :
             print( "STOP :  positive switch")
             self.MOT[0].stopMotor()
         else :
+            print(a)
             self.MOT[0].rmove(a)
 
     def mMove(self): 
@@ -706,7 +713,7 @@ class PositionThread(QtCore.QThread):
             else:
                 
                 Posi=(self.MOT.position())
-                time.sleep(1)
+                time.sleep(0.1)
                 try :
                     self.POS.emit(Posi)
     
@@ -727,7 +734,7 @@ if __name__ =='__main__':
     
     appli=QApplication(sys.argv)
     
-    mot5=ONEMOTORGUI( mot='moteur0B',motorTypeName='A2V',showRef=False,unit=2,jogValue=1)
+    mot5=ONEMOTORGUI( mot='moteur0A',motorTypeName='Apt',showRef=False,unit=2,jogValue=1)
    # mot5=REF1M(1)#
     mot5.show()
     mot5.startThread2()
