@@ -19,19 +19,20 @@ import time
 
 #%% rack initialisation et connexion des racks
 
-portA='com4' # USB n1
-portB='com5' #USB n2
+portA='com15' # USB n1
+portB='com14' #USB n2
 
 mysA=Serial()
 mysB=Serial()
 confA2V=QSettings('fichiersConfig/configMoteurA2V.ini', QSettings.IniFormat) # motor configuration  files
-
+mutexA=QtCore.QMutex()
+mutexB=QtCore.QMutex()
 def connectA():
     """
     ouverture du port A
     """
     mysA.port=portA
-    mysA.timeout=1
+    mysA.timeout=10
     mysA.Baudrate=9600
     if mysA.is_open==False:
         mysA.open()
@@ -48,7 +49,7 @@ def connectB():
     ouverture du port B
     """
     mysB.port=portB
-    mysB.Timeout=1
+    mysB.Timeout=10
     mysB.Baudrate=9600
     if mysB.is_open==False:
         mysB.open()
@@ -124,16 +125,32 @@ def sendCommand(instruction, instr_type, mii, values_list,rack="A"):
 
         cmd[8] = sum(cmd[0:8])&0xff
     if rack=="A" :
-        mysA.write(cmd)
-        time.sleep(0.02)
-        out = mysA.read(9)
-        time.sleep(0.02)
+        mutexA.lock()
+        try:
+            mysA.write(cmd)
+            time.sleep(0.01)
+            out = mysA.read(9)
+            time.sleep(0.01)
+        except:
+            print('error connection A')
+            mysA.close()
+            time.sleep(0.5)
+            connectA()
+        mutexA.unlock()
         return bytearray(out)
     elif rack=='B':
-        mysB.write(cmd)
-        time.sleep(0.02)
-        out = mysB.read(9)
-        time.sleep(0.02)
+        mutexB.lock()
+        try:
+            mysB.write(cmd)
+            time.sleep(0.01)
+            out = mysB.read(9)
+            time.sleep(0.01)
+        except: 
+            print('error connection B')
+            mysB.close()
+            time.sleep(0.5)
+            connectB()
+        mutexB.unlock()
         return bytearray(out)
         
 
@@ -215,14 +232,18 @@ def ini(motor=0):
 def iniTot():
     """ initialisation of all the motor present in the config.ini file
     """
-    print('intialisation of all A2V motors')
+    i='.'
+    print('intialisation of all A2V motors :')
     groups=confA2V.childGroups()
     for vi in groups:
         time.sleep(0.05)
         ini(vi)
+        print(i,end="")
+        i=i+'.'
+    print("")
     print('initialisation A2V :OK')
     
-iniTot() # initialisation de tous les moteurs        
+# iniTot() # initialisation de tous les moteurs        
         
 #%% class A2V motor
 class MOTORA2V():

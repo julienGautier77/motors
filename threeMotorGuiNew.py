@@ -4,17 +4,17 @@ Created on Mon Apr  1 11:16:50 2019
 
 @author: sallejaune
 """
-
+#%%Import
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit,QToolButton
-from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
+from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit
+from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
 from PyQt5.QtWidgets import QComboBox,QLabel
 from PyQt5.QtGui import QIcon
 import sys,time,os
 import qdarkstyle
 import pathlib
 import __init__
-
+import TirGui
 __version__=__init__.__version__
 
 from oneMotorGuiNew import ONEMOTORGUI
@@ -74,7 +74,7 @@ class THREEMOTORGUI(QWidget) :
         self.FocWidget=ONEMOTORGUI(mot=self.motor[2],motorTypeName=self.motorTypeName[2],nomWin='Control One Motor : ',showRef=False,unit=2)
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
         self.version=__version__
-        
+        self.tir=TirGui.TIRGUI()
         
         for zi in range (0,3): #  list configuration and motor types 
             if self.motorTypeName[zi]=='RSAI':
@@ -114,18 +114,13 @@ class THREEMOTORGUI(QWidget) :
                  self.MOT=self.motorType[zi].MOTORSERVO(self.motor[zi])
                  
             elif self.motorTypeName[zi]=='Arduino':
-                print('zi',zi)
+                
                 self.configMotName[zi]=self.configPath+'configMoteurArduino.ini'
-                print(self.configMotName[zi])
+                
                 import moteurArduino as arduino
                 self.motorType[zi]=arduino
                 self.MOT[zi]=self.motorType[zi].MOTORARDUINO(self.motor[zi])
-            
-            elif self.motorTypeName[zi]=='Apt':
-                self.configMotName[zi]=self.configPath+'configMoteurApt.ini'
-                import moteurApt as apt
-                self.motorType[zi]=apt
-                self.MOT[zi]=self.motorType[zi].MOTORAPT(self.motor[zi])    
+                
             else:
                 print('Error config motor Type name')
                 self.configMotName[zi]=self.configPath+'configMoteurTest.ini'
@@ -197,6 +192,7 @@ class THREEMOTORGUI(QWidget) :
         if self.unitChangeVert==0:
             self.unitChangeVert=1 #if / 0
         
+        
         self.setup()
         self.unitFoc()
         self.unitTrans()
@@ -208,7 +204,7 @@ class THREEMOTORGUI(QWidget) :
     def startThread2(self):
         self.threadVert.ThreadINIT()
         self.threadVert.start()
-        time.sleep(0.1)
+        time.sleep(0.25)
         self.threadFoc.ThreadINIT()
         self.threadFoc.start()
         time.sleep(0.1)
@@ -238,7 +234,20 @@ class THREEMOTORGUI(QWidget) :
         
         hboxTitre.addWidget(self.unitTransBouton)
         hboxTitre.addStretch(1)
+        self.butNegButt=QCheckBox('But Neg',self)
+        hboxTitre.addWidget(self.butNegButt)
+       
+        self.butPosButt=QCheckBox('But Pos',self)
+        hboxTitre.addWidget(self.butPosButt)
         vbox1.addLayout(hboxTitre)
+        
+        hShoot=QHBoxLayout()
+        self.shootCibleButton=QPushButton('Shot')
+        self.shootCibleButton.setStyleSheet("font: 12pt;background-color: red")
+        self.shootCibleButton.setMaximumWidth(100)
+        self.shootCibleButton.setMinimumWidth(100)
+        hShoot.addWidget(self.shootCibleButton)
+        vbox1.addLayout(hShoot)
         
         hLatBox=QHBoxLayout()
         hbox1=QHBoxLayout()
@@ -247,7 +256,7 @@ class THREEMOTORGUI(QWidget) :
         self.posLat.setStyleSheet("font: 12pt")
         self.posLat.setMaximumHeight(30)
         self.position_Lat=QLabel('12345667')
-        self.position_Lat.setStyleSheet("font: bold 25pt" )
+        self.position_Lat.setStyleSheet("font: bold 18pt" )
         self.position_Lat.setMaximumHeight(30)
         self.enPosition_Lat=QLineEdit('?')
         self.enPosition_Lat.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
@@ -267,7 +276,7 @@ class THREEMOTORGUI(QWidget) :
         self.posVert.setStyleSheet("font: 12pt")
         self.posVert.setMaximumHeight(30)
         self.position_Vert=QLabel('1234556')
-        self.position_Vert.setStyleSheet("font: bold 25pt" )
+        self.position_Vert.setStyleSheet("font: bold 18pt" )
         self.position_Vert.setMaximumHeight(30)
         self.enPosition_Vert=QLineEdit('?')
         self.enPosition_Vert.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
@@ -293,42 +302,47 @@ class THREEMOTORGUI(QWidget) :
         grid_layout = QGridLayout()
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
-        self.haut=QPushButton('up')
-        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.haut=QPushButton()
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechehaut.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechehaut.png) ;background-color: transparent ;border-color: blue}")
         
         self.haut.setMaximumHeight(70)
         self.haut.setMinimumWidth(70)
         self.haut.setMaximumWidth(70)
         self.haut.setMinimumHeight(70)
+        self.haut.setAutoRepeat(True)
         
-        self.bas=QPushButton('down')
-        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.bas=QPushButton()
+        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechebas.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechebas.png);background-color: transparent ;border-color: blue}")
         self.bas.setMaximumHeight(70)
         self.bas.setMinimumWidth(70)
         self.bas.setMaximumWidth(70)
         self.bas.setMinimumHeight(70)
+        self.bas.setAutoRepeat(True)
         
-        self.gauche=QPushButton('Left')
-        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechegauche.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechegauche.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
-        
+        self.gauche=QPushButton()
+        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechegauche.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechegauche.png);background-color: transparent ;border-color: blue}")
         self.gauche.setMaximumHeight(70)
         self.gauche.setMinimumWidth(70)
         self.gauche.setMaximumWidth(70)
         self.gauche.setMinimumHeight(70)
-        self.droite=QPushButton('right')
-        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechedroite.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechedroite.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.gauche.setAutoRepeat(True)
+        
+        self.droite=QPushButton()
+        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechedroite.png) ;background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechedroite.png) ;background-color: transparent ;border-color: blue}")
         self.droite.setMaximumHeight(70)
         self.droite.setMinimumWidth(70)
         self.droite.setMaximumWidth(70)
         self.droite.setMinimumHeight(70)
-        
+        self.droite.setAutoRepeat(True)
         
         self.jogStep=QDoubleSpinBox()
-        self.jogStep.setMaximum(1000)
+        self.jogStep.setMaximum(10000)
         self.jogStep.setStyleSheet("font: bold 12pt")
-        self.jogStep.setValue(100)
+        
         self.jogStep.setMaximumWidth(120)
-        self.unitChangeLat=1
+        
+        self.jogStep.setValue(self.jogValue)
+        
     
         center=QHBoxLayout()
         center.addWidget(self.jogStep)
@@ -353,7 +367,7 @@ class THREEMOTORGUI(QWidget) :
         self.posFoc.setMaximumHeight(30)
         self.posFoc.setStyleSheet("font: bold 12pt")
         self.position_Foc=QLabel('1234567')
-        self.position_Foc.setStyleSheet("font: bold 25pt" )
+        self.position_Foc.setStyleSheet("font: bold 12pt" )
         self.position_Foc.setMaximumHeight(30)
         self.unitFocBouton=QComboBox()
         self.unitFocBouton.addItem('Step')
@@ -367,7 +381,7 @@ class THREEMOTORGUI(QWidget) :
         
         self.enPosition_Foc=QLineEdit()
         self.enPosition_Foc.setMaximumWidth(60)
-        self.enPosition_Foc.setStyleSheet("font: bold 12pt")
+        self.enPosition_Foc.setStyleSheet("font: bold 15pt")
         self.enPosition_Foc.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.zeroButtonFoc=QPushButton('Zero')
         self.zeroButtonFoc.setMaximumWidth(30)
@@ -382,7 +396,7 @@ class THREEMOTORGUI(QWidget) :
         hboxFoc.addSpacing(25)
         
         self.moins=QPushButton()
-        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;}""QPushButton:pressed{image: url(./Icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.moins.setMaximumWidth(70)
         self.moins.setMinimumHeight(70)
         hboxFoc.addWidget(self.moins)
@@ -396,7 +410,7 @@ class THREEMOTORGUI(QWidget) :
          
         
         self.plus=QPushButton()
-        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/plusBleu.png);background-color: rgb(0, 0, 0,0) }""QPushButton:pressed{image: url(./Icons/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.plus.setMaximumWidth(70)
         self.plus.setMinimumHeight(70)
     
@@ -405,14 +419,8 @@ class THREEMOTORGUI(QWidget) :
         vbox1.addLayout(hboxFoc)
         vbox1.addSpacing(20)
         
-        self.stopButton=QPushButton()
-        self.stopButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;}""QPushButton:pressed{image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
-        self.stopButton.setMaximumHeight(70)
-        self.stopButton.setMaximumWidth(70)
-        self.stopButton.setMinimumHeight(70)
-        self.stopButton.setMinimumWidth(70)
-        self.stopButton.setToolTip('Stop Motors')
-        
+        self.stopButton=QPushButton('STOP')
+        self.stopButton.setStyleSheet("background-color: red")
         hbox3=QHBoxLayout()
         hbox3.addWidget(self.stopButton)
         self.showRef=QPushButton('Show Ref')
@@ -493,7 +501,8 @@ class THREEMOTORGUI(QWidget) :
         self.posVert.clicked.connect(lambda:self.open_widget(self.VertWidget))
         self.posLat.clicked.connect(lambda:self.open_widget(self.LatWidget))
         self.posFoc.clicked.connect(lambda:self.open_widget(self.FocWidget))
-         
+        self.shootCibleButton.clicked.connect(self.ShootAct)
+        
         iii=1
         for saveNameButton in self.posText: # refference name
             nbRef=str(iii)
@@ -552,7 +561,7 @@ class THREEMOTORGUI(QWidget) :
             self.widget6REF.show()
             self.refShowId=False
             self.showRef.setText('Hide Ref')
-            self.setFixedSize(750,1000)
+            self.setFixedSize(750,800)
             
             
         else:
@@ -575,14 +584,18 @@ class THREEMOTORGUI(QWidget) :
         a=float(self.jogStep_2.value())
         a=float(a*self.unitChangeFoc)
         b=self.MOT[2].position()
-        if b+a<self.buteNeg[2] :
+        a=float(self.jogStep_2.value())
+        a=float(a*self.unitChangeFoc)
+        b=self.MOT[2].position()
+        
+        if b+a>self.butePos[2] :
             print( "STOP : Positive switch")
             self.MOT[2].stopMotor()
-        elif b+a>self.butePos[2] :
-            print( "STOP : Negative switch")
-            self.MOT[2].stopMotor()
+            self.butPosButt.setChecked(True)
         else :
             self.MOT[2].rmove(a)
+            self.butNegButt.setChecked(False)
+            self.butPosButt.setChecked(False)
 
     def mMove(self): 
         '''
@@ -592,79 +605,81 @@ class THREEMOTORGUI(QWidget) :
         a=float(a*self.unitChangeFoc)
         b=self.MOT[2].position()
         if b-a<self.buteNeg[2] :
-            print( "STOP : Positive switch")
-            self.MOT[2].stopMotor()
-        elif b-a>self.butePos[2] :
             print( "STOP : Negative switch")
             self.MOT[2].stopMotor()
+            self.butNegButt.setChecked(True)
         else :
             self.MOT[2].rmove(-a)
+            self.butNegButt.setChecked(False)
+            self.butPosButt.setChecked(False)
 
 
     def gMove(self):
         '''
-        action button left
+        action button left + 
         '''
         a=float(self.jogStep.value())
         a=float(a*self.unitChangeLat)
         b=self.MOT[0].position()
-        if b-a<self.buteNeg[0] :
+       
+        if b+a>self.butePos[0] :
             print( "STOP : Positive switch")
             self.MOT[0].stopMotor()
-        elif b-a>self.butePos[0] :
-            print( "STOP : Negative switch")
-            self.MOT[0].stopMotor()
+            self.butPosButt.setChecked(True)
         else :
             self.MOT[0].rmove(a)
+            self.butNegButt.setChecked(False)
+            self.butPosButt.setChecked(False)
             
     def dMove(self):
         '''
-        action bouton left
+        action bouton right -
         '''
         a=float(self.jogStep.value())
         a=float(a*self.unitChangeLat)
         b=self.MOT[0].position()
         if b-a<self.buteNeg[0] :
-            print( "STOP : Positive switch")
-            self.MOT[0].stopMotor()
-        elif b-a>self.butePos[0] :
             print( "STOP : Negative switch")
             self.MOT[0].stopMotor()
+            self.butNegButt.setChecked(True)
         else :
             self.MOT[0].rmove(-a)
+            self.butNegButt.setChecked(False)
+            self.butPosButt.setChecked(False)
         
     def hMove(self): 
         '''
-        action button up
+        action button up +
         '''
         a=float(self.jogStep.value())
         a=float(a*self.unitChangeVert)
         b=self.MOT[1].position()
-        if b-a<self.buteNeg[1] :
+        if b+a>self.butePos[1] :
             print( "STOP : Positive switch")
             self.MOT[1].stopMotor()
-        elif b-a>self.butePos[1] :
-            print( "STOP : Negative switch")
-            self.MOT[1].stopMotor()
+            self.butPosButt.setChecked(True)
+            
         else :
-            self.MOT[1].rmove(a)   
+            self.MOT[1].rmove(a)           
+            self.butNegButt.setChecked(False)
+            self.butPosButt.setChecked(False) 
         
         
     def bMove(self):
         '''
-        action button up
+        action button up -
         '''
         a=float(self.jogStep.value())
         a=float(a*self.unitChangeVert)
         b=self.MOT[1].position()
         if b-a<self.buteNeg[1] :
-            print( "STOP : Positive switch")
             self.MOT[1].stopMotor()
-        elif b-a>self.butePos[1] :
             print( "STOP : Negative switch")
-            self.MOT[1].stopMotor()
+            self.butNegButt.setChecked(True)
         else :
-            self.MOT[1].rmove(-a)           
+            self.MOT[1].rmove(-a)   
+            self.butNegButt.setChecked(False)
+            self.butPosButt.setChecked(False)   
         
     def ZeroLat(self): #  zero 
         self.MOT[0].setzero()
@@ -713,6 +728,7 @@ class THREEMOTORGUI(QWidget) :
         '''
          unit change mot foc
         '''
+        
         valueJog=self.jogStep.value()*self.unitChangeLat
         
         
@@ -834,7 +850,7 @@ class THREEMOTORGUI(QWidget) :
         take and save the reference
         '''
         sender=QtCore.QObject.sender(self) # take the name of  the button 
-        print ('sender name',sender)
+        
         reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
         if reply == QMessageBox.Yes:
                tposLat=self.MOT[0].position()
@@ -867,17 +883,21 @@ class THREEMOTORGUI(QWidget) :
         if reply == QMessageBox.Yes:
             nbRef=str(sender.objectName()[0])
             for i in range (0,3):
-                print(i)
+                
                 vref=int(self.conf[i].value(self.motor[i]+"/ref"+nbRef+"Pos"))
                 if vref<self.buteNeg[i] :
                     print( "STOP : negative switch")
+                    self.butNegButt.setChecked(True)
                     self.MOT[i].stopMotor()
                 elif vref>self.butePos[i] :
                     print( "STOP : positive switch")
+                    self.butPosButt.setChecked(True)
                     self.MOT[i].stopMotor()
                 else :
                     self.MOT[i].move(vref)
                     time.sleep(1)
+                    self.butNegButt.setChecked(False)
+                    self.butPosButt.setChecked(False) 
 #
     def savName(self) :
         '''
@@ -920,8 +940,11 @@ class THREEMOTORGUI(QWidget) :
         nbRefFoc=sender.objectName()[0] 
         vrefFoc=int(self.absFocRef[int(nbRefFoc)-1].value()*self.unitChangeFoc)
         self.conf[2].setValue(self.motor[2]+"/ref"+nbRefFoc+"Pos",vrefFoc)
-        self.conf[2].sync()        
-    
+        self.conf[2].sync()  
+        
+    def ShootAct(self):
+        self.tir.TirAct()
+        
     def closeEvent(self, event):
         """ 
         When closing the window
@@ -956,26 +979,22 @@ class REF3M(QWidget):
         self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.posText.setObjectName('%s'%self.id)
         self.vboxPos.addWidget(self.posText)
-        self.take=QToolButton()
+        self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QToolButton:!pressed{image: url(./Icons/pin.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/pin.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
-        self.take.setMaximumWidth(40)
-        self.take.setMinimumWidth(40)
-        self.take.setMinimumHeight(40)
-        self.take.setMaximumHeight(40)
-        self.take.setToolTip('Take position reference')
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setMaximumWidth(30)
+        self.take.setMinimumWidth(30)
+        self.take.setMinimumHeight(30)
+        self.take.setMaximumHeight(30)
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
-        self.takeLayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-        
-        self.Pos=QToolButton()
-        self.Pos.setStyleSheet("QToolButton:!pressed{image: url(./Icons/go2.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/go2.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos=QPushButton()
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)
         self.Pos.setMinimumWidth(40)
         self.Pos.setMaximumWidth(40)
         self.PosLayout=QHBoxLayout()
-        self.Pos.setToolTip('Go to reference position' )
         self.PosLayout.addWidget(self.Pos)
         self.Pos.setObjectName('%s'%self.id)
         
@@ -998,7 +1017,7 @@ class REF3M(QWidget):
         self.ABSFocref.setMinimum(-5000000000)
         
         grid_layoutPos = QGridLayout()
-        grid_layoutPos.setVerticalSpacing(20)
+        grid_layoutPos.setVerticalSpacing(5)
         grid_layoutPos.setHorizontalSpacing(10)
         grid_layoutPos.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         grid_layoutPos.addLayout(self.takeLayout,0,0)
@@ -1041,11 +1060,11 @@ class PositionThread(QtCore.QThread):
             else:
                 
                 Posi=(self.MOT.position())
-                time.sleep(1)
+                time.sleep(0.1)
                 try :
                     self.POS.emit(Posi)
                     
-                    time.sleep(0.1)
+                    time.sleep(0.2)
                 except:
                     print('error emit')
                     
@@ -1057,6 +1076,8 @@ class PositionThread(QtCore.QThread):
         time.sleep(0.1)
         self.terminate()
         
+
+#%%#####################################################################
 
 
 if __name__ =='__main__':

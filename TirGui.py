@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QWidget,QMessageBox,QShortcut,QVBoxLayout,QPushButto
 import time
 import sys
 import tirSalleJaune as tirSJ
-import moteurRSAI as RSAI  # Moteur RSAI
+# import moteurRSAI as RSAI  # Moteur RSAI
 PY = sys.version_info[0]
 if PY<3:
     print('wrong version of python : Python 3.X must be used')

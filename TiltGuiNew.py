@@ -59,6 +59,7 @@ class TILTMOTORGUI(QWidget) :
         self.icon=str(p.parent) + sepa + 'icons' +sepa
         self.motor=[str(motLat),str(motVert)]
         self.motorTypeName=[motorTypeName0,motorTypeName1]
+        
         self.motorType=[0,0]
         self.MOT=[0,0]
         self.configMotName=[0,0]
@@ -82,7 +83,8 @@ class TILTMOTORGUI(QWidget) :
                 self.motorType[zi]=RSAI
                 self.MOT[zi]=self.motorType[zi].MOTORRSAI(self.motor[zi])
                 
-            elif self.motorTypeName=='SmartAct':
+            elif self.motorTypeName[zi]=='SmartAct':
+                 
                  self.configMotName[zi]=self.configPath+'configMoteurSmartAct.ini'
                  import smartactmot as SmartAct
                  self.motorType[zi]=SmartAct
@@ -99,7 +101,7 @@ class TILTMOTORGUI(QWidget) :
                  import moteurNewFocus as NewFoc
                  self.motorType[zi]=NewFoc
                  self.MOT[zi]=self.motorType[zi].MOTORNEWFOCUS(self.motor[zi])
-                 print('NewFocus')
+                 
                  
             elif self.motorTypeName[zi]=='newport':
                  self.configMotName[zi]=self.configPath+'confNewport.ini'
@@ -172,12 +174,13 @@ class TILTMOTORGUI(QWidget) :
         hbox1=QHBoxLayout()
         hboxTitre=QHBoxLayout()
         self.nomTilt=QLabel(self.nomTilt)
-        
+        self.nomTilt.setStyleSheet("font: bold 20pt;color:yellow")
         hboxTitre.addWidget(self.nomTilt)
         
         self.unitTransBouton=QComboBox()
-        self.unitTransBouton.setMaximumWidth(80)
-        self.unitTransBouton.setMinimumWidth(80)
+        self.unitTransBouton.setMaximumWidth(100)
+        self.unitTransBouton.setMinimumWidth(100)
+        self.unitTransBouton.setStyleSheet("font: bold 12pt")
         self.unitTransBouton.addItem('Step')
         self.unitTransBouton.addItem('um')
         self.unitTransBouton.addItem('mm')
@@ -194,28 +197,57 @@ class TILTMOTORGUI(QWidget) :
         grid_layout = QGridLayout()
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
-        self.haut=QPushButton('Haut')
-        self.haut.setMinimumHeight(60)
+        self.haut=QPushButton()
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechehaut.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechehaut.png) ;background-color: transparent;border-color: blue}")
         
-        self.bas=QPushButton('Bas')
-        self.bas.setMinimumHeight(60)
-        self.gauche=QPushButton('Gauche')
-        self.gauche.setMinimumHeight(60)
-        self.gauche.setMinimumWidth(60)
-        self.droite=QPushButton('Droite')
-        self.droite.setMinimumHeight(60)
-        self.droite.setMinimumWidth(60)
-       
+        self.haut.setMaximumHeight(70)
+        self.haut.setMinimumWidth(70)
+        self.haut.setMaximumWidth(70)
+        self.haut.setMinimumHeight(70)
+        
+        self.bas=QPushButton()
+        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechebas.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechebas.png) ;background-color: transparent;border-color: blue}")
+        self.bas.setMaximumHeight(70)
+        self.bas.setMinimumWidth(70)
+        self.bas.setMaximumWidth(70)
+        self.bas.setMinimumHeight(70)
+        
+        self.droite=QPushButton()
+        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechedroite.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechedroite.png) ;background-color: transparent;border-color: blue}")
+        self.droite.setMaximumHeight(70)
+        self.droite.setMinimumWidth(70)
+        self.droite.setMaximumWidth(70)
+        self.droite.setMinimumHeight(70)
+        
+        self.gauche=QPushButton()
+        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechegauche.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechegauche.png) ;background-color: transparent;border-color: blue}")
+        
+        self.gauche.setMaximumHeight(70)
+        self.gauche.setMinimumWidth(70)
+        self.gauche.setMaximumWidth(70)
+        self.gauche.setMinimumHeight(70)
+        
+        
+        
         self.jogStep=QDoubleSpinBox()
-        self.jogStep.setMaximum(10000)
-        self.jogStep.setValue(self.jogValue)
+        self.jogStep.setMaximum(1000)
+        self.jogStep.setStyleSheet("font: bold 12pt")
+        self.jogStep.setValue(100)
+        self.jogStep.setMaximumWidth(120)
         
         
-        grid_layout.addWidget(self.haut, 0, 1)
-        grid_layout.addWidget(self.bas,2,1)
+        center=QHBoxLayout()
+        center.addWidget(self.jogStep)
+        self.hautLayout=QHBoxLayout()
+        self.hautLayout.addWidget(self.haut)
+        self.basLayout=QHBoxLayout()
+        self.basLayout.addWidget(self.bas)
+        grid_layout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        grid_layout.addLayout(self.hautLayout, 0, 1)
+        grid_layout.addLayout(self.basLayout,2,1)
         grid_layout.addWidget(self.gauche, 1, 0)
         grid_layout.addWidget(self.droite, 1, 2)
-        grid_layout.addWidget(self.jogStep,1,1)
+        grid_layout.addLayout(center,1,1)
         
         hbox1.addLayout(grid_layout)
         
@@ -455,21 +487,24 @@ class PositionThread(QtCore.QThread):
         self.MOT=mot
         self.motorType=motorType
         self.stop=False
-        
+        self.mutex=QtCore.QMutex()
     def run(self):
         while True:
             if self.stop==True:
                 break
             else:
-                time.sleep(0.2)
+                
+                self.mutex.lock()
                 Posi=(self.MOT.position())
+                time.sleep(0.3)
                 try :
-                    time.sleep(1)
+                    
                     self.POS.emit(Posi)
-                   
+                    time.sleep(0.1)
                 except:
                     print('error emit')
-                    
+                self.mutex.unlock()   
+                
     def ThreadINIT(self):
         self.stop=False         
                     
@@ -481,10 +516,10 @@ class PositionThread(QtCore.QThread):
     
 
 if __name__ =='__main__':
-    motor0="testMot1"
-    motor1="testMot2"
+    motor0='PinholeLat'
+    motor1='PinholeVert'
     appli=QApplication(sys.argv)
-    mot5=TILTMOTORGUI( motLat=motor0,motorTypeName0='test', motVert=motor1,motorTypeName1='test',nomWin='Tilts')
+    mot5=TILTMOTORGUI( motLat=motor0,motorTypeName0='SmartAct' , motVert=motor1,motorTypeName1='SmartAct',nomWin='Tilts Pinhole')
     mot5.show()
     mot5.startThread2()
     appli.exec_()

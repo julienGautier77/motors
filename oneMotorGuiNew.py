@@ -4,22 +4,21 @@ Created on Mon Apr  1 11:16:50 2019
 
 @author: sallejaune
 """
-
+#%%Import
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication,QSizePolicy
-
-from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit,QToolButton
-from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit
+from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
 from PyQt5.QtWidgets import QComboBox,QLabel
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QRect,QSize
+from PyQt5.QtCore import QRect
 
 import sys,time,os
 import qdarkstyle
 import pathlib
 from scanMotor import SCAN
 import __init__
-
+import TirGui
 __version__=__init__.__version__
 
 
@@ -41,13 +40,12 @@ class ONEMOTORGUI(QWidget) :
     fichier de config des moteurs : 'configMoteurRSAI.ini' 'configMoteurA2V.ini' 'configMoteurNewFocus.ini' 'configMoteurSmartAct.ini'
     """
 
-    def __init__(self, mot='',motorTypeName='',nomWin='One motor',showRef=False,unit=2,jogValue=1,parent=None):
+    def __init__(self, mot='',motorTypeName='',nomWin='',showRef=False,unit=2,jogValue=1,parent=None):
        
         super(ONEMOTORGUI, self).__init__(parent)
         p = pathlib.Path(__file__)
         sepa=os.sep
-        self.icon=str(p.parent) + sepa + 'icons' +sepa+'LOA.png'
-        #print(self.icon)
+        self.icon=str(p.parent) + sepa + 'icons' +sepa
         self.motor=[str(mot)]
         self.motorTypeName=[motorTypeName]
         self.motorType=[0]
@@ -61,8 +59,8 @@ class ONEMOTORGUI(QWidget) :
         self.indexUnit=unit
         self.jogValue=jogValue
         self.version=__version__
-        self.icon='./icons/LOA.png'
-        self.setWindowIcon(QIcon(self.icon))
+        self.tir=TirGui.TIRGUI()
+        self.setWindowIcon(QIcon(self.icon+'LOA.png'))
         
         
         for zi in range (0,1): #  list configuration et motor types 
@@ -81,7 +79,6 @@ class ONEMOTORGUI(QWidget) :
                  
             elif self.motorTypeName[zi]=='A2V':
                  self.configMotName[zi]=self.configPath+'configMoteurA2V.ini'
-                 
                  import moteurA2V  as A2V
                  self.motorType[zi]=A2V
                  self.MOT[zi]=self.motorType[zi].MOTORA2V(self.motor[zi])
@@ -109,13 +106,7 @@ class ONEMOTORGUI(QWidget) :
                 import moteurArduino as arduino
                 self.motorType[zi]=arduino
                 self.MOT[zi]=self.motorType[zi].MOTORARDUINO(self.motor[zi])
-            
-            elif self.motorTypeName[zi]=='Apt':
-                self.configMotName[zi]=self.configPath+'configMoteurApt.ini'
-                import moteurApt as apt
-                self.motorType[zi]=apt
-                self.MOT[zi]=self.motorType[zi].MOTORAPT(self.motor[zi])
-            
+             
             else:
                 print('Error config motor Type name')
                 self.configMotName[zi]=self.configPath+'configMoteurTest.ini'
@@ -125,7 +116,7 @@ class ONEMOTORGUI(QWidget) :
                 print(self.configMotName[zi])
                 
             self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.IniFormat) # fichier config motor fichier .ini
-           
+       
         self.scanWidget=SCAN(MOT=self.MOT[0],motor=self.motor[0],configMotName=self.configMotName[0]) # for the scan
         
         self.stepmotor=[0,0,0]
@@ -164,6 +155,8 @@ class ONEMOTORGUI(QWidget) :
         if self.indexUnit==4: #  en degres
             self.unitChange=1 *self.stepmotor[0]
             self.unitName='°'    
+        
+        
         self.setup()
         self.unit()
         
@@ -187,9 +180,22 @@ class ONEMOTORGUI(QWidget) :
         self.enPosition.setStyleSheet("font: bold 15pt")
         self.enPosition.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         hboxTitre.addWidget(self.enPosition)
-        
+        self.butNegButt=QCheckBox('But Neg',self)
+        hboxTitre.addWidget(self.butNegButt)
+       
+        self.butPosButt=QCheckBox('But Pos',self)
+        hboxTitre.addWidget(self.butPosButt)
         vbox1.addLayout(hboxTitre)
         #vbox1.addSpacing(10)
+        
+        hShoot=QHBoxLayout()
+        self.shootCibleButton=QPushButton('Shot')
+        self.shootCibleButton.setStyleSheet("font: 12pt;background-color: red")
+        self.shootCibleButton.setMaximumWidth(100)
+        self.shootCibleButton.setMinimumWidth(100)
+        hShoot.addWidget(self.shootCibleButton)
+        vbox1.addLayout(hShoot)
+        
         
         hbox0=QHBoxLayout()
         self.position=QLabel('1234567')
@@ -221,17 +227,16 @@ class ONEMOTORGUI(QWidget) :
         absolueLabel=QLabel('Absolue mouvement')
 #        absolueLabel.setStyleSheet("background-color: green")
         self.MoveStep=QDoubleSpinBox()
-        self.MoveStep.setMaximum(100000000)
-        self.MoveStep.setMinimum(-100000000)
+        self.MoveStep.setMaximum(1000000)
+        self.MoveStep.setMinimum(-1000000)
         #self.MoveStep.setStyleSheet("background-color: green")
         
         self.absMvtButton=QPushButton()
-        self.absMvtButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;}""QPushButton:pressed{image: url(./Icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.absMvtButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png) ;background-color: transparent;border-color: blue}")
         self.absMvtButton.setMinimumHeight(50)
         self.absMvtButton.setMaximumHeight(50)
         self.absMvtButton.setMinimumWidth(50)
         self.absMvtButton.setMaximumWidth(50)
-        self.absMvtButton.setToolTip('Go to absolute position')
         #self.absMvtButton.setStyleSheet("background-color: green")
         hboxAbs.addWidget(absolueLabel)
         hboxAbs.addWidget(self.MoveStep)
@@ -240,7 +245,7 @@ class ONEMOTORGUI(QWidget) :
         vbox1.addSpacing(10)
         hbox1=QHBoxLayout()
         self.moins=QPushButton()
-        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;}""QPushButton:pressed{image: url(./Icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/moinsBleu.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/moinsBleu.png);background-color: transparent;border-color: blue}")
         
         self.moins.setMinimumHeight(70)
         self.moins.setMaximumHeight(70)
@@ -251,7 +256,7 @@ class ONEMOTORGUI(QWidget) :
         hbox1.addWidget(self.moins)
         
         self.jogStep=QDoubleSpinBox()
-        self.jogStep.setMaximum(1000000)
+        self.jogStep.setMaximum(10000)
         self.jogStep.setMaximumWidth(130)
         self.jogStep.setStyleSheet("font: bold 12pt")
         self.jogStep.setValue(self.jogValue)
@@ -260,7 +265,7 @@ class ONEMOTORGUI(QWidget) :
          
         
         self.plus=QPushButton()
-        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/plusBleu.png);background-color: rgb(0, 0, 0,0) }""QPushButton:pressed{image: url(./Icons/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/plusBleu.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/plusBleu.png) ;background-color: transparent;border-color: blue}")
         self.plus.setMinimumHeight(70)
         self.plus.setMaximumHeight(70)
         self.plus.setMinimumWidth(70)
@@ -274,13 +279,12 @@ class ONEMOTORGUI(QWidget) :
         
         hbox2=QHBoxLayout()
         self.stopButton=QPushButton()
-        self.stopButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;}""QPushButton:pressed{image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.stopButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/close.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/close.png) ;background-color: transparent;border-color: blue}")
         #self.stopButton.setStyleSheet("border-radius:20px;background-color: red")
         self.stopButton.setMaximumHeight(70)
         self.stopButton.setMaximumWidth(70)
         self.stopButton.setMinimumHeight(70)
         self.stopButton.setMinimumWidth(70)
-        self.stopButton.setToolTip('Stop Motor')
         hbox2.addWidget(self.stopButton)
         vbox2=QVBoxLayout()
         
@@ -349,7 +353,7 @@ class ONEMOTORGUI(QWidget) :
         
         self.stopButton.clicked.connect(self.StopMot)#stop motors 
         self.showRef.clicked.connect(self.refShow) # show references widgets
-        
+        self.shootCibleButton.clicked.connect(self.ShootAct)
         iii=1
         for saveNameButton in self.posText: # reference name
             nbRef=str(iii)
@@ -421,13 +425,16 @@ class ONEMOTORGUI(QWidget) :
         a=float(a*self.unitChange) # changement d unite
         if a<self.buteNeg[0] :
             print( "STOP : Butée Négative")
+            self.butNegButt.setChecked(True)
             self.MOT[0].stopMotor()
         elif a>self.butePos[0] :
             print( "STOP : Butée Positive")
+            self.butPosButt.setChecked(True)
             self.MOT[0].stopMotor()
         else :
             self.MOT[0].move(a)
-    
+            self.butNegButt.setChecked(False)
+            self.butPosButt.setChecked(False)
     
     def pMove(self):
         '''
@@ -438,12 +445,13 @@ class ONEMOTORGUI(QWidget) :
         b=self.MOT[0].position()
         
         if b+a>self.butePos[0] :
-            print( "STOP :  positive switch")
+            print( "STOP :  Positive switch")
             self.MOT[0].stopMotor()
+            self.butPosButt.setChecked(True)
         else :
-            print(a)
             self.MOT[0].rmove(a)
-
+            self.butNegButt.setChecked(False)
+            self.butPosButt.setChecked(False)
     def mMove(self): 
         '''
         action jog - foc
@@ -454,10 +462,11 @@ class ONEMOTORGUI(QWidget) :
         if b-a<self.buteNeg[0] :
             print( "STOP : negative switch")
             self.MOT[0].stopMotor()
-        
+            self.butNegButt.setChecked(True)
         else :
             self.MOT[0].rmove(-a)
-
+            self.butNegButt.setChecked(False)
+            self.butPosButt.setChecked(False)
   
     def Zero(self): #  zero 
         self.MOT[0].setzero()
@@ -473,6 +482,7 @@ class ONEMOTORGUI(QWidget) :
         unit change mot foc
         '''
         self.indexUnit=self.unitBouton.currentIndex()
+        
         valueJog=self.jogStep.value()*self.unitChange
         
         if self.indexUnit==0: #  step
@@ -545,7 +555,7 @@ class ONEMOTORGUI(QWidget) :
         
         nbRef=str(sender.objectName()[0])
         
-        reply=QMessageBox.question(None,'Save Position ?',"Do you want to SAVE this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
+        reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
         if reply == QMessageBox.Yes:
                tpos=float(self.MOT[0].position())
                
@@ -562,7 +572,7 @@ class ONEMOTORGUI(QWidget) :
         Fait bouger le moteur a la valeur de reference en step : bouton Go 
         '''
         sender=QtCore.QObject.sender(self)
-        reply=QMessageBox.question(None,'GO to this Position ?',"Do you want to GO to this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
+        reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
         if reply == QMessageBox.Yes:
             nbRef=str(sender.objectName()[0])
             for i in range (0,1):
@@ -570,12 +580,16 @@ class ONEMOTORGUI(QWidget) :
                 vref=int(self.conf[i].value(self.motor[i]+"/ref"+nbRef+"Pos"))
                 if vref<self.buteNeg[i] :
                     print( "STOP : negative switch")
+                    self.butNegButt.setChecked(True)
                     self.MOT[i].stopMotor()
                 elif vref>self.butePos[i] :
                     print( "STOP : positive switch")
+                    self.butPosButt.setChecked(True)
                     self.MOT[i].stopMotor()
                 else :
                     self.MOT[i].move(vref)
+                    self.butNegButt.setChecked(False)
+                    self.butPosButt.setChecked(False) 
 #
     def savName(self) :
         '''
@@ -599,7 +613,8 @@ class ONEMOTORGUI(QWidget) :
         self.conf[0].setValue(self.motor[0]+"/ref"+nbRef+"Pos",vref) # on sauvegarde en step dans le fichier ini
         self.conf[0].sync()
         
-        
+    def ShootAct(self):
+        self.tir.TirAct()    
     
     def closeEvent(self, event):
         """ 
@@ -622,9 +637,7 @@ class ONEMOTORGUI(QWidget) :
 class REF1M(QWidget):
     
     def __init__(self,num=0, parent=None):
-        
         super(REF1M, self).__init__()
-        
         self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
         self.wid=QWidget()
         self.id=num
@@ -634,33 +647,26 @@ class REF1M(QWidget):
         self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.posText.setStyleSheet("font: bold 15pt")
         self.posText.setObjectName('%s'%self.id)
-        #self.posText.setMaximumWidth(200)
-        self.vboxPos.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+#        self.posText.setMaximumWidth(80)
         self.vboxPos.addWidget(self.posText)
         
-        self.take=QToolButton()
+        self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QToolButton:!pressed{image: url(./Icons/pin.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/pin.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
-        self.take.setMaximumWidth(40)
-        self.take.setMinimumWidth(40)
-        
-        self.take.setMinimumHeight(40)
-        self.take.setMaximumHeight(40)
-        self.take.setToolTip('Take position reference')
-        #self.take.setFixedSize(QSize(20,20))
-        # self.takeLayout=QHBoxLayout()
-        # self.takeLayout.addWidget(self.take)
-        #self.take.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
-        self.Pos=QToolButton()
-        self.Pos.setStyleSheet("QToolButton:!pressed{image: url(./Icons/go2.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/go2.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setMaximumWidth(30)
+        self.take.setMinimumWidth(30)
+        self.take.setMinimumHeight(30)
+        self.take.setMaximumHeight(30)
+        self.takeLayout=QHBoxLayout()
+        self.takeLayout.addWidget(self.take)
+        self.Pos=QPushButton()
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)
         self.Pos.setMinimumWidth(40)
         self.Pos.setMaximumWidth(40)
-        self.Pos.setToolTip('Go to reference position' )
-        # self.Pos.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        # self.PosLayout=QHBoxLayout()
-        # self.takeLayout.addWidget(self.Pos)
+        self.PosLayout=QHBoxLayout()
+        self.PosLayout.addWidget(self.Pos)
         self.Pos.setObjectName('%s'%self.id)
         #○self.Pos.setStyleSheet("background-color: rgb(85, 170, 255)")
         Labelref=QLabel('Pos :')
@@ -675,11 +681,11 @@ class REF1M(QWidget):
         self.ABSref.setStyleSheet("font: 9pt" )
         
         grid_layoutPos = QGridLayout()
-        grid_layoutPos.setVerticalSpacing(25)
-        grid_layoutPos.setHorizontalSpacing(20)
+        grid_layoutPos.setVerticalSpacing(5)
+        grid_layoutPos.setHorizontalSpacing(10)
         grid_layoutPos.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-        grid_layoutPos.addWidget(self.take,0,0)
-        grid_layoutPos.addWidget(self.Pos,0,1)
+        grid_layoutPos.addLayout(self.takeLayout,0,0)
+        grid_layoutPos.addLayout(self.PosLayout,0,1)
         grid_layoutPos.addWidget(Labelref,1,0)
         grid_layoutPos.addWidget(self.ABSref,1,1)
         
@@ -690,7 +696,7 @@ class REF1M(QWidget):
         self.wid.setLayout(self.vboxPos)
         mainVert=QVBoxLayout()
         mainVert.addWidget(self.wid)
-        mainVert.setContentsMargins(1,1,1,1)
+        mainVert.setContentsMargins(0,0,0,0)
         self.setLayout(mainVert)
 
 
@@ -713,7 +719,7 @@ class PositionThread(QtCore.QThread):
             else:
                 
                 Posi=(self.MOT.position())
-                time.sleep(0.1)
+                time.sleep(1)
                 try :
                     self.POS.emit(Posi)
     
@@ -730,12 +736,14 @@ class PositionThread(QtCore.QThread):
         self.terminate()
         
 
+#%%#####################################################################
+
+
 if __name__ =='__main__':
     
     appli=QApplication(sys.argv)
     
-    mot5=ONEMOTORGUI( mot='moteur0A',motorTypeName='Apt',showRef=False,unit=2,jogValue=1)
-   # mot5=REF1M(1)#
+    mot5=ONEMOTORGUI( mot='LAME_Foc',motorTypeName='RSAI',showRef=False,unit=1,jogValue=100)
     mot5.show()
     mot5.startThread2()
     appli.exec_()

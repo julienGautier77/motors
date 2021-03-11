@@ -7,7 +7,7 @@ Created on Thu Feb  7 09:42:51 2019
 
 
 create button and control all the motors in the .ini file
-
+ROSA
 
 """
 
@@ -21,10 +21,10 @@ import oneMotorGuiNew
 import pathlib,os
 import qdarkstyle
 from TirGui import TIRGUI
-
+import moteurRSAI as RSAI
 
 class MainWin(QWidget) :
-    def __init__(self,shoot=True,title='Motors Control',configFile='configMoteurRSAI.ini'):
+    def __init__(self,shoot=True,title='Motors Control RSAI ROSA',configFile='configMoteurRSAI.ini'):
         super(MainWin, self).__init__() 
         p = pathlib.Path(__file__)
         sepa=os.sep
@@ -43,11 +43,11 @@ class MainWin(QWidget) :
         self.motorListGui=list()
         self.setWindowTitle(title)
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
-        
+        self.setGeometry(100, 20, 600, 700)
         self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
         grid = QGridLayout()
         vbox1=QVBoxLayout() 
-        
+        self.colorButton=list()
         print('Please wait ...')
         
         for vi in self.groups:
@@ -55,7 +55,8 @@ class MainWin(QWidget) :
             # creation des boutons avec le nom
             self.motorListButton.append(QPushButton(self.conf.value(vi+"/Name"),self))  
             # creation de widget oneMotorGui pour chaque moteurs
-            self.motorListGui.append(oneMotorGuiNew.ONEMOTORGUI(mot=str(vi),motorTypeName='RSAI'))
+            self.motorListGui.append(oneMotorGuiNew.ONEMOTORGUI(mot=str(vi),motorTypeName='RSAI',unit=1,jogValue=100))
+            self.colorButton.append(str(self.conf.value(vi+"/Color")))
             
         #creation des d'une matrice de point pour creer une grille    
         z=0
@@ -73,6 +74,15 @@ class MainWin(QWidget) :
             
             #action de chaque bouton : open a new widget for onemotor control
             mm.clicked.connect(lambda checked, j=j:self.open_widget(self.motorListGui[j]))
+            mm.setMinimumHeight(30)
+           
+            if self.colorButton[j] != 'None' :
+                mm.setStyleSheet("background-color:"+self.colorButton[j])
+            else :
+                
+                mm.setStyleSheet("background-color:gray")
+            
+                
             j+=1
         
         # ajout de la grille de bouton au widget proncipal
@@ -83,7 +93,7 @@ class MainWin(QWidget) :
             
         self.setLayout(vbox1)   
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-    
+        print('ok')
     def open_widget(self,fene):
         """ ouverture widget suplementaire 
         """
@@ -91,7 +101,7 @@ class MainWin(QWidget) :
         if fene.isWinOpen==False:
             fene.setup
             fene.isWinOpen=True
-            
+            fene.startThread2()
             fene.show()
         else:
             fene.activateWindow()
@@ -100,6 +110,7 @@ class MainWin(QWidget) :
 
     def closeEvent(self,event):
         print('close...')
+        RSAI.stopConnexion()
         event.accept() 
             
         
@@ -107,6 +118,6 @@ class MainWin(QWidget) :
 if __name__ == "__main__":
     appli = QApplication(sys.argv) 
     
-    e = MainWin(shoot=False)
+    e = MainWin(shoot=True)
     e.show()
     appli.exec_()

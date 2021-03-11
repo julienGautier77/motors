@@ -4,12 +4,12 @@ Created on Mon Apr  1 11:16:50 2019
 
 @author: sallejaune
 """
-
+#%%Import
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication,QStyle,QToolButton
+from PyQt5.QtWidgets import QApplication,QStyle
 from PyQt5.QtWidgets import QWidget,QMessageBox,QSpinBox,QLineEdit,QFrame
 from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushButton,QGridLayout,QTextEdit,QDoubleSpinBox
-from PyQt5.QtWidgets import QInputDialog,QComboBox,QSlider,QCheckBox,QLabel,QSizePolicy,QLineEdit,QPlainTextEdit,QMessageBox,QMenu
+from PyQt5.QtWidgets import QInputDialog,QComboBox,QSlider,QCheckBox,QLabel,QSizePolicy,QLineEdit,QPlainTextEdit,QMessageBox,QMenu,QRadioButton
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QRect
 from PyQt5.QtGui import QIcon
@@ -106,13 +106,7 @@ class TWOMOTORGUI(QWidget) :
                 import moteurArduino as arduino
                 self.motorType[zi]=arduino
                 self.MOT[zi]=self.motorType[zi].MOTORARDUINO(self.motor[zi])
-            
-            elif self.motorTypeName[zi]=='Apt':
-                self.configMotName[zi]=self.configPath+'configMoteurApt.ini'
-                import moteurApt as apt
-                self.motorType[zi]=apt
-                self.MOT[zi]=self.motorType[zi].MOTORAPT(self.motor[zi])    
-            
+                
             else:
                 print('Error config motor Type name')
                 self.configMotName[zi]=self.configPath+'configMoteurTest.ini'
@@ -191,7 +185,6 @@ class TWOMOTORGUI(QWidget) :
         self.nomTilt=QLabel(self.nomTilt)
         self.nomTilt.setStyleSheet("font: bold 20pt;color:yellow")
         hboxTitre.addWidget(self.nomTilt)
-        
         self.unitTransBouton=QComboBox()
         self.unitTransBouton.setMaximumWidth(100)
         self.unitTransBouton.setMinimumWidth(100)
@@ -204,7 +197,15 @@ class TWOMOTORGUI(QWidget) :
         
         
         hboxTitre.addWidget(self.unitTransBouton)
+        
         hboxTitre.addStretch(1)
+        
+        
+        self.butNegButt=QCheckBox('But Neg',self)
+        hboxTitre.addWidget(self.butNegButt)
+       
+        self.butPosButt=QCheckBox('But Pos',self)
+        hboxTitre.addWidget(self.butPosButt)
         
         vbox1.addLayout(hboxTitre)
         
@@ -257,30 +258,30 @@ class TWOMOTORGUI(QWidget) :
         grid_layout = QGridLayout()
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
+        self.haut=QPushButton()
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechehaut.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechehaut.png);background-color: transparent ;border-color: blue}")
         
-        self.haut=QPushButton('up')
-        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechehaut.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.haut.setMaximumHeight(70)
         self.haut.setMinimumWidth(70)
         self.haut.setMaximumWidth(70)
         self.haut.setMinimumHeight(70)
         
-        self.bas=QPushButton('down')
-        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechebas.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.bas=QPushButton()
+        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechebas.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechebas.png);background-color: transparent;border-color: blue}")
         self.bas.setMaximumHeight(70)
         self.bas.setMinimumWidth(70)
         self.bas.setMaximumWidth(70)
         self.bas.setMinimumHeight(70)
         
         self.gauche=QPushButton('Left')
-        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechegauche.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechegauche.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechegauche.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechegauche.png);background-color: transparent ;border-color: blue}")
         
         self.gauche.setMaximumHeight(70)
         self.gauche.setMinimumWidth(70)
         self.gauche.setMaximumWidth(70)
         self.gauche.setMinimumHeight(70)
         self.droite=QPushButton('right')
-        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/flechedroite.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./Icons/flechedroite.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechedroite.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechedroite.png);background-color: transparent ;border-color: blue}")
         self.droite.setMaximumHeight(70)
         self.droite.setMinimumWidth(70)
         self.droite.setMaximumWidth(70)
@@ -312,14 +313,8 @@ class TWOMOTORGUI(QWidget) :
         
         
         
-        self.stopButton=QPushButton()
-        self.stopButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;}""QPushButton:pressed{image: url(./Icons/close.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
-        self.stopButton.setMaximumHeight(70)
-        self.stopButton.setMaximumWidth(70)
-        self.stopButton.setMinimumHeight(70)
-        self.stopButton.setMinimumWidth(70)
-        self.stopButton.setToolTip('Stop Motors')
-        
+        self.stopButton=QPushButton('STOP')
+        self.stopButton.setStyleSheet("background-color: red")
         hbox3=QHBoxLayout()
         hbox3.addWidget(self.stopButton)
         self.showRef=QPushButton('Show Ref')
@@ -461,14 +456,14 @@ class TWOMOTORGUI(QWidget) :
         a=float(a*self.unitChangeLat)
         b=self.MOT[0].position()
         
-        if b-a<self.buteNeg[0] :
+        if b+a>self.butePos[0] :
             print( "STOP : positive switch")
             self.MOT[0].stopMotor()
-        elif b-a>self.butePos[0] :
-            print( "STOP : negative switch")
-            self.MOT[0].stopMotor()
-        else :
+            self.butPosButt.setChecked(True)
+        else:
             self.MOT[0].rmove(a)
+            self.butPosButt.setChecked(False)
+            self.butNegButt.setChecked(False)
             
     def dMove(self):
         '''
@@ -478,15 +473,18 @@ class TWOMOTORGUI(QWidget) :
         a=float(a*self.unitChangeLat)
         b=self.MOT[0].position()
         
+        
         if b-a<self.buteNeg[0] :
-            print( "STOP : positive switch")
-            self.MOT[0].stopMotor()
-        elif b-a>self.butePos[0] :
             print( "STOP : negative switch")
+            self.butNegButt.setChecked(True)
             self.MOT[0].stopMotor()
         else :
             self.MOT[0].rmove(-a)
-        
+            self.butPosButt.setChecked(False)
+            self.butNegButt.setChecked(False)
+            
+            
+            
     def hMove(self): 
         '''
         action button up
@@ -495,19 +493,20 @@ class TWOMOTORGUI(QWidget) :
         a=float(a*self.unitChangeVert)
         b=self.MOT[1].position()
         
-        if b-a<self.buteNeg[1] :
+        if b+a>self.butePos[1] :
             print( "STOP : positive switch")
             self.MOT[1].stopMotor()
-        elif b-a>self.butePos[1] :
-            print( "STOP : negative switch")
-            self.MOT[1].stopMotor()
+            self.butPosButt.setChecked(True)
         else :
-            self.MOT[1].rmove(a)   
+            self.MOT[1].rmove(a) 
+            
+            self.butPosButt.setChecked(False)
+            self.butNegButt.setChecked(False)
         
         
     def bMove(self):
         '''
-        action button up
+        action button down
         '''
         a=float(self.jogStep.value())
         a=float(a*self.unitChangeVert)
@@ -516,12 +515,12 @@ class TWOMOTORGUI(QWidget) :
         if b-a<self.buteNeg[1] :
             print( "STOP : positive switch")
             self.MOT[1].stopMotor()
-        elif b-a>self.butePos[1] :
-            print( "STOP : negative switch")
-            self.MOT[1].stopMotor()
+            self.butNegButt.setChecked(True)
         else :
             self.MOT[1].rmove(-a)           
-        
+            self.butPosButt.setChecked(False)
+            self.butNegButt.setChecked(False)
+            
     def ZeroLat(self): #  zero 
         self.MOT[0].setzero()
         
@@ -670,13 +669,18 @@ class TWOMOTORGUI(QWidget) :
                 vref=int(self.conf[i].value(self.motor[i]+"/ref"+nbRef+"Pos"))
                 if vref<self.buteNeg[i] :
                     print( "STOP : negative switch")
+                    self.butNegButt.setChecked(True)
                     self.MOT[i].stopMotor()
                 elif vref>self.butePos[i] :
                     print( "STOP : positive switch")
+                    self.butPosButt.setChecked(True)
                     self.MOT[i].stopMotor()
                 else :
                     self.MOT[i].move(vref)
                     time.sleep(0.5)
+                    self.butPosButt.setChecked(False)
+                    self.butNegButt.setChecked(False)
+                    
     def savName(self) :
         '''
         Save reference name
@@ -744,18 +748,17 @@ class REF2M(QWidget):
         self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.posText.setObjectName('%s'%self.id)
         self.vboxPos.addWidget(self.posText)
-        self.take=QToolButton()
+        self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QToolButton:!pressed{border-image: url(./Icons/pin.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/pin.png);background-color: rgb(0, 0, 0,0) }")
-        self.take.setMaximumWidth(40)
-        self.take.setMinimumWidth(40)
-        self.take.setMinimumHeight(40)
-        self.take.setMaximumHeight(40)
-        self.take.setToolTip('Take position reference')
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setMaximumWidth(30)
+        self.take.setMinimumWidth(30)
+        self.take.setMinimumHeight(30)
+        self.take.setMaximumHeight(30)
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
-        self.Pos=QToolButton()
-        self.Pos.setStyleSheet("QToolButton:!pressed{border-image: url(./Icons/go2.png);background-color: rgb(0, 0, 0,0) ;}""QToolButton:pressed{image: url(./Icons/go2.png);background-color: rgb(0, 0, 0,0) }")
+        self.Pos=QPushButton()
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)
         self.Pos.setMinimumWidth(40)
@@ -763,7 +766,6 @@ class REF2M(QWidget):
         self.PosLayout=QHBoxLayout()
         self.PosLayout.addWidget(self.Pos)
         self.Pos.setObjectName('%s'%self.id)
-        self.Pos.setToolTip('Go to reference position' )
         
         LabeLatref=QLabel('Lat:')
         self.ABSLatref=QDoubleSpinBox()
@@ -833,13 +835,15 @@ class PositionThread(QtCore.QThread):
         self.terminate()
         
 
+#%%#####################################################################
+
 
 if __name__ =='__main__':
-    motor0="Cible_Trans_Lat"
-    motor1="Cible_Trans_Vert"
+    motor0="Axicon_Trans_Lat"
+    motor1="Axicon_Trans_Vert"
     
     appli=QApplication(sys.argv)
-    mot5=TWOMOTORGUI(motor0,'RSAI',motor1,'RSAI',nomWin='Tilt motor name',nomTilt='Tilt') # croix XUV
+    mot5=TWOMOTORGUI('PinholeLat','SmartAct','PinholeVert','SmartAct',nomWin='Pinhole',nomTilt='Pinhole') # croix XUV
     
     mot5.show()
     mot5.startThread2()

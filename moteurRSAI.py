@@ -50,7 +50,7 @@ except AttributeError as s:
 
 #%% ENTREE
 # liste adresse IP des modules
-IP    = b"10.0.2.30\0      10.0.2.31\0      10.0.4.30\0      " 
+IP    = b"10.0.1.30\0      10.0.1.31\0      10.0.4.30\0      " 
 IPs_C = ctypes.create_string_buffer(IP, 48) # permet d avoir la liste comme demander dans la dll
 
 
