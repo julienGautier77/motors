@@ -10,6 +10,7 @@ Newport
 TMCM
 pololu
 Arduino
+APT (Thorlabs)
 
 
 test on windows 32 bits only
