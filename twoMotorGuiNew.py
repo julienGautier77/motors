@@ -291,9 +291,9 @@ class TWOMOTORGUI(QWidget) :
         self.jogStep=QDoubleSpinBox()
         self.jogStep.setMaximum(1000)
         self.jogStep.setStyleSheet("font: bold 12pt")
-        self.jogStep.setValue(100)
+        self.jogStep.setValue(self.jogValue)
         self.jogStep.setMaximumWidth(120)
-        self.unitChangeLat=1
+        #self.unitChangeLat=1
     
         center=QHBoxLayout()
         center.addWidget(self.jogStep)
