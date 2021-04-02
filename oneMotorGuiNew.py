@@ -743,7 +743,7 @@ if __name__ =='__main__':
     
     appli=QApplication(sys.argv)
     
-    mot5=ONEMOTORGUI( mot='LAME_Foc',motorTypeName='RSAI',showRef=False,unit=1,jogValue=100)
+    mot5=ONEMOTORGUI( mot='Jet_LWFA_FOC',motorTypeName='RSAI',showRef=False,unit=1,jogValue=100)
     mot5.show()
     mot5.startThread2()
     appli.exec_()

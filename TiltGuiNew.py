@@ -51,7 +51,7 @@ class TILTMOTORGUI(QWidget) :
     fichier de config des moteurs : 'configMoteurRSAI.ini' 'configMoteurA2V.ini' 'configMoteurNewFocus.ini' 'configMoteurSmartAct.ini'
     """
   
-    def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',nomWin='',nomTilt='',unit=1,jogValue=1,parent=None):
+    def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',nomWin='',nomTilt='',unit=1,jogValue=1,background='gray',parent=None):
         
         super(TILTMOTORGUI, self).__init__()
         p = pathlib.Path(__file__)
@@ -71,7 +71,7 @@ class TILTMOTORGUI(QWidget) :
         self.jogValue=jogValue
         self.nomTilt=nomTilt
         
-        
+        self.setStyleSheet("background-color:"+background)
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
         self.version=__version__
         
@@ -232,7 +232,7 @@ class TILTMOTORGUI(QWidget) :
         self.jogStep=QDoubleSpinBox()
         self.jogStep.setMaximum(1000)
         self.jogStep.setStyleSheet("font: bold 12pt")
-        self.jogStep.setValue(100)
+        self.jogStep.setValue(self.jogValue)
         self.jogStep.setMaximumWidth(120)
         
         
@@ -487,23 +487,23 @@ class PositionThread(QtCore.QThread):
         self.MOT=mot
         self.motorType=motorType
         self.stop=False
-        self.mutex=QtCore.QMutex()
+        
     def run(self):
         while True:
             if self.stop==True:
                 break
             else:
                 
-                self.mutex.lock()
+                
                 Posi=(self.MOT.position())
                 time.sleep(0.3)
                 try :
                     
                     self.POS.emit(Posi)
-                    time.sleep(0.1)
+                    time.sleep(0.2)
                 except:
                     print('error emit')
-                self.mutex.unlock()   
+                  
                 
     def ThreadINIT(self):
         self.stop=False         

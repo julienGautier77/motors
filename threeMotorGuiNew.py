@@ -6,7 +6,7 @@ Created on Mon Apr  1 11:16:50 2019
 """
 #%%Import
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit
+from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit,QToolButton
 from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
 from PyQt5.QtWidgets import QComboBox,QLabel
 from PyQt5.QtGui import QIcon
@@ -48,7 +48,7 @@ class THREEMOTORGUI(QWidget) :
 
 
 
-    def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',motFoc='',motorTypeName2='',nomWin='',nomTilt='',nomFoc='',showRef=False,unit=1,unitFoc=2,jogValue=1,jogValueFoc=1,parent=None):
+    def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',motFoc='',motorTypeName2='',nomWin='',nomTilt='',nomFoc='',showRef=False,unit=1,unitFoc=2,jogValue=1,jogValueFoc=1,parent=None,background="gray"):
         
         super(THREEMOTORGUI, self).__init__()
         p = pathlib.Path(__file__)
@@ -63,7 +63,12 @@ class THREEMOTORGUI(QWidget) :
         self.nomTilt=nomTilt
         self.configPath="./fichiersConfig/"#"/.fichiersConfig/"
         self.isWinOpen=False
+        
+        
         self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        # self.setStyleSheet("background-color:green")
+        # self.setStyleSheet("QPushButton {background-color:gray}")
+        # self.setStyleSheet("background-color:green")
         self.refShowId=showRef
         self.indexUnit=unit
         self.indexUnitFoc=unitFoc
@@ -895,7 +900,7 @@ class THREEMOTORGUI(QWidget) :
                     self.MOT[i].stopMotor()
                 else :
                     self.MOT[i].move(vref)
-                    time.sleep(1)
+                    time.sleep(0.1)
                     self.butNegButt.setChecked(False)
                     self.butPosButt.setChecked(False) 
 #
@@ -979,21 +984,21 @@ class REF3M(QWidget):
         self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.posText.setObjectName('%s'%self.id)
         self.vboxPos.addWidget(self.posText)
-        self.take=QPushButton()
+        self.take=QToolButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setStyleSheet("QToolButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QToolButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.take.setMaximumWidth(30)
         self.take.setMinimumWidth(30)
         self.take.setMinimumHeight(30)
         self.take.setMaximumHeight(30)
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
-        self.Pos=QPushButton()
-        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
-        self.Pos.setMinimumHeight(40)
-        self.Pos.setMaximumHeight(40)
-        self.Pos.setMinimumWidth(40)
-        self.Pos.setMaximumWidth(40)
+        self.Pos=QToolButton()
+        self.Pos.setStyleSheet("QToolButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QToolButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos.setMinimumHeight(30)
+        self.Pos.setMaximumHeight(30)
+        self.Pos.setMinimumWidth(30)
+        self.Pos.setMaximumWidth(30)
         self.PosLayout=QHBoxLayout()
         self.PosLayout.addWidget(self.Pos)
         self.Pos.setObjectName('%s'%self.id)
@@ -1083,7 +1088,7 @@ class PositionThread(QtCore.QThread):
 if __name__ =='__main__':
    
     appli=QApplication(sys.argv)
-    mot5=motLat=THREEMOTORGUI( 'sample_Lat',motorTypeName0='RSAI', motVert='sample_Vert',motorTypeName1='RSAI',motFoc='sample_Foc',motorTypeName2='RSAI',nomWin='SAMPLE',nomTilt='SAMPLE',nomFoc='SAMPLE FOC')
+    mot5=motLat=THREEMOTORGUI( motLat='CAM_Lat',motorTypeName0='RSAI', motVert='CAM_Vert',motorTypeName1='RSAI',motFoc='CAM_Foc',motorTypeName2='RSAI',nomWin='SAMPLE',nomTilt='SAMPLE',nomFoc='SAMPLE FOC')
     mot5.show()
     mot5.startThread2()
     appli.exec_()

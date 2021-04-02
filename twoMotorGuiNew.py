@@ -293,7 +293,7 @@ class TWOMOTORGUI(QWidget) :
         self.jogStep.setStyleSheet("font: bold 12pt")
         self.jogStep.setValue(self.jogValue)
         self.jogStep.setMaximumWidth(120)
-        #self.unitChangeLat=1
+        # self.unitChangeLat=1
     
         center=QHBoxLayout()
         center.addWidget(self.jogStep)
@@ -540,8 +540,9 @@ class TWOMOTORGUI(QWidget) :
         '''
          unit change mot foc
         '''
-        self.indexUnit=self.unitTransBouton.currentIndex()
         valueJog=self.jogStep.value()*self.unitChangeLat
+        self.indexUnit=self.unitTransBouton.currentIndex()
+        
         if self.indexUnit==0: # step
             self.unitChangeLat=1
             self.unitChangeVert=1
@@ -843,8 +844,8 @@ if __name__ =='__main__':
     motor1="Axicon_Trans_Vert"
     
     appli=QApplication(sys.argv)
-    mot5=TWOMOTORGUI('PinholeLat','SmartAct','PinholeVert','SmartAct',nomWin='Pinhole',nomTilt='Pinhole') # croix XUV
-    
+    mot5=TWOMOTORGUI( motLat='Axipara_LAT',motorTypeName0='RSAI', motVert='Axipara_VERT',motorTypeName1='RSAI',nomWin='AXIPARABOLA Control',nomTilt='AXIPARA',unit=1,jogValue=100)
+        
     mot5.show()
     mot5.startThread2()
     appli.exec_()

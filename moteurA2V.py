@@ -20,7 +20,7 @@ import time
 #%% rack initialisation et connexion des racks
 
 portA='com15' # USB n1
-portB='com14' #USB n2
+portB='com16' #USB n2
 
 mysA=Serial()
 mysB=Serial()
@@ -243,7 +243,7 @@ def iniTot():
     print("")
     print('initialisation A2V :OK')
     
-# iniTot() # initialisation de tous les moteurs        
+#iniTot() # initialisation de tous les moteurs        
         
 #%% class A2V motor
 class MOTORA2V():
