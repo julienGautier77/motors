@@ -1,6 +1,6 @@
 # motors
 
-motors module is a Python user interface for to control motion controlers
+motors module is a Python user interface based on PyQT for to control motion controlers
 
 Controlers avaible :
 
