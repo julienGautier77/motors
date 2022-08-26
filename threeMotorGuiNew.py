@@ -5,11 +5,11 @@ Created on Mon Apr  1 11:16:50 2019
 @author: sallejaune
 """
 #%%Import
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit,QToolButton
-from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
-from PyQt5.QtWidgets import QComboBox,QLabel
-from PyQt5.QtGui import QIcon
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QWidget,QMessageBox,QLineEdit,QToolButton
+from PyQt6.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
+from PyQt6.QtWidgets import QComboBox,QLabel
+from PyQt6.QtGui import QIcon
 import sys,time,os
 import qdarkstyle
 import pathlib
@@ -65,7 +65,7 @@ class THREEMOTORGUI(QWidget) :
         self.isWinOpen=False
         
         
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         # self.setStyleSheet("background-color:green")
         # self.setStyleSheet("QPushButton {background-color:gray}")
         # self.setStyleSheet("background-color:green")
@@ -308,7 +308,7 @@ class THREEMOTORGUI(QWidget) :
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
         self.haut=QPushButton()
-        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechehaut.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechehaut.png) ;background-color: transparent ;border-color: blue}")
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechehaut.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechehaut.png) ;background-color: transparent ;border-color: blue}")
         
         self.haut.setMaximumHeight(70)
         self.haut.setMinimumWidth(70)
@@ -317,7 +317,7 @@ class THREEMOTORGUI(QWidget) :
         self.haut.setAutoRepeat(True)
         
         self.bas=QPushButton()
-        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechebas.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechebas.png);background-color: transparent ;border-color: blue}")
+        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechebas.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./icons/flechebas.png);background-color: transparent ;border-color: blue}")
         self.bas.setMaximumHeight(70)
         self.bas.setMinimumWidth(70)
         self.bas.setMaximumWidth(70)
@@ -325,7 +325,7 @@ class THREEMOTORGUI(QWidget) :
         self.bas.setAutoRepeat(True)
         
         self.gauche=QPushButton()
-        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechegauche.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechegauche.png);background-color: transparent ;border-color: blue}")
+        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechegauche.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./icons/flechegauche.png);background-color: transparent ;border-color: blue}")
         self.gauche.setMaximumHeight(70)
         self.gauche.setMinimumWidth(70)
         self.gauche.setMaximumWidth(70)
@@ -333,7 +333,7 @@ class THREEMOTORGUI(QWidget) :
         self.gauche.setAutoRepeat(True)
         
         self.droite=QPushButton()
-        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechedroite.png) ;background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechedroite.png) ;background-color: transparent ;border-color: blue}")
+        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechedroite.png) ;background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./icons/flechedroite.png) ;background-color: transparent ;border-color: blue}")
         self.droite.setMaximumHeight(70)
         self.droite.setMinimumWidth(70)
         self.droite.setMaximumWidth(70)
@@ -401,7 +401,7 @@ class THREEMOTORGUI(QWidget) :
         hboxFoc.addSpacing(25)
         
         self.moins=QPushButton()
-        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/moinsBleu.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./icons/moinsBleu.png);background-color: transparent ;border-color: blue}")
         self.moins.setMaximumWidth(70)
         self.moins.setMinimumHeight(70)
         hboxFoc.addWidget(self.moins)
@@ -415,7 +415,7 @@ class THREEMOTORGUI(QWidget) :
          
         
         self.plus=QPushButton()
-        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/plusBleu.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./icons/plusBleu.png);background-color: transparent ;border-color: blue}")
         self.plus.setMaximumWidth(70)
         self.plus.setMinimumHeight(70)
     
@@ -856,8 +856,8 @@ class THREEMOTORGUI(QWidget) :
         '''
         sender=QtCore.QObject.sender(self) # take the name of  the button 
         
-        reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,QMessageBox.StandardButton.No)
+        if reply == QMessageBox.StandardButton.Yes:
                tposLat=self.MOT[0].position()
                nbRef=str(sender.objectName()[0])
               # print('ref',nbRef)
@@ -884,8 +884,8 @@ class THREEMOTORGUI(QWidget) :
         Fait bouger le moteur a la valeur de reference en step : bouton Go 
         '''
         sender=QtCore.QObject.sender(self)
-        reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,QMessageBox.StandardButton.No)
+        if reply == QMessageBox.StandardButton.Yes:
             nbRef=str(sender.objectName()[0])
             for i in range (0,3):
                 
@@ -974,19 +974,19 @@ class REF3M(QWidget):
     def __init__(self,num=0, parent=None):
         QtCore.QObject.__init__(self)
         super(REF3M, self).__init__()
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         self.wid=QWidget()
         self.id=num
         self.vboxPos=QVBoxLayout()
         
         self.posText=QLineEdit('ref')
         self.posText.setStyleSheet("font: bold 15pt")
-        self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.posText.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.posText.setObjectName('%s'%self.id)
         self.vboxPos.addWidget(self.posText)
         self.take=QToolButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QToolButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QToolButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setStyleSheet("QToolButton:!pressed{border-image: url(./icons/disquette.png);background-color: transparent ;border-color: green;}""QToolButton:pressed{image: url(./icons/disquette.png);background-color: transparent ;border-color: blue}")
         self.take.setMaximumWidth(30)
         self.take.setMinimumWidth(30)
         self.take.setMinimumHeight(30)
@@ -994,7 +994,7 @@ class REF3M(QWidget):
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
         self.Pos=QToolButton()
-        self.Pos.setStyleSheet("QToolButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QToolButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos.setStyleSheet("QToolButton:!pressed{border-image: url(./icons/playGreen.png);background-color: transparent ;border-color: green;}""QToolButton:pressed{image: url(./icons/playGreen.png);background-color: transparent ;border-color: blue}")
         self.Pos.setMinimumHeight(30)
         self.Pos.setMaximumHeight(30)
         self.Pos.setMinimumWidth(30)
@@ -1024,7 +1024,7 @@ class REF3M(QWidget):
         grid_layoutPos = QGridLayout()
         grid_layoutPos.setVerticalSpacing(5)
         grid_layoutPos.setHorizontalSpacing(10)
-        grid_layoutPos.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        grid_layoutPos.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         grid_layoutPos.addLayout(self.takeLayout,0,0)
         grid_layoutPos.addLayout(self.PosLayout,0,1)
         grid_layoutPos.addWidget(LabeLatref,1,0)
@@ -1035,7 +1035,7 @@ class REF3M(QWidget):
         grid_layoutPos.addWidget(self.ABSFocref,3,1)
         self.vboxPos.addLayout(grid_layoutPos)
 #        self.vboxPos.setContentsMargins(-10,-10,-10,-10)
-        self.wid.setStyleSheet("background-color: rgb(60, 77, 87)")
+        #self.wid.setStyleSheet("background-color: rgb(60, 77, 87)")
         self.wid.setLayout(self.vboxPos)
 #        self.setContentsMargins(-10,-10,-10,-10)
         mainVert=QVBoxLayout()
@@ -1088,7 +1088,7 @@ class PositionThread(QtCore.QThread):
 if __name__ =='__main__':
    
     appli=QApplication(sys.argv)
-    mot5=motLat=THREEMOTORGUI( motLat='CAM_Lat',motorTypeName0='RSAI', motVert='CAM_Vert',motorTypeName1='RSAI',motFoc='CAM_Foc',motorTypeName2='RSAI',nomWin='SAMPLE',nomTilt='SAMPLE',nomFoc='SAMPLE FOC')
+    mot5=motLat=THREEMOTORGUI( motLat='CAM_Lat',motorTypeName0='', motVert='CAM_Vert',motorTypeName1='',motFoc='CAM_Foc',motorTypeName2='RSAI',nomWin='SAMPLE',nomTilt='SAMPLE',nomFoc='SAMPLE FOC')
     mot5.show()
     mot5.startThread2()
     appli.exec_()
