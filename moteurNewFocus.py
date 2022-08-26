@@ -1,14 +1,14 @@
 # -*- coding: utf-8
 """ Control des moteurs NewFocus
 protocole TC/IP
-python 3.X and PyQt5
+python 3.X and PyQt6
 @author: Gautier julien loa
 Created on Wed Feb 28 11:59:41 2018
 """
 #%% import
 import socket
 import time
-from PyQt5.QtCore import QSettings
+from PyQt6.QtCore import QSettings
 
 #%% initialisation and connexion
 IP='10.0.2.60'
@@ -39,7 +39,7 @@ def stopConnexion():
     print('stop new Focus')
     s.close()
     
-confNewFocus=QSettings('fichiersConfig/configMoteurNewFocus.ini',QSettings.IniFormat)
+confNewFocus=QSettings('fichiersConfig/configMoteurNewFocus.ini',QSettings.Format.IniFormat)
 
 #%%  class motorNewfocus
 
