@@ -5,11 +5,11 @@ Created on Mon Apr  1 11:16:50 2019
 @author: sallejaune
 """
 #%%Import
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit,QToolButton
-from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
-from PyQt5.QtWidgets import QComboBox,QLabel
-from PyQt5.QtGui import QIcon
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QWidget,QMessageBox,QLineEdit,QToolButton
+from PyQt6.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
+from PyQt6.QtWidgets import QComboBox,QLabel
+from PyQt6.QtGui import QIcon
 import sys,time,os
 import qdarkstyle
 import pathlib
@@ -65,7 +65,7 @@ class THREEMOTORGUI(QWidget) :
         self.isWinOpen=False
         
         
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         # self.setStyleSheet("background-color:green")
         # self.setStyleSheet("QPushButton {background-color:gray}")
         # self.setStyleSheet("background-color:green")
@@ -856,8 +856,8 @@ class THREEMOTORGUI(QWidget) :
         '''
         sender=QtCore.QObject.sender(self) # take the name of  the button 
         
-        reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,QMessageBox.StandardButton.No)
+        if reply == QMessageBox.StandardButton.Yes:
                tposLat=self.MOT[0].position()
                nbRef=str(sender.objectName()[0])
               # print('ref',nbRef)
@@ -884,8 +884,8 @@ class THREEMOTORGUI(QWidget) :
         Fait bouger le moteur a la valeur de reference en step : bouton Go 
         '''
         sender=QtCore.QObject.sender(self)
-        reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,QMessageBox.StandardButton.No)
+        if reply == QMessageBox.StandardButton.Yes:
             nbRef=str(sender.objectName()[0])
             for i in range (0,3):
                 
@@ -974,14 +974,14 @@ class REF3M(QWidget):
     def __init__(self,num=0, parent=None):
         QtCore.QObject.__init__(self)
         super(REF3M, self).__init__()
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         self.wid=QWidget()
         self.id=num
         self.vboxPos=QVBoxLayout()
         
         self.posText=QLineEdit('ref')
         self.posText.setStyleSheet("font: bold 15pt")
-        self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.posText.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.posText.setObjectName('%s'%self.id)
         self.vboxPos.addWidget(self.posText)
         self.take=QToolButton()
@@ -1024,7 +1024,7 @@ class REF3M(QWidget):
         grid_layoutPos = QGridLayout()
         grid_layoutPos.setVerticalSpacing(5)
         grid_layoutPos.setHorizontalSpacing(10)
-        grid_layoutPos.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        grid_layoutPos.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         grid_layoutPos.addLayout(self.takeLayout,0,0)
         grid_layoutPos.addLayout(self.PosLayout,0,1)
         grid_layoutPos.addWidget(LabeLatref,1,0)

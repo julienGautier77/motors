@@ -4,11 +4,11 @@ Created on Wed Sep 26 14:32:54 2018
 Control tir laview 
 @author: loa
 """
-from PyQt5 import QtCore
+from PyQt6 import QtCore
 import qdarkstyle
-from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QWidget,QMessageBox,QShortcut,QVBoxLayout,QPushButton,QHBoxLayout
+from PyQt6.QtGui import QKeySequence
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QWidget,QMessageBox,QShortcut,QVBoxLayout,QPushButton,QHBoxLayout
 import time
 import sys
 import tirSalleJaune as tirSJ
@@ -27,10 +27,10 @@ class TIRGUI(QWidget) :
         
         super(TIRGUI, self).__init__(parent)
         self.isWinOpen=False
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         self.setup()
         self.actionButton()
-        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
         
 
     def setup(self):
@@ -93,7 +93,7 @@ class TIRGUI(QWidget) :
     def TirAct(self):
         
         a=tirSJ.Tir()
-        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
         print( "tir :",a)
         if a==0 or a=="":
             self.TirConnected=0
@@ -103,7 +103,7 @@ class TIRGUI(QWidget) :
             msg.setText("Not connected !")
             msg.setInformativeText("Please connect !!")
             msg.setWindowTitle("Warning ...")
-            msg.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+            msg.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
             msg.exec_()
 
 

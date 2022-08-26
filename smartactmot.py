@@ -8,13 +8,13 @@ Created on Tue Feb 27 15:49:32 2018
 
 #%% Imports
 try:
-    from PyQt5.QtCore import QSettings
-    from PyQt5 import uic,QtCore
-    from PyQt5.QtWidgets import QApplication
-    from PyQt5.QtWidgets import QMessageBox
+    from PyQt6.QtCore import QSettings
+    from PyQt6 import uic,QtCore
+    from PyQt6.QtWidgets import QApplication
+    from PyQt6.QtWidgets import QMessageBox
     import time
 except:
-    print("error QT5 import")
+    print("error QT6import")
 
 import ctypes
 import sys
@@ -22,7 +22,7 @@ import sys
 #%% import dll with cdll et non windll sinon error 4 bytes in excess (cf :https://ammous88.wordpress.com/2014/12/31/ctypes-cdll-vs-windll/)
 dll_file = 'DLL/MCSControl' 
 
-confSmart = QSettings('./fichiersConfig/configMoteurSmartAct.ini', QSettings.IniFormat) # motor configuration  files
+confSmart = QSettings('./fichiersConfig/configMoteurSmartAct.ini', QSettings.Format.IniFormat) # motor configuration  files
 
 configuration=ctypes.c_uint32(0) 
 

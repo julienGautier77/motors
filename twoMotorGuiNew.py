@@ -5,15 +5,13 @@ Created on Mon Apr  1 11:16:50 2019
 @author: sallejaune
 """
 #%%Import
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication,QStyle
-from PyQt5.QtWidgets import QWidget,QMessageBox,QSpinBox,QLineEdit,QFrame
-from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushButton,QGridLayout,QTextEdit,QDoubleSpinBox
-from PyQt5.QtWidgets import QInputDialog,QComboBox,QSlider,QCheckBox,QLabel,QSizePolicy,QLineEdit,QPlainTextEdit,QMessageBox,QMenu,QRadioButton
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import QRect
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QShortcut,QStyleOption
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QWidget,QMessageBox,QLineEdit
+from PyQt6.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushButton,QGridLayout,QDoubleSpinBox
+from PyQt6.QtWidgets import QComboBox,QCheckBox,QLabel,QLineEdit,QMessageBox
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtGui import QIcon
 import sys,time,os
 import qdarkstyle
 import pathlib
@@ -53,7 +51,7 @@ class TWOMOTORGUI(QWidget) :
         self.conf=[0,0,0]
         self.configPath="./fichiersConfig/"#"/.fichiersConfig/"
         self.isWinOpen=False
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         self.refShowId=showRef
         self.indexUnit=unit
         self.nomTilt=nomTilt
@@ -114,7 +112,7 @@ class TWOMOTORGUI(QWidget) :
                 self.motorType[zi]=test
                 self.MOT[zi]=self.motorType[zi].MOTORTEST(self.motor[zi])
                 
-            self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.IniFormat) # fichier config motor fichier .ini
+            self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.Format.IniFormat) # fichier config motor fichier .ini
         
         self.stepmotor=[0,0,0]
         self.butePos=[0,0,0]
@@ -219,7 +217,7 @@ class TWOMOTORGUI(QWidget) :
         self.position_Lat.setStyleSheet("font: bold 25pt" )
         self.position_Lat.setMaximumHeight(30)
         self.enPosition_Lat=QLineEdit('?')
-        self.enPosition_Lat.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.enPosition_Lat.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.enPosition_Lat.setMaximumWidth(70)
         self.enPosition_Lat.setStyleSheet("font: bold 15pt")
         self.zeroButtonLat=QPushButton('Zero')
@@ -238,7 +236,7 @@ class TWOMOTORGUI(QWidget) :
         self.position_Vert.setMaximumHeight(30)
         self.enPosition_Vert=QLineEdit('?')
         self.enPosition_Vert.setMaximumWidth(80)
-        self.enPosition_Vert.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.enPosition_Vert.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.enPosition_Vert.setStyleSheet("font: bold 15pt")
         self.zeroButtonVert=QPushButton('Zero')
         self.zeroButtonVert.setMaximumWidth(50)
@@ -301,7 +299,7 @@ class TWOMOTORGUI(QWidget) :
         self.hautLayout.addWidget(self.haut)
         self.basLayout=QHBoxLayout()
         self.basLayout.addWidget(self.bas)
-        grid_layout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        grid_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         
         grid_layout.addLayout(self.hautLayout, 0, 1)
         grid_layout.addLayout(self.basLayout,2,1)
@@ -637,9 +635,9 @@ class TWOMOTORGUI(QWidget) :
         take and save the reference
         '''
         sender=QtCore.QObject.sender(self) # take the name of  the button 
-        reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
+        reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,QMessageBox.StandardButton.No)
         
-        if reply == QMessageBox.Yes:
+        if reply == QMessageBox.StandardButton.Yes:
             
                tposLat=self.MOT[0].position()
                nbRef=str(sender.objectName()[0])
@@ -662,8 +660,8 @@ class TWOMOTORGUI(QWidget) :
         Fait bouger le moteur a la valeur de reference en step : bouton Go 
         '''
         sender=QtCore.QObject.sender(self)
-        reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,QMessageBox.StandardButton.No)
+        if reply == QMessageBox.StandardButton.Yes:
             nbRef=str(sender.objectName()[0])
             for i in range (0,2):
                 print(i)
@@ -739,14 +737,14 @@ class REF2M(QWidget):
     def __init__(self,num=0, parent=None):
         QtCore.QObject.__init__(self)
         super(REF2M, self).__init__()
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         self.wid=QWidget()
         self.id=num
         self.vboxPos=QVBoxLayout()
         
         self.posText=QLineEdit('ref')
         self.posText.setStyleSheet("font: bold 15pt")
-        self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.posText.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.posText.setObjectName('%s'%self.id)
         self.vboxPos.addWidget(self.posText)
         self.take=QPushButton()
@@ -804,7 +802,6 @@ class PositionThread(QtCore.QThread):
     '''
     Secon thread  to display the position
     '''
-    import time #?
     POS=QtCore.pyqtSignal(float) # signal of the second thread to main thread  to display motors position
     def __init__(self,parent=None,mot='',motorType=''):
         super(PositionThread,self).__init__(parent)

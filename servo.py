@@ -8,9 +8,9 @@ Created on Wed Feb 28 14:46:32 2018
 
 
 from serial import Serial,serialutil
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import QSettings
-from PyQt5 import uic
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import QSettings
+from PyQt6 import uic
 import time,sys
 
 portServo=('com4')
@@ -41,7 +41,7 @@ def stopConnexion():
     except:
        pass
 
-confServo=QSettings('fichiersConfig/configMoteurServo.ini', QSettings.IniFormat) # motor configuration  files
+confServo=QSettings('fichiersConfig/configMoteurServo.ini', QSettings.Format.IniFormat) # motor configuration  files
 
 
 

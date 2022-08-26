@@ -5,13 +5,21 @@ Created on Mon Apr  1 11:16:50 2019
 @author: sallejaune
 """
 #%%Import
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit
-from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
-from PyQt5.QtWidgets import QComboBox,QLabel
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QRect
+try :
+    from PyQt6 import QtCore
+    from PyQt6.QtWidgets import QApplication
+    from PyQt6.QtWidgets import QWidget,QMessageBox,QLineEdit
+    from PyQt6.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
+    from PyQt6.QtWidgets import QComboBox,QLabel
+    from PyQt6.QtGui import QIcon
+except ImportError:
+    from PyQt5 import QtCore
+    from PyQt5.QtWidgets import QApplication
+    from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit
+    from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
+    from PyQt5.QtWidgets import QComboBox,QLabel
+    from PyQt5.QtGui import QIcon
+    from PyQt5.QtCore import QRect
 
 import sys,time,os
 import qdarkstyle
@@ -54,7 +62,7 @@ class ONEMOTORGUI(QWidget) :
         self.conf=[0]
         self.configPath=str(p.parent / "fichiersConfig")+sepa
         self.isWinOpen=False
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         self.refShowId=showRef
         self.indexUnit=unit
         self.jogValue=jogValue
@@ -555,8 +563,8 @@ class ONEMOTORGUI(QWidget) :
         
         nbRef=str(sender.objectName()[0])
         
-        reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,QMessageBox.StandardButton.No)
+        if reply == QMessageBox.StandardButton.Yes:
                tpos=float(self.MOT[0].position())
                
                self.conf[0].setValue(self.motor[0]+"/ref"+nbRef+"Pos",tpos)
@@ -572,8 +580,8 @@ class ONEMOTORGUI(QWidget) :
         Fait bouger le moteur a la valeur de reference en step : bouton Go 
         '''
         sender=QtCore.QObject.sender(self)
-        reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,QMessageBox.StandardButton.No)
+        if reply == QMessageBox.StandardButton.Yes:
             nbRef=str(sender.objectName()[0])
             for i in range (0,1):
                 
@@ -638,13 +646,13 @@ class REF1M(QWidget):
     
     def __init__(self,num=0, parent=None):
         super(REF1M, self).__init__()
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6')) # dark style
         self.wid=QWidget()
         self.id=num
         self.vboxPos=QVBoxLayout()
         
         self.posText=QLineEdit('ref')
-        self.posText.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.posText.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.posText.setStyleSheet("font: bold 15pt")
         self.posText.setObjectName('%s'%self.id)
 #        self.posText.setMaximumWidth(80)
@@ -683,7 +691,7 @@ class REF1M(QWidget):
         grid_layoutPos = QGridLayout()
         grid_layoutPos.setVerticalSpacing(5)
         grid_layoutPos.setHorizontalSpacing(10)
-        grid_layoutPos.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        grid_layoutPos.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         grid_layoutPos.addLayout(self.takeLayout,0,0)
         grid_layoutPos.addLayout(self.PosLayout,0,1)
         grid_layoutPos.addWidget(Labelref,1,0)
@@ -704,7 +712,6 @@ class PositionThread(QtCore.QThread):
     '''
     Secon thread  to display the position
     '''
-    import time #?
     POS=QtCore.pyqtSignal(float) # signal of the second thread to main thread  to display motors position
     def __init__(self,parent=None,mot='',motorType=''):
         super(PositionThread,self).__init__(parent)

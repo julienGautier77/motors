@@ -13,9 +13,9 @@ import ctypes
 import time
 
 try:
-    from PyQt5.QtCore import QSettings
+    from PyQt6.QtCore import QSettings
 except:
-    from PyQt4.QtCore import QSettings
+    from PyQt5.QtCore import QSettings
 
 
 #%% DLL
@@ -55,7 +55,7 @@ IPs_C = ctypes.create_string_buffer(IP, 48) # permet d avoir la liste comme dema
 
 
 #conf = QSettings(QSettings.IniFormat, QSettings.UserScope, "configMoteur", "configMoteurRSAI")
-confRSAI = QSettings('fichiersConfig/configMoteurRSAI.ini', QSettings.IniFormat)
+confRSAI = QSettings('fichiersConfig/configMoteurRSAI.ini', QSettings.Format.IniFormat)
 
 
 
