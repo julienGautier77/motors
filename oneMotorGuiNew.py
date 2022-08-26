@@ -699,7 +699,7 @@ class REF1M(QWidget):
         
         
         self.vboxPos.addLayout(grid_layoutPos)
-        self.wid.setStyleSheet("background-color: rgb(60, 77, 87);border-radius:10px")
+        #self.wid.setStyleSheet("background-color: rgb(60, 77, 87);border-radius:10px")
        
         self.wid.setLayout(self.vboxPos)
         mainVert=QVBoxLayout()
