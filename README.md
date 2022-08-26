@@ -4,7 +4,7 @@ motors module is a Python user interface based on PyQT for to control motion con
 
 Controlers avaible :
 
--RSAI
+-RSAI (64 bits Dll)
 
 -NewFocus
 
@@ -21,10 +21,10 @@ Controlers avaible :
 -APT (Thorlabs)
 
 
-test on windows 32 bits only
+test on windows 64 bits 
 
 Requirements
 python 3.x
 Numpy
-PyQt5
+PyQt6
 qdarkstyle (https://github.com/ColinDuquesnoy/QDarkStyleSheet.git) pip install qdarkstyle
