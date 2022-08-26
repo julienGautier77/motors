@@ -198,7 +198,7 @@ class TILTMOTORGUI(QWidget) :
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
         self.haut=QPushButton()
-        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechehaut.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechehaut.png) ;background-color: transparent;border-color: blue}")
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechehaut.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechehaut.png) ;background-color: transparent;border-color: blue}")
         
         self.haut.setMaximumHeight(70)
         self.haut.setMinimumWidth(70)
@@ -206,21 +206,21 @@ class TILTMOTORGUI(QWidget) :
         self.haut.setMinimumHeight(70)
         
         self.bas=QPushButton()
-        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechebas.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechebas.png) ;background-color: transparent;border-color: blue}")
+        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechebas.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechebas.png) ;background-color: transparent;border-color: blue}")
         self.bas.setMaximumHeight(70)
         self.bas.setMinimumWidth(70)
         self.bas.setMaximumWidth(70)
         self.bas.setMinimumHeight(70)
         
         self.droite=QPushButton()
-        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechedroite.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechedroite.png) ;background-color: transparent;border-color: blue}")
+        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechedroite.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechedroite.png) ;background-color: transparent;border-color: blue}")
         self.droite.setMaximumHeight(70)
         self.droite.setMinimumWidth(70)
         self.droite.setMaximumWidth(70)
         self.droite.setMinimumHeight(70)
         
         self.gauche=QPushButton()
-        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechegauche.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechegauche.png) ;background-color: transparent;border-color: blue}")
+        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechegauche.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechegauche.png) ;background-color: transparent;border-color: blue}")
         
         self.gauche.setMaximumHeight(70)
         self.gauche.setMinimumWidth(70)

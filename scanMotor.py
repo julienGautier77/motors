@@ -185,7 +185,7 @@ class SCAN(QWidget):
         
         if a==0 or a=="":
             msg = QMessageBox()
-            msg.setIcon(QMessageBox.Critical)
+            msg.setIcon(QMessageBox.Icon.Critical)
             msg.setText("Not connected !")
             msg.setInformativeText("Please connect !!")
             msg.setWindowTitle("Warning ...")

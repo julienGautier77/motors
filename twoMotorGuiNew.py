@@ -257,7 +257,7 @@ class TWOMOTORGUI(QWidget) :
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
         self.haut=QPushButton()
-        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechehaut.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechehaut.png);background-color: transparent ;border-color: blue}")
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechehaut.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechehaut.png);background-color: transparent ;border-color: blue}")
         
         self.haut.setMaximumHeight(70)
         self.haut.setMinimumWidth(70)
@@ -265,21 +265,21 @@ class TWOMOTORGUI(QWidget) :
         self.haut.setMinimumHeight(70)
         
         self.bas=QPushButton()
-        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechebas.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechebas.png);background-color: transparent;border-color: blue}")
+        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechebas.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechebas.png);background-color: transparent;border-color: blue}")
         self.bas.setMaximumHeight(70)
         self.bas.setMinimumWidth(70)
         self.bas.setMaximumWidth(70)
         self.bas.setMinimumHeight(70)
         
         self.gauche=QPushButton('Left')
-        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechegauche.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechegauche.png);background-color: transparent ;border-color: blue}")
+        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechegauche.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechegauche.png);background-color: transparent ;border-color: blue}")
         
         self.gauche.setMaximumHeight(70)
         self.gauche.setMinimumWidth(70)
         self.gauche.setMaximumWidth(70)
         self.gauche.setMinimumHeight(70)
         self.droite=QPushButton('right')
-        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechedroite.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechedroite.png);background-color: transparent ;border-color: blue}")
+        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechedroite.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./icons/flechedroite.png);background-color: transparent ;border-color: blue}")
         self.droite.setMaximumHeight(70)
         self.droite.setMinimumWidth(70)
         self.droite.setMaximumWidth(70)
@@ -749,7 +749,7 @@ class REF2M(QWidget):
         self.vboxPos.addWidget(self.posText)
         self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.take.setMaximumWidth(30)
         self.take.setMinimumWidth(30)
         self.take.setMinimumHeight(30)
@@ -757,7 +757,7 @@ class REF2M(QWidget):
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
         self.Pos=QPushButton()
-        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)
         self.Pos.setMinimumWidth(40)
@@ -837,8 +837,8 @@ class PositionThread(QtCore.QThread):
 
 
 if __name__ =='__main__':
-    motor0="Axicon_Trans_Lat"
-    motor1="Axicon_Trans_Vert"
+    motor0="testMot"
+    motor1="testMot"
     
     appli=QApplication(sys.argv)
     mot5=TWOMOTORGUI( motLat='Axipara_LAT',motorTypeName0='RSAI', motVert='Axipara_VERT',motorTypeName1='RSAI',nomWin='AXIPARABOLA Control',nomTilt='AXIPARA',unit=1,jogValue=100)

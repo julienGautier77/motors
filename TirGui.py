@@ -8,7 +8,8 @@ from PyQt6 import QtCore
 import qdarkstyle
 from PyQt6.QtGui import QKeySequence
 from PyQt6.QtWidgets import QApplication
-from PyQt6.QtWidgets import QWidget,QMessageBox,QShortcut,QVBoxLayout,QPushButton,QHBoxLayout
+from PyQt6.QtWidgets import QWidget,QMessageBox,QVBoxLayout,QPushButton,QHBoxLayout
+from PyQt6.QtGui import QShortcut
 import time
 import sys
 import tirSalleJaune as tirSJ
@@ -99,7 +100,7 @@ class TIRGUI(QWidget) :
             self.TirConnected=0
             print( "Probleme tir")
             msg = QMessageBox()
-            msg.setIcon(QMessageBox.Critical)
+            msg.setIcon(QMessageBox.Icon.Critical)
             msg.setText("Not connected !")
             msg.setInformativeText("Please connect !!")
             msg.setWindowTitle("Warning ...")

@@ -240,7 +240,7 @@ class ONEMOTORGUI(QWidget) :
         #self.MoveStep.setStyleSheet("background-color: green")
         
         self.absMvtButton=QPushButton()
-        self.absMvtButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png) ;background-color: transparent;border-color: blue}")
+        self.absMvtButton.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/playGreen.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/playGreen.png) ;background-color: transparent;border-color: blue}")
         self.absMvtButton.setMinimumHeight(50)
         self.absMvtButton.setMaximumHeight(50)
         self.absMvtButton.setMinimumWidth(50)
@@ -253,7 +253,7 @@ class ONEMOTORGUI(QWidget) :
         vbox1.addSpacing(10)
         hbox1=QHBoxLayout()
         self.moins=QPushButton()
-        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/moinsBleu.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/moinsBleu.png);background-color: transparent;border-color: blue}")
+        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/moinsBleu.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./icons/moinsBleu.png);background-color: transparent;border-color: blue}")
         
         self.moins.setMinimumHeight(70)
         self.moins.setMaximumHeight(70)
@@ -273,7 +273,7 @@ class ONEMOTORGUI(QWidget) :
          
         
         self.plus=QPushButton()
-        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/plusBleu.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/plusBleu.png) ;background-color: transparent;border-color: blue}")
+        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/plusBleu.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/plusBleu.png) ;background-color: transparent;border-color: blue}")
         self.plus.setMinimumHeight(70)
         self.plus.setMaximumHeight(70)
         self.plus.setMinimumWidth(70)
@@ -287,7 +287,7 @@ class ONEMOTORGUI(QWidget) :
         
         hbox2=QHBoxLayout()
         self.stopButton=QPushButton()
-        self.stopButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/close.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/close.png) ;background-color: transparent;border-color: blue}")
+        self.stopButton.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/close.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/close.png) ;background-color: transparent;border-color: blue}")
         #self.stopButton.setStyleSheet("border-radius:20px;background-color: red")
         self.stopButton.setMaximumHeight(70)
         self.stopButton.setMaximumWidth(70)
@@ -660,7 +660,7 @@ class REF1M(QWidget):
         
         self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.take.setMaximumWidth(30)
         self.take.setMinimumWidth(30)
         self.take.setMinimumHeight(30)
@@ -668,7 +668,7 @@ class REF1M(QWidget):
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
         self.Pos=QPushButton()
-        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)
         self.Pos.setMinimumWidth(40)
