@@ -401,7 +401,9 @@ class THREEMOTORGUI(QWidget) :
         hboxFoc.addSpacing(25)
         
         self.moins=QPushButton()
+
         self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+
         self.moins.setMaximumWidth(70)
         self.moins.setMinimumHeight(70)
         hboxFoc.addWidget(self.moins)
@@ -415,7 +417,9 @@ class THREEMOTORGUI(QWidget) :
          
         
         self.plus=QPushButton()
+
         self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+
         self.plus.setMaximumWidth(70)
         self.plus.setMinimumHeight(70)
     
@@ -986,7 +990,10 @@ class REF3M(QWidget):
         self.vboxPos.addWidget(self.posText)
         self.take=QToolButton()
         self.take.setObjectName('%s'%self.id)
+
         self.take.setStyleSheet("QToolButton:!pressed{border-image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QToolButton:pressed{image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+
+        
         self.take.setMaximumWidth(30)
         self.take.setMinimumWidth(30)
         self.take.setMinimumHeight(30)
@@ -994,7 +1001,10 @@ class REF3M(QWidget):
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
         self.Pos=QToolButton()
+
         self.Pos.setStyleSheet("QToolButton:!pressed{border-image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QToolButton:pressed{image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+
+        
         self.Pos.setMinimumHeight(30)
         self.Pos.setMaximumHeight(30)
         self.Pos.setMinimumWidth(30)
@@ -1035,7 +1045,7 @@ class REF3M(QWidget):
         grid_layoutPos.addWidget(self.ABSFocref,3,1)
         self.vboxPos.addLayout(grid_layoutPos)
 #        self.vboxPos.setContentsMargins(-10,-10,-10,-10)
-        self.wid.setStyleSheet("background-color: rgb(60, 77, 87)")
+        #self.wid.setStyleSheet("background-color: rgb(60, 77, 87)")
         self.wid.setLayout(self.vboxPos)
 #        self.setContentsMargins(-10,-10,-10,-10)
         mainVert=QVBoxLayout()

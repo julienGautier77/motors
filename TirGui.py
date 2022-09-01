@@ -76,18 +76,18 @@ class TIRGUI(QWidget) :
         a=tirSJ.tirConnect()
         print (a)
         if a==1:
-            self.connectButton.setStyleSheet("background-color: rgb(0, 170, 0)")
+            self.connectButton.setStyleSheet("background-color: green")
             self.connectButton.setText("Connected")
             self.TirConnected=1
             
         else :
-            self.connectButton.setStyleSheet("background-color: rgb(180,180,180)")
+            self.connectButton.setStyleSheet("background-color: gray")
             self.connectButton.setText("Connection")
             self.TirConnected=0
 
     def Disconnect(self):
     	tirSJ.disconnect()
-    	self.connectButton.setStyleSheet("background-color: rgb(180,180,180)")
+    	self.connectButton.setStyleSheet("background-color: gray")
     	self.connectButton.setText("Connection")
     	self.TirConnected=0
     

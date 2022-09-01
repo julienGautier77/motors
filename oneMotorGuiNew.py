@@ -660,7 +660,9 @@ class REF1M(QWidget):
         
         self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
+
         self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+
         self.take.setMaximumWidth(30)
         self.take.setMinimumWidth(30)
         self.take.setMinimumHeight(30)
@@ -668,7 +670,10 @@ class REF1M(QWidget):
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
         self.Pos=QPushButton()
+
         self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+
+
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)
         self.Pos.setMinimumWidth(40)
@@ -699,7 +704,7 @@ class REF1M(QWidget):
         
         
         self.vboxPos.addLayout(grid_layoutPos)
-        self.wid.setStyleSheet("background-color: rgb(60, 77, 87);border-radius:10px")
+        #self.wid.setStyleSheet("background-color: rgb(60, 77, 87);border-radius:10px")
        
         self.wid.setLayout(self.vboxPos)
         mainVert=QVBoxLayout()
