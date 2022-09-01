@@ -10,11 +10,11 @@ serial port defined in servo.py
 """
 
 import servo
-from PyQt5 import QtCore
+from PyQt6 import QtCore
 
 import sys
-from PyQt5.QtWidgets import QApplication,QWidget,QPushButton,QGridLayout,QVBoxLayout
-from PyQt5.QtGui import QIcon
+from PyQt6.QtWidgets import QApplication,QWidget,QPushButton,QGridLayout,QVBoxLayout
+from PyQt6.QtGui import QIcon
 
 import pathlib,os
 import qdarkstyle
@@ -35,7 +35,7 @@ class SERVOWIN(QWidget):
             
             self.configPath=str(p.parent / "fichiersConfig")+sepa
             self.configMotName=self.configPath+configFile
-            self.conf=QtCore.QSettings(self.configMotName, QtCore.QSettings.IniFormat)   
+            self.conf=QtCore.QSettings(self.configMotName, QtCore.QSettings.Format.IniFormat)   
             self.groups=self.conf.childGroups() # lecture de tous les moteurs
             # print('servo in ini   file : ',self.configMotName)
             # print(self.groups)
@@ -50,7 +50,7 @@ class SERVOWIN(QWidget):
             
     def setup(self):
         
-            self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+            self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
             grid = QGridLayout()
             vbox1=QVBoxLayout() 
             print('Please wait ...')
@@ -79,7 +79,7 @@ class SERVOWIN(QWidget):
             # # ajout de la grille de bouton au widget proncipal
             vbox1.addLayout(grid)
             self.setLayout(vbox1)   
-            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+            self.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
             
             j = 0
             for mm in self.motorListButton:

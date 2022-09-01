@@ -16,12 +16,12 @@ Modified on Tue july 17  10:49:32 2018
 
 
 
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
-from PyQt5.QtWidgets import QComboBox,QLabel
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QWidget
+from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
+from PyQt6.QtWidgets import QComboBox,QLabel
 import qdarkstyle
 import pathlib
 import time
@@ -66,7 +66,7 @@ class TILTMOTORGUI(QWidget) :
         self.conf=[0,0]
         self.configPath="./fichiersConfig/"
         self.isWinOpen=False
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         self.indexUnit=unit
         self.jogValue=jogValue
         self.nomTilt=nomTilt
@@ -121,7 +121,7 @@ class TILTMOTORGUI(QWidget) :
                 self.motorType[zi]=test
                 self.MOT[zi]=self.motorType[zi].MOTORTEST(self.motor[zi])
                 
-            self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.IniFormat) # fichier config motor fichier .ini
+            self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.Format.IniFormat) # fichier config motor fichier .ini
         
         
         self.stepmotor=[0,0]
@@ -198,7 +198,7 @@ class TILTMOTORGUI(QWidget) :
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
         self.haut=QPushButton()
-        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechehaut.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechehaut.png) ;background-color: transparent;border-color: blue}")
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechehaut.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechehaut.png) ;background-color: transparent;border-color: blue}")
         
         self.haut.setMaximumHeight(70)
         self.haut.setMinimumWidth(70)
@@ -206,21 +206,21 @@ class TILTMOTORGUI(QWidget) :
         self.haut.setMinimumHeight(70)
         
         self.bas=QPushButton()
-        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechebas.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechebas.png) ;background-color: transparent;border-color: blue}")
+        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechebas.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechebas.png) ;background-color: transparent;border-color: blue}")
         self.bas.setMaximumHeight(70)
         self.bas.setMinimumWidth(70)
         self.bas.setMaximumWidth(70)
         self.bas.setMinimumHeight(70)
         
         self.droite=QPushButton()
-        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechedroite.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechedroite.png) ;background-color: transparent;border-color: blue}")
+        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechedroite.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechedroite.png) ;background-color: transparent;border-color: blue}")
         self.droite.setMaximumHeight(70)
         self.droite.setMinimumWidth(70)
         self.droite.setMaximumWidth(70)
         self.droite.setMinimumHeight(70)
         
         self.gauche=QPushButton()
-        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechegauche.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechegauche.png) ;background-color: transparent;border-color: blue}")
+        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechegauche.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechegauche.png) ;background-color: transparent;border-color: blue}")
         
         self.gauche.setMaximumHeight(70)
         self.gauche.setMinimumWidth(70)
@@ -242,7 +242,7 @@ class TILTMOTORGUI(QWidget) :
         self.hautLayout.addWidget(self.haut)
         self.basLayout=QHBoxLayout()
         self.basLayout.addWidget(self.bas)
-        grid_layout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        grid_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         grid_layout.addLayout(self.hautLayout, 0, 1)
         grid_layout.addLayout(self.basLayout,2,1)
         grid_layout.addWidget(self.gauche, 1, 0)

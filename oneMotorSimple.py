@@ -8,11 +8,11 @@ Created on Tue Apr 16 15:49:41 2019
 
 
 #%%Import
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QDoubleSpinBox
-from PyQt5.QtWidgets import QComboBox,QLabel
-from PyQt5.QtGui import QIcon
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QDoubleSpinBox
+from PyQt6.QtWidgets import QComboBox,QLabel
+from PyQt6.QtGui import QIcon
 import sys,time,os
 import qdarkstyle
 import pathlib
@@ -34,7 +34,7 @@ class ONEMOTOR(QWidget) :
         self.indexUnit=unit
         self.configPath="./fichiersConfig/"
         self.isWinOpen=False
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         self.jogValue=jogValue
         self.version=__version__
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
@@ -96,7 +96,7 @@ class ONEMOTOR(QWidget) :
             
         configMotName=self.configPath+ self.configMotName  
         
-        self.conf=QtCore.QSettings(configMotName, QtCore.QSettings.IniFormat) # fichier config motor fichier .ini
+        self.conf=QtCore.QSettings(configMotName, QtCore.QSettings.Format.IniFormat) # fichier config motor fichier .ini
         
         self.name=str(self.conf.value(self.motor+"/Name"))
         self.setWindowTitle(nomWin+' : '+ self.name+'                     V.'+str(self.version))
@@ -297,7 +297,7 @@ class ONEMOTOR(QWidget) :
 #%%#################################################################################       
 class PositionThread(QtCore.QThread):
     ### thread secondaire pour afficher la position
-    import time #?
+    
     POS=QtCore.pyqtSignal(float) # signal transmit par le second thread au thread principal pour aff la position
     def __init__(self,parent=None,mot='',motorType=''):
         super(PositionThread,self).__init__(parent)

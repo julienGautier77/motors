@@ -1,7 +1,10 @@
 
-from PyQt5.QtCore import QSettings
+try :
+    from PyQt6.QtCore import QSettings
+except ImportError:
+    from PyQt5.QtCore import QSettings
 
-confApt=QSettings('./fichiersConfig/configMoteurApt.ini', QSettings.IniFormat)
+confApt=QSettings('./fichiersConfig/configMoteurApt.ini', QSettings.Format.IniFormat)
 from DLL.apt import core
 
 

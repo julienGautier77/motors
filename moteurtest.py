@@ -1,7 +1,7 @@
 
-from PyQt5.QtCore import QSettings
+from PyQt6.QtCore import QSettings
 
-confTest=QSettings('./fichiersConfig/configMoteurTest.ini', QSettings.IniFormat)
+confTest=QSettings('./fichiersConfig/configMoteurTest.ini', QSettings.Format.IniFormat)
 
 class MOTORTEST():
     

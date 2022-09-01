@@ -749,7 +749,10 @@ class REF2M(QWidget):
         self.vboxPos.addWidget(self.posText)
         self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/disquette.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./icons/disquette.png);background-color: transparent ;border-color: blue}")
+
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+
+        
         self.take.setMaximumWidth(30)
         self.take.setMinimumWidth(30)
         self.take.setMinimumHeight(30)
@@ -757,7 +760,9 @@ class REF2M(QWidget):
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
         self.Pos=QPushButton()
-        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/playGreen.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./icons/playGreen.png);background-color: transparent ;border-color: blue}")
+
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)
         self.Pos.setMinimumWidth(40)

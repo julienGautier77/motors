@@ -7,15 +7,24 @@ Created on Mon Apr 22 20:23:31 2019
 """
 
 #%%Import
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication,QSizePolicy
-from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit,QFrame
-from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
-from PyQt5.QtWidgets import QComboBox,QCheckBox,QLabel
-from PyQt5.QtGui import QIcon
+try :
+    from PyQt6 import QtCore
+    from PyQt6.QtWidgets import QApplication
+    from PyQt6.QtWidgets import QWidget,QMessageBox
+    from PyQt6.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
+    from PyQt6.QtWidgets import QComboBox,QLabel
+    from PyQt6.QtGui import QIcon
+
+except ImportError:
+    from PyQt5 import QtCore
+    from PyQt5.QtWidgets import QApplication
+    from PyQt5.QtWidgets import QWidget,QMessageBox
+    from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
+    from PyQt5.QtWidgets import QComboBox,QLabel
+    from PyQt5.QtGui import QIcon
 
 import tirSalleJaune as tirSJ
-import sys,time,os
+import sys,time
 import qdarkstyle
 import numpy as np
 
@@ -29,11 +38,11 @@ class SCAN(QWidget):
         self.isWinOpen=False
         self.parent=parent
         
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+        self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         self.MOT=MOT 
         self.motor=motor
         self.configMotName=configMotName
-        self.conf=QtCore.QSettings(self.configMotName, QtCore.QSettings.IniFormat)
+        self.conf=QtCore.QSettings(self.configMotName, QtCore.QSettings.Format.IniFormat)
         self.indexUnit=1
         self.name=str(self.conf.value(self.motor+"/Name"))
         self.stepmotor=float(self.conf.value(self.motor+"/stepmotor"))
@@ -176,11 +185,11 @@ class SCAN(QWidget):
         
         if a==0 or a=="":
             msg = QMessageBox()
-            msg.setIcon(QMessageBox.Critical)
+            msg.setIcon(QMessageBox.Icon.Critical)
             msg.setText("Not connected !")
             msg.setInformativeText("Please connect !!")
             msg.setWindowTitle("Warning ...")
-            msg.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+            msg.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
             msg.exec_()
        
         
@@ -394,7 +403,7 @@ class ThreadScan(QtCore.QThread):
                         msg.setText("Not connected !")
                         msg.setInformativeText("Please connect !!")
                         msg.setWindowTitle("Warning ...")
-                        msg.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+                        msg.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
                         msg.exec_()
                         
                     print('wait',self.val_time)

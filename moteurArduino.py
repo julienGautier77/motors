@@ -1,8 +1,8 @@
 
 import socket
-from PyQt5.QtCore import QSettings
+from PyQt6.QtCore import QSettings
 
-confArduino=QSettings('./fichiersConfig/configMoteurArduino.ini', QSettings.IniFormat)
+confArduino=QSettings('./fichiersConfig/configMoteurArduino.ini', QSettings.Format.IniFormat)
 
 
 
