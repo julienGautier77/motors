@@ -516,10 +516,10 @@ class PositionThread(QtCore.QThread):
     
 
 if __name__ =='__main__':
-    motor0='PinholeLat'
-    motor1='PinholeVert'
+    motor0='testMot1'
+    motor1='testMot1'
     appli=QApplication(sys.argv)
-    mot5=TILTMOTORGUI( motLat=motor0,motorTypeName0='SmartAct' , motVert=motor1,motorTypeName1='SmartAct',nomWin='Tilts Pinhole')
+    mot5=TILTMOTORGUI( motLat=motor0,motorTypeName0='Test' , motVert=motor1,motorTypeName1='Test',nomWin='Tilts Pinhole')
     mot5.show()
     mot5.startThread2()
     appli.exec_()
