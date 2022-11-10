@@ -108,6 +108,8 @@ class TWOMOTORGUI(QWidget) :
             else:
                 print('Error config motor Type name')
                 self.configMotName[zi]=self.configPath+'configMoteurTest.ini'
+                print("a dummy motor class will be used")
+                self.motor[zi]="test"
                 import moteurtest as test
                 self.motorType[zi]=test
                 self.MOT[zi]=self.motorType[zi].MOTORTEST(self.motor[zi])
@@ -750,7 +752,7 @@ class REF2M(QWidget):
         self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
 
-        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/disquette.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/disquette.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
 
         
         self.take.setMaximumWidth(30)
@@ -761,7 +763,7 @@ class REF2M(QWidget):
         self.takeLayout.addWidget(self.take)
         self.Pos=QPushButton()
 
-        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
 
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)

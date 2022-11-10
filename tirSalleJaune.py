@@ -30,20 +30,20 @@ def disconnect():
     #'closes the connection to LabVIEW Server'
     global isConnected
     try :
-    	_sockobj.close()                             # close socket
+        _sockobj.close()                             # close socket
     except:
-    	pass
+        pass
     isConnected = 0
     return isConnected
 
 
 def passCommand(command):
-    'passes a command to LabVIEW Server'
+    # passes a command to LabVIEW Server'
     try :
-    	_sockobj.send(command.encode())
-    	data = _sockobj.recv(65536)
+        _sockobj.send(command.encode())
+        data = _sockobj.recv(65536)
     except :
-    	data=0
+        data=0
     #execString = "lvdata = " + data
     #exec execString
     return data

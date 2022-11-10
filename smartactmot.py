@@ -1,7 +1,7 @@
 # -*- coding: utf-8
 """ Control des moteurs smartact ##
 utilise la dll MSCControl.dll presente dans le meme repertoire
-python 3.X and PyQt5
+python 3.X and PyQt6
 @author: Gautier julien loa
 Created on Tue Feb 27 15:49:32 2018
 """
@@ -18,7 +18,8 @@ except:
 
 import ctypes
 import sys
-
+import time
+import logging
 #%% import dll with cdll et non windll sinon error 4 bytes in excess (cf :https://ammous88.wordpress.com/2014/12/31/ctypes-cdll-vs-windll/)
 dll_file = 'DLL/MCSControl' 
 
@@ -153,7 +154,10 @@ class MOTORSMART():
         self.numMoteur=int(confSmart.value(self.moteurname+'/numMoteur'))
         #SMART.SA_SetClosedLoopMaxFrequency_S(self.numControleur,self.numMoteur,18000)
         #SMART.SA_SetClosedLoopMoveSpeed_S(self.numControleur,self.numMoteur,100000000)
-        
+        date=time.strftime("%Y_%m_%d")
+        fileNameLog='logMotor_'+date+'.log'
+        logging.basicConfig(filename=fileNameLog, encoding='utf-8', level=logging.INFO,format='%(asctime)s %(message)s')
+
     def position(self):
         """
         ## position(motor): Get position actuelle
@@ -180,7 +184,8 @@ class MOTORSMART():
         print (time.strftime("%A %d %B %Y %H:%M:%S"))
         print (self.moteurname, "position before moving :", self.position(),"(step)")
         print (self.moteurname, "relative move of :",pos,"(step)")
-        
+        tx='motor ' +self.moteurname +' rmove  of ' + str(pos) + ' step  ' + '  position is :  ' + str(self.position())
+        logging.info(tx)
 
     def move(self,pos,vitesse=10000):
         """
@@ -190,7 +195,9 @@ class MOTORSMART():
         print (time.strftime("%A %d %B %Y %H:%M:%S"))
         print (self.moteurname, "position before moving :", self.position(),"(step)")
         print (self.moteurname, "move at :",pos,"(step)")
-    
+        tx='motor ' +self.moteurname +'  absolute move to ' + str(pos) + ' step  ' + '  position is :  ' + str(self.position())
+        logging.info(tx)
+
     def setvelocity(self,v=10000):
         """
         ## setvelocity(motor,velocity): Set Velocity en nm /s
@@ -222,7 +229,11 @@ class MOTORSMART():
         """
         SMART.SA_SetZeroPosition_S(self.numControleur,self.numMoteur)
         print (self.moteurname,"zero set")
+        tx='motor '+ self.moteurname + 'set to :  ' + '  '+ str(0)
 
+        logging.info(tx)
+
+        
     def refMark(self):
         """
         ## refMark(motor): refMark(motor): move to reference Mark  #SA_STATUS SA_FindReferenceMark_S(SA_INDEX systemIndex,SA_INDEX channelIndex,unsigned int direction,unsigned int holdTimeunsigned int autoZero);

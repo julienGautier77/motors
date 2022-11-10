@@ -11,14 +11,18 @@ modified on Tue Feb 27 15:49:32 2018
 #%% Imports
 import ctypes
 import time
-
+import sys
+import logging
 try:
     from PyQt6.QtCore import QSettings
 except:
-    from PyQt5.QtCore import QSettings
+    print('erro pyQT6 import)')
 
 
 #%% DLL
+
+if sys.maxsize <2**32:
+    print('you are using a 32 bits version of python use 64 bits or change RSAI dll') 
 dll_file = 'DLL/PilMotTango.dll'
 #modbus_file='DLL/OpenModbus.dll'
 try:
@@ -98,8 +102,18 @@ class MOTORRSAI():
     def __init__(self, mot1='',parent=None):
         #super(MOTORNEWPORT, self).__init__()
         self.moteurname=mot1
-        self.numEsim=ctypes.c_int16(int(confRSAI.value(self.moteurname+'/numESim')))
-        self.numMoteur=ctypes.c_int16(int(confRSAI.value(self.moteurname+'/numMoteur')) )
+        try: 
+            self.numEsim=ctypes.c_int16(int(confRSAI.value(self.moteurname+'/numESim')))
+        except:
+            print('configuration file error : motor name or motortype is not correct ')
+        try:
+            self.numMoteur=ctypes.c_int16(int(confRSAI.value(self.moteurname+'/numMoteur')) )
+        except:
+            print('configuration file error : motor name or motortype is not correct ')
+            # sys.exit()
+        date=time.strftime("%Y_%m_%d_%H_%M_%S")
+        fileNameLog='logMotor_'+date+'.log'
+        logging.basicConfig(filename=fileNameLog, encoding='utf-8', level=logging.INFO,format='%(asctime)s %(message)s')
 
     def stopMotor(self): # stop le moteur motor
         """ stopMotor(motor): stop le moteur motor """
@@ -119,6 +133,8 @@ class MOTORRSAI():
         print(self.moteurname, "position before ", self.position(), "(step)")
         PilMot.wCdeMot(self.numEsim , self.numMoteur, regCde, posi, vit)
         print(self.moteurname, "move to", pos, "(step)")
+        tx='motor ' +self.moteurname +'  absolute move to ' + str(position) + ' step  ' + '  position is :  ' + str(self.position())
+        logging.info(tx)
 
     def rmove(self, posrelatif, vitesse=1000):
         """
@@ -126,13 +142,16 @@ class MOTORRSAI():
         """
         regCde    = ctypes.c_uint(2) # commande mvt absolue
         posActuel = self.position()
-        print(time.strftime("%A %d %B %Y %H:%M:%S"))
+        print(time.strftime("%A %d %B %Y"))
         print(self.moteurname,"position before ",posActuel,"(step)")
         pos  = int(posActuel+posrelatif)
         posi = ctypes.c_int(pos)
         vit  = ctypes.c_int(int(vitesse))
         PilMot.wCdeMot(self.numEsim , self.numMoteur, regCde, posi, vit)
         print(self.moteurname, "relative move of", posrelatif, "(step)")
+        tx='motor ' +self.moteurname +' rmove  of ' + str(posrelatif) + ' step  ' + '  position is :  ' + str(self.position())
+
+        logging.info(tx)
 
     def setzero(self):
         """
@@ -143,7 +162,10 @@ class MOTORRSAI():
         a=PilMot.wCdeMot(self.numEsim , self.numMoteur,regCde,ctypes.c_int(0),ctypes.c_int(0))
        
         print (self.moteurname,"zero set",a)
+        tx='motor '+ self.moteurname + 'set to :  ' + '  '+ str(0)
 
+        logging.info(tx)
+        
 
 #%% Functions ETAT Moteur
 

@@ -86,10 +86,10 @@ class TIRGUI(QWidget) :
             self.TirConnected=0
 
     def Disconnect(self):
-    	tirSJ.disconnect()
-    	self.connectButton.setStyleSheet("background-color: gray")
-    	self.connectButton.setText("Connection")
-    	self.TirConnected=0
+        tirSJ.disconnect()
+        self.connectButton.setStyleSheet("background-color: gray")
+        self.connectButton.setText("Connection")
+        self.TirConnected=0
     
     def TirAct(self):
         

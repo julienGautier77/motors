@@ -13,6 +13,7 @@ try :
     from PyQt6.QtWidgets import QComboBox,QLabel
     from PyQt6.QtGui import QIcon
 except ImportError:
+    print(' pyqt6 import error')
     from PyQt5 import QtCore
     from PyQt5.QtWidgets import QApplication
     from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit
@@ -117,13 +118,17 @@ class ONEMOTORGUI(QWidget) :
              
             else:
                 print('Error config motor Type name')
+                print('dumy motor class used')
                 self.configMotName[zi]=self.configPath+'configMoteurTest.ini'
                 import moteurtest as test
                 self.motorType[zi]=test
+                try: self.stepmotor[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/stepmotor"))
+                except:
+                    self.motor[zi]='test'
                 self.MOT[zi]=self.motorType[zi].MOTORTEST(self.motor[zi])
                 print(self.configMotName[zi])
                 
-            self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.IniFormat) # fichier config motor fichier .ini
+            self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.Format.IniFormat) # fichier config motor fichier .ini
        
         self.scanWidget=SCAN(MOT=self.MOT[0],motor=self.motor[0],configMotName=self.configMotName[0]) # for the scan
         
@@ -133,8 +138,12 @@ class ONEMOTORGUI(QWidget) :
         self.name=[0,0,0]
         
         for zzi in range(0,1):
-            
-            self.stepmotor[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/stepmotor")) #list of stepmotor values for unit conversion
+            try:
+                self.stepmotor[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/stepmotor")) #list of stepmotor values for unit conversion
+            except:
+                print('configuration file error : motor name or motortype is not correct ')
+                self.motor[zi]='test'
+
             self.butePos[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/buteePos")) # list 
             self.buteNeg[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/buteeneg"))
             self.name[zzi]=str(self.conf[zzi].value(self.motor[zzi]+"/Name"))
@@ -186,7 +195,7 @@ class ONEMOTORGUI(QWidget) :
         self.enPosition=QLineEdit()
         #self.enPosition.setMaximumWidth(50)
         self.enPosition.setStyleSheet("font: bold 15pt")
-        self.enPosition.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.enPosition.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         hboxTitre.addWidget(self.enPosition)
         self.butNegButt=QCheckBox('But Neg',self)
         hboxTitre.addWidget(self.butNegButt)
@@ -661,7 +670,7 @@ class REF1M(QWidget):
         self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
 
-        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/disquette.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/disquette.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
 
         self.take.setMaximumWidth(30)
         self.take.setMinimumWidth(30)
@@ -671,7 +680,7 @@ class REF1M(QWidget):
         self.takeLayout.addWidget(self.take)
         self.Pos=QPushButton()
 
-        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/playGreen.png);background-color: rgb(0, 0,0) ;border-color: blue}")
 
 
         self.Pos.setMinimumHeight(40)
@@ -755,7 +764,7 @@ if __name__ =='__main__':
     
     appli=QApplication(sys.argv)
     
-    mot5=ONEMOTORGUI( mot='Jet_LWFA_FOC',motorTypeName='RSAI',showRef=False,unit=1,jogValue=100)
+    mot5=ONEMOTORGUI( mot='Jet_LWFA_FOC',motorTypeName='',showRef=False,unit=1,jogValue=100)
     mot5.show()
     mot5.startThread2()
     appli.exec_()

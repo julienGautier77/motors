@@ -128,20 +128,25 @@ class THREEMOTORGUI(QWidget) :
                 
             else:
                 print('Error config motor Type name')
+                print('dummy motor class used ')
+                self.motor[zi]="test"
                 self.configMotName[zi]=self.configPath+'configMoteurTest.ini'
                 import moteurtest as test
                 self.motorType[zi]=test
                 self.MOT[zi]=self.motorType[zi].MOTORTEST(self.motor[zi])
                 
-            self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.IniFormat) # fichier config motor fichier .ini
+            self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.Format.IniFormat) # fichier config motor fichier .ini
         
         self.stepmotor=[0,0,0]
         self.butePos=[0,0,0]
         self.buteNeg=[0,0,0]
         self.name=[0,0,0]
         for zzi in range(0,3):
-            
-            self.stepmotor[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/stepmotor")) #list of stepmotor values for unit conversion
+            try: 
+                self.stepmotor[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/stepmotor")) #list of stepmotor values for unit conversion
+            except:
+                print('configuration file error : motor name or motortype is not correct ')
+
             self.butePos[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/buteePos")) # list 
             self.buteNeg[zzi]=float(self.conf[zzi].value(self.motor[zzi]+"/buteeneg"))
             self.name[zzi]=str(self.conf[zzi].value(self.motor[zzi]+"/Name"))
@@ -264,7 +269,7 @@ class THREEMOTORGUI(QWidget) :
         self.position_Lat.setStyleSheet("font: bold 18pt" )
         self.position_Lat.setMaximumHeight(30)
         self.enPosition_Lat=QLineEdit('?')
-        self.enPosition_Lat.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.enPosition_Lat.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.enPosition_Lat.setMaximumWidth(70)
         self.enPosition_Lat.setStyleSheet("font: bold 12pt")
         self.zeroButtonLat=QPushButton('Zero')
@@ -284,7 +289,7 @@ class THREEMOTORGUI(QWidget) :
         self.position_Vert.setStyleSheet("font: bold 18pt" )
         self.position_Vert.setMaximumHeight(30)
         self.enPosition_Vert=QLineEdit('?')
-        self.enPosition_Vert.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.enPosition_Vert.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.enPosition_Vert.setMaximumWidth(70)
         self.enPosition_Vert.setStyleSheet("font: bold 12pt")
         self.zeroButtonVert=QPushButton('Zero')
@@ -355,7 +360,7 @@ class THREEMOTORGUI(QWidget) :
         self.hautLayout.addWidget(self.haut)
         self.basLayout=QHBoxLayout()
         self.basLayout.addWidget(self.bas)
-        grid_layout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        grid_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         
         grid_layout.addLayout(self.hautLayout, 0, 1)
         grid_layout.addLayout(self.basLayout,2,1)
@@ -387,7 +392,7 @@ class THREEMOTORGUI(QWidget) :
         self.enPosition_Foc=QLineEdit()
         self.enPosition_Foc.setMaximumWidth(60)
         self.enPosition_Foc.setStyleSheet("font: bold 15pt")
-        self.enPosition_Foc.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.enPosition_Foc.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.zeroButtonFoc=QPushButton('Zero')
         self.zeroButtonFoc.setMaximumWidth(30)
         self.zeroButtonFoc.setMinimumWidth(30)
@@ -402,7 +407,7 @@ class THREEMOTORGUI(QWidget) :
         
         self.moins=QPushButton()
 
-        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/moinsBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/moinsBleu.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/moinsBleu.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
 
         self.moins.setMaximumWidth(70)
         self.moins.setMinimumHeight(70)
@@ -418,7 +423,7 @@ class THREEMOTORGUI(QWidget) :
         
         self.plus=QPushButton()
 
-        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/plusBleu.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/plusBleu.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/plusBleu.png);background-color: rgb(0, 0,0) ;border-color: blue}")
 
         self.plus.setMaximumWidth(70)
         self.plus.setMinimumHeight(70)
@@ -991,7 +996,7 @@ class REF3M(QWidget):
         self.take=QToolButton()
         self.take.setObjectName('%s'%self.id)
 
-        self.take.setStyleSheet("QToolButton:!pressed{border-image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QToolButton:pressed{image: url(./icons/disquette.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.take.setStyleSheet("QToolButton:!pressed{border-image: url(./icons/disquette.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QToolButton:pressed{image: url(./icons/disquette.png);background-color: rgb(0, 0,0) ;border-color: blue}")
 
         
         self.take.setMaximumWidth(30)
@@ -1002,7 +1007,7 @@ class REF3M(QWidget):
         self.takeLayout.addWidget(self.take)
         self.Pos=QToolButton()
 
-        self.Pos.setStyleSheet("QToolButton:!pressed{border-image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: green;}""QToolButton:pressed{image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0,0) ;border-color: blue}")
+        self.Pos.setStyleSheet("QToolButton:!pressed{border-image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QToolButton:pressed{image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
 
         
         self.Pos.setMinimumHeight(30)
@@ -1098,7 +1103,7 @@ class PositionThread(QtCore.QThread):
 if __name__ =='__main__':
    
     appli=QApplication(sys.argv)
-    mot5=motLat=THREEMOTORGUI( motLat='CAM_Lat',motorTypeName0='', motVert='CAM_Vert',motorTypeName1='',motFoc='CAM_Foc',motorTypeName2='RSAI',nomWin='SAMPLE',nomTilt='SAMPLE',nomFoc='SAMPLE FOC')
+    mot5=motLat=THREEMOTORGUI( motLat='CAM_Lat',motorTypeName0='', motVert='CAM_Vert',motorTypeName1='',motFoc='CAM_Foc',motorTypeName2='',nomWin='SAMPLE',nomTilt='SAMPLE',nomFoc='SAMPLE FOC')
     mot5.show()
     mot5.startThread2()
     appli.exec_()

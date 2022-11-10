@@ -2,11 +2,11 @@
 try :
     from PyQt6.QtCore import QSettings
 except ImportError:
-    from PyQt5.QtCore import QSettings
-
+    print('error PYQT6 import')
 confApt=QSettings('./fichiersConfig/configMoteurApt.ini', QSettings.Format.IniFormat)
 from DLL.apt import core
-
+import time
+import logging
 
 
 class MOTORAPT():
@@ -15,6 +15,9 @@ class MOTORAPT():
         self.moteurname=mot1
         self.numMoteur=int(confApt.value(self.moteurname+'/numMoteur'))
         print(self.numMoteur)
+        date=time.strftime("%Y_%m_%d")
+        fileNameLog='logMotor_'+date+'.log'
+        logging.basicConfig(filename=fileNameLog, encoding='utf-8', level=logging.INFO,format='%(asctime)s %(message)s')
         self.aptMotor=core.Motor(self.numMoteur)
         
     def stopMotor(self): # stop le moteur motor
@@ -30,6 +33,11 @@ class MOTORAPT():
        
         confApt.setValue(self.moteurname+"/Pos",position)
         confApt.sync()
+
+        tx='motor ' +self.moteurname +' rmove  of ' + str(pas) + ' step  ' + '  position is :  ' + str(self.position())
+
+        logging.info(tx)
+
         #return recu
 
     def move(self,position,vitesse=1000):
@@ -42,6 +50,8 @@ class MOTORAPT():
         #self.aptMotor.move_to(position)
         confApt.setValue(self.moteurname+"/Pos",position)
         confApt.sync()
+        tx='motor ' +self.moteurname +'  absolute move to ' + str(position) + ' step  ' + '  position is :  ' + str(self.position())
+        logging.info(tx)
         #return recu
     
     def position(self):

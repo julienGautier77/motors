@@ -9,6 +9,7 @@ Created on Wed Feb 28 11:59:41 2018
 import socket
 import time
 from PyQt6.QtCore import QSettings
+import logging
 
 #%% initialisation and connexion
 IP='10.0.2.60'
@@ -49,7 +50,9 @@ class MOTORNEWFOCUS():
         #super(MOTORNEWFOCUS, self).__init__()
         self.moteurname=mot1
         self.numMoteur=str(confNewFocus.value(self.moteurname+'/numMoteur'))
-        
+        date=time.strftime("%Y_%m_%d")
+        fileNameLog='logMotor_'+date+'.log'
+        logging.basicConfig(filename=fileNameLog, encoding='utf-8', level=logging.INFO,format='%(asctime)s %(message)s')
         
     def position (self):
         """
@@ -77,6 +80,8 @@ class MOTORNEWFOCUS():
        
         s.send((self.numMoteur+'PA'+str(pos) +'\n').encode())
         print (self.moteurname, "absolu move  to",pos,"(step)")
+        tx='motor ' +self.moteurname +'  absolute move to ' + str(pos) + ' step  ' + '  position is :  ' + str(self.position())
+        logging.info(tx)
 
     def rmove(self,posrelatif,vitesse=10000):
         """
@@ -88,6 +93,11 @@ class MOTORNEWFOCUS():
         
         s.send((self.numMoteur+'PR'+str(int(posrelatif)) +'\n').encode())
         print (self.moteurname , "relative move of",posrelatif,"(step)")
+        tx='motor ' +self.moteurname +' rmove  of ' + str(posrelatif) + ' step  ' + '  position is :  ' + str(self.position())
+
+        
+
+        logging.info(tx)
 
     def setzero(self):
         """
@@ -97,7 +107,8 @@ class MOTORNEWFOCUS():
         s.send((self.numMoteur+'DH'+'\n').encode())
         print (time.strftime("%A %d %B %Y %H:%M:%S"))
         print (self.moteurname,"set to zero")
-
+        tx='motor '+ self.moteurname + 'set to : ' +'   '+ str(0)
+        logging.info(tx)
     def setvelocity(self,v=2000):
         """
         setvelocity(motor,velocity): Set Velocity en step/s
