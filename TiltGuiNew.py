@@ -7,7 +7,7 @@ Controleurs possible : A2V RSAI NewFocus SmartAct ,newport, Polulu
 Thread secondaire pour afficher les positions
 import files : moteurRSAI.py smartactmot.py moteurNewFocus.py  moteurA2V.py newportMotors.py servo.py
 memorisation de 5 positions
-python 3.X PyQt5 
+python 3.X PyQt6
 System 32 bit (at least python MSC v.1900 32 bit (Intel)) 
 @author: Gautier julien loa
 Created on Tue Jan 4 10:42:10 2018
@@ -26,6 +26,7 @@ import qdarkstyle
 import pathlib
 import time
 import sys,os
+
 PY = sys.version_info[0]
 if PY<3:
     print('wrong version of python : Python 3.X must be used')
@@ -51,7 +52,7 @@ class TILTMOTORGUI(QWidget) :
     fichier de config des moteurs : 'configMoteurRSAI.ini' 'configMoteurA2V.ini' 'configMoteurNewFocus.ini' 'configMoteurSmartAct.ini'
     """
   
-    def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',nomWin='',nomTilt='',unit=1,jogValue=1,background='gray',parent=None):
+    def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',nomWin='',nomTilt='',unit=2,jogValue=1,background='',parent=None,showUnit=False):
         
         super(TILTMOTORGUI, self).__init__()
         p = pathlib.Path(__file__)
@@ -59,7 +60,7 @@ class TILTMOTORGUI(QWidget) :
         self.icon=str(p.parent) + sepa + 'icons' +sepa
         self.motor=[str(motLat),str(motVert)]
         self.motorTypeName=[motorTypeName0,motorTypeName1]
-        
+        self.showUnit=showUnit
         self.motorType=[0,0]
         self.MOT=[0,0]
         self.configMotName=[0,0]
@@ -70,8 +71,9 @@ class TILTMOTORGUI(QWidget) :
         self.indexUnit=unit
         self.jogValue=jogValue
         self.nomTilt=nomTilt
-        
-        self.setStyleSheet("background-color:"+background)
+        if background != "":
+            self.setStyleSheet("background-color:"+background)
+
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
         self.version=__version__
         
@@ -116,6 +118,8 @@ class TILTMOTORGUI(QWidget) :
                  self.MOT[zi]=self.motorType[zi].MOTORSERVO(self.motor[zi])
             else:
                 print('Error config motor Type name')
+                print("a dummy motor class will be used")
+                
                 self.configMotName[zi]=self.configPath+'configMoteurTest.ini'
                 import moteurtest as test
                 self.motorType[zi]=test
@@ -176,20 +180,23 @@ class TILTMOTORGUI(QWidget) :
         self.nomTilt=QLabel(self.nomTilt)
         self.nomTilt.setStyleSheet("font: bold 20pt;color:yellow")
         hboxTitre.addWidget(self.nomTilt)
+        if self.showUnit==True:
+
+            self.unitTransBouton=QComboBox()
+            self.unitTransBouton.setMaximumWidth(100)
+            self.unitTransBouton.setMinimumWidth(100)
+            self.unitTransBouton.setStyleSheet("font: bold 12pt")
+            self.unitTransBouton.addItem('Step')
+            self.unitTransBouton.addItem('um')
+            self.unitTransBouton.addItem('mm')
+            self.unitTransBouton.addItem('ps')
+            self.unitTransBouton.setCurrentIndex(self.indexUnit)
+            hboxTitre.addWidget(self.unitTransBouton)
+            hboxTitre.addStretch(1)
+        else:
+            pass
         
-        self.unitTransBouton=QComboBox()
-        self.unitTransBouton.setMaximumWidth(100)
-        self.unitTransBouton.setMinimumWidth(100)
-        self.unitTransBouton.setStyleSheet("font: bold 12pt")
-        self.unitTransBouton.addItem('Step')
-        self.unitTransBouton.addItem('um')
-        self.unitTransBouton.addItem('mm')
-        self.unitTransBouton.addItem('ps')
-        self.unitTransBouton.setCurrentIndex(self.indexUnit)
         
-        
-        hboxTitre.addWidget(self.unitTransBouton)
-        hboxTitre.addStretch(1)
         
         vbox1.addLayout(hboxTitre)
         
@@ -302,7 +309,8 @@ class TILTMOTORGUI(QWidget) :
         '''
            Definition des boutons 
         '''
-        self.unitTransBouton.currentIndexChanged.connect(self.unitTrans) # Trans unit change
+        if self.showUnit==True:
+            self.unitTransBouton.currentIndexChanged.connect(self.unitTrans) # Trans unit change
         
         self.haut.clicked.connect(self.hMove) # jog haut
         self.haut.setAutoRepeat(False)
@@ -410,7 +418,9 @@ class TILTMOTORGUI(QWidget) :
         '''
          unit change mot foc
         '''
-        self.indexUnit=self.unitTransBouton.currentIndex()
+        if self.showUnit==True:
+            self.indexUnit=self.unitTransBouton.currentIndex()
+        
         valueJog=self.jogStep.value()*self.unitChangeLat
         if self.indexUnit==0: # step
             self.unitChangeLat=1
@@ -517,9 +527,9 @@ class PositionThread(QtCore.QThread):
 
 if __name__ =='__main__':
     motor0='testMot1'
-    motor1='testMot1'
+    motor1='testMot2'
     appli=QApplication(sys.argv)
-    mot5=TILTMOTORGUI( motLat=motor0,motorTypeName0='Test' , motVert=motor1,motorTypeName1='Test',nomWin='Tilts Pinhole')
+    mot5=TILTMOTORGUI( motLat=motor0,motorTypeName0='Test' , motVert=motor1,motorTypeName1='Test',nomWin='Test',background='')
     mot5.show()
     mot5.startThread2()
     appli.exec_()

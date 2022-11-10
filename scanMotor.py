@@ -24,7 +24,7 @@ except ImportError:
     from PyQt5.QtGui import QIcon
 
 import tirSalleJaune as tirSJ
-import sys,time
+import sys,time,logging
 import qdarkstyle
 import numpy as np
 
@@ -44,8 +44,16 @@ class SCAN(QWidget):
         self.configMotName=configMotName
         self.conf=QtCore.QSettings(self.configMotName, QtCore.QSettings.Format.IniFormat)
         self.indexUnit=1
-        self.name=str(self.conf.value(self.motor+"/Name"))
-        self.stepmotor=float(self.conf.value(self.motor+"/stepmotor"))
+        try :
+            self.name=str(self.conf.value(self.motor+"/Name"))
+            self.stepmotor=float(self.conf.value(self.motor+"/stepmotor"))
+        except:
+            print('dummy motors class in scan class')
+            self.motor='test'
+            self.conf=QtCore.QSettings('./fichiersConfig/configMoteurTest.ini', QtCore.QSettings.Format.IniFormat)
+            self.name=str(self.conf.value(self.motor+"/Name"))
+
+            self.stepmotor=float(self.conf.value(self.motor+"/stepmotor"))
         self.setup()
         self.actionButton()
         self.unit()
@@ -343,15 +351,24 @@ class ThreadScan(QtCore.QThread):
         super(ThreadScan,self).__init__(parent)
         self.parent = parent
         self.stop=False
+        date=time.strftime("%Y_%m_%d_%H_%M_%S")
+        fileNameLog='logScanMotor_'+date+'.log'
+        
+        self.handler_scan= logging.FileHandler(fileNameLog, mode="a", encoding="utf-8")
+        self.handler_scan.setFormatter('%(asctime)s %(message)s')
+        self.logger = logging.getLogger("nom_programme")
+        self.logger.setLevel(logging.INFO)
+        self.logger.addHandler(self.handler_scan)
 
     def run(self):
         
         self.stop=False
-#        print('number of steps:', self.parent.nbStep,self.parent.unitName)
-#        print('Initial position:',self.parent.vInit,self.parent.unitName)
-#        print('final position:',self.parent.vFin,self.parent.unitName)
-#        print('step value',self.parent.vStep,self.parent.unitName)
-#        print('nb of shoot for one postion',self.parent.val_nbTir.value())
+        self.logger.info('Start Scan')
+        self.logger.info(str('number of steps:'+ str(self.parent.nbStep)+ str(self.parent.unitName)))
+        # logging.info('Initial position:',self.parent.vInit,self.parent.unitName)
+        # logging.info('final position:',self.parent.vFin,self.parent.unitName)
+        # logging.info('step value',self.parent.vStep,self.parent.unitName)
+        # logging.info('nb of shoot for one postion',self.parent.val_nbTir.value())
         self.vini=self.parent.vInit*self.parent.unitChange
         self.vfin=self.parent.vFin*self.parent.unitChange
         self.step=self.parent.vStep*self.parent.unitChange
@@ -388,28 +405,30 @@ class ThreadScan(QtCore.QThread):
                         b=self.parent.MOT.position()
                         print (b,mv)
                         if b==mv:
+                            self.logger.info('position reached')
                             print( "position reached")
                             break
                 
                 for nu in range (0,int(self.parent.val_nbTir.value())):
                     nb+=1
                     print('tir')
-                    
+                    self.logger.info('Shoot')
                     a=tirSJ.Tir()
                     print(a)
                     if a==0 or a=="":
-                        msg = QMessageBox()
-                        msg.setIcon(QMessageBox.Critical)
+                        
+                        msg = QMessageBox(self.parent)
+                        
                         msg.setText("Not connected !")
-                        msg.setInformativeText("Please connect !!")
+                        
                         msg.setWindowTitle("Warning ...")
                         msg.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
-                        msg.exec_()
+                        msg.exec()
                         
                     print('wait',self.val_time)
                     time.sleep(self.val_time)
         print ("fin du scan")
-
+        self.logger.info('end of scan')
     def stopThread(self):
         self.stop=True
         print( "stop thread" )  
