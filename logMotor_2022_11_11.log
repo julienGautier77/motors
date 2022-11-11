@@ -1,0 +1,148 @@
+2022-11-11 18:39:59,374 Test moteur class used
+2022-11-11 18:39:59,375 QSS file successfully loaded.
+2022-11-11 18:39:59,375 Found application patches to be applied.
+2022-11-11 18:39:59,394 QSS file successfully loaded.
+2022-11-11 18:39:59,394 Found application patches to be applied.
+2022-11-11 18:39:59,401 QSS file successfully loaded.
+2022-11-11 18:39:59,401 Found application patches to be applied.
+2022-11-11 18:39:59,406 QSS file successfully loaded.
+2022-11-11 18:39:59,406 Found application patches to be applied.
+2022-11-11 18:39:59,410 QSS file successfully loaded.
+2022-11-11 18:39:59,410 Found application patches to be applied.
+2022-11-11 18:39:59,415 QSS file successfully loaded.
+2022-11-11 18:39:59,415 Found application patches to be applied.
+2022-11-11 18:39:59,420 QSS file successfully loaded.
+2022-11-11 18:39:59,421 Found application patches to be applied.
+2022-11-11 18:40:06,010 Start Scan
+2022-11-11 18:40:06,011 number of steps:1.0um
+2022-11-11 18:40:06,011 Initial position:0.0um
+2022-11-11 18:40:06,011 final position:100.0um
+2022-11-11 18:40:06,011 step value100.0um
+2022-11-11 18:40:06,011 nb of shoot for one postion1.0
+2022-11-11 18:40:06,011 motor test  absolute move to 0.0 step    position is :  0.0
+2022-11-11 18:40:06,513 motor test  absolute move to 40 step    position is :  40.0
+2022-11-11 18:40:06,523 position reached 40.0
+2022-11-11 18:40:06,523 Shoot
+2022-11-11 18:40:08,525 end of scan
+2022-11-11 18:40:08,526   
+2022-11-11 18:40:08,526   
+2022-11-11 18:40:11,162 Start Scan
+2022-11-11 18:40:11,162 number of steps:1.0um
+2022-11-11 18:40:11,162 Initial position:0.0um
+2022-11-11 18:40:11,162 final position:100.0um
+2022-11-11 18:40:11,162 step value100.0um
+2022-11-11 18:40:11,162 nb of shoot for one postion1.0
+2022-11-11 18:40:11,162 motor test  absolute move to 0.0 step    position is :  0.0
+2022-11-11 18:40:11,664 motor test  absolute move to 40 step    position is :  40.0
+2022-11-11 18:40:11,673 position reached 40.0
+2022-11-11 18:40:11,673 Shoot
+2022-11-11 18:40:13,676 end of scan
+2022-11-11 18:40:13,676   
+2022-11-11 18:40:13,676   
+2022-11-11 18:41:43,170 Test moteur class used
+2022-11-11 18:41:43,170 QSS file successfully loaded.
+2022-11-11 18:41:43,171 Found application patches to be applied.
+2022-11-11 18:41:43,194 QSS file successfully loaded.
+2022-11-11 18:41:43,194 Found application patches to be applied.
+2022-11-11 18:41:43,201 QSS file successfully loaded.
+2022-11-11 18:41:43,201 Found application patches to be applied.
+2022-11-11 18:41:43,204 QSS file successfully loaded.
+2022-11-11 18:41:43,204 Found application patches to be applied.
+2022-11-11 18:41:43,208 QSS file successfully loaded.
+2022-11-11 18:41:43,208 Found application patches to be applied.
+2022-11-11 18:41:43,213 QSS file successfully loaded.
+2022-11-11 18:41:43,213 Found application patches to be applied.
+2022-11-11 18:41:43,216 QSS file successfully loaded.
+2022-11-11 18:41:43,216 Found application patches to be applied.
+2022-11-11 18:41:45,851 motor test rmove  of 40.0 step    position is :  80.0
+2022-11-11 18:41:46,892 motor test rmove  of -40.0 step    position is :  40.0
+2022-11-11 18:41:48,912 motor test  absolute move to 0.0 step    position is :  0.0
+2022-11-11 18:41:58,434 Start Scan
+2022-11-11 18:41:58,434 number of steps:3.0um
+2022-11-11 18:41:58,434 Initial position:0.0um
+2022-11-11 18:41:58,435 final position:100.0um
+2022-11-11 18:41:58,435 step value33.333333333333336um
+2022-11-11 18:41:58,435 nb of shoot for one postion1.0
+2022-11-11 18:41:58,435 motor test  absolute move to 0.0 step    position is :  0.0
+2022-11-11 18:41:58,937 motor test  absolute move to 13 step    position is :  13.0
+2022-11-11 18:41:58,946 position reached 13.0
+2022-11-11 18:41:58,946 Shoot
+2022-11-11 18:42:00,949 motor test  absolute move to 26 step    position is :  26.0
+2022-11-11 18:42:00,953 position reached 26.0
+2022-11-11 18:42:00,953 Shoot
+2022-11-11 18:42:02,956 motor test  absolute move to 40 step    position is :  40.0
+2022-11-11 18:42:02,964 position reached 40.0
+2022-11-11 18:42:02,964 Shoot
+2022-11-11 18:42:04,967 end of scan
+2022-11-11 18:42:04,967   
+2022-11-11 18:42:04,967   
+2022-11-11 18:44:40,941 Test moteur class used
+2022-11-11 18:44:40,941 QSS file successfully loaded.
+2022-11-11 18:44:40,941 Found application patches to be applied.
+2022-11-11 18:44:40,964 QSS file successfully loaded.
+2022-11-11 18:44:40,964 Found application patches to be applied.
+2022-11-11 18:44:40,970 QSS file successfully loaded.
+2022-11-11 18:44:40,970 Found application patches to be applied.
+2022-11-11 18:44:40,974 QSS file successfully loaded.
+2022-11-11 18:44:40,974 Found application patches to be applied.
+2022-11-11 18:44:40,979 QSS file successfully loaded.
+2022-11-11 18:44:40,979 Found application patches to be applied.
+2022-11-11 18:44:40,982 QSS file successfully loaded.
+2022-11-11 18:44:40,982 Found application patches to be applied.
+2022-11-11 18:44:40,986 QSS file successfully loaded.
+2022-11-11 18:44:40,986 Found application patches to be applied.
+2022-11-11 18:44:49,805 Start Scan
+2022-11-11 18:44:49,805 number of steps:3.0um
+2022-11-11 18:44:49,805 Initial position:0.0um
+2022-11-11 18:44:49,805 final position:100.0um
+2022-11-11 18:44:49,805 step value33.333333333333336um
+2022-11-11 18:44:49,806 nb of shoot for one postion1.0
+2022-11-11 18:44:49,806 motor test  absolute move to 0.0 step    position is :  0.0
+2022-11-11 18:44:50,308 motor test  absolute move to 13 step    position is :  13.0
+2022-11-11 18:44:50,316 position reached 13.0
+2022-11-11 18:44:50,316 Shoot
+2022-11-11 18:44:52,319 motor test  absolute move to 26 step    position is :  26.0
+2022-11-11 18:44:52,327 position reached 26.0
+2022-11-11 18:44:52,328 Shoot
+2022-11-11 18:44:54,330 motor test  absolute move to 40 step    position is :  40.0
+2022-11-11 18:44:54,338 position reached 40.0
+2022-11-11 18:44:54,338 Shoot
+2022-11-11 18:44:56,340 end of scan
+2022-11-11 18:44:56,341   
+2022-11-11 18:44:56,341   
+2022-11-11 18:46:12,718 Test moteur class used
+2022-11-11 18:46:12,719 QSS file successfully loaded.
+2022-11-11 18:46:12,719 Found application patches to be applied.
+2022-11-11 18:46:12,745 QSS file successfully loaded.
+2022-11-11 18:46:12,745 Found application patches to be applied.
+2022-11-11 18:46:12,751 QSS file successfully loaded.
+2022-11-11 18:46:12,751 Found application patches to be applied.
+2022-11-11 18:46:12,755 QSS file successfully loaded.
+2022-11-11 18:46:12,755 Found application patches to be applied.
+2022-11-11 18:46:12,758 QSS file successfully loaded.
+2022-11-11 18:46:12,758 Found application patches to be applied.
+2022-11-11 18:46:12,761 QSS file successfully loaded.
+2022-11-11 18:46:12,761 Found application patches to be applied.
+2022-11-11 18:46:12,765 QSS file successfully loaded.
+2022-11-11 18:46:12,765 Found application patches to be applied.
+2022-11-11 18:46:20,402 
+2022-11-11 18:46:20,402 
+2022-11-11 18:46:20,402 Start Scan
+2022-11-11 18:46:20,402 number of steps:  3.0
+2022-11-11 18:46:20,402 Initial position:  0.0um
+2022-11-11 18:46:20,402 final position:  100.0um
+2022-11-11 18:46:20,402 step value:  33.333333333333336um
+2022-11-11 18:46:20,402 nb of shoot for one postion:  1.0
+2022-11-11 18:46:20,402 motor test  absolute move to 0.0 step    position is :  0.0
+2022-11-11 18:46:20,904 motor test  absolute move to 13 step    position is :  13.0
+2022-11-11 18:46:20,912 position reached 13.0
+2022-11-11 18:46:20,913 Shoot
+2022-11-11 18:46:22,916 motor test  absolute move to 26 step    position is :  26.0
+2022-11-11 18:46:22,924 position reached 26.0
+2022-11-11 18:46:22,924 Shoot
+2022-11-11 18:46:24,926 motor test  absolute move to 40 step    position is :  40.0
+2022-11-11 18:46:24,926 position reached 40.0
+2022-11-11 18:46:24,926 Shoot
+2022-11-11 18:46:26,928 end of scan
+2022-11-11 18:46:26,929   
+2022-11-11 18:46:26,929   

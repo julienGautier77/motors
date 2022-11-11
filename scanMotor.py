@@ -355,20 +355,23 @@ class ThreadScan(QtCore.QThread):
         fileNameLog='logScanMotor_'+date+'.log'
         
         self.handler_scan= logging.FileHandler(fileNameLog, mode="a", encoding="utf-8")
-        self.handler_scan.setFormatter('%(asctime)s %(message)s')
-        self.logger = logging.getLogger("nom_programme")
+        # self.handler_scan.setFormatter('%(asctime)s %(message)s')
+        self.logger = logging.getLogger("Scan")
         self.logger.setLevel(logging.INFO)
         self.logger.addHandler(self.handler_scan)
 
     def run(self):
         
         self.stop=False
+        self.logger.info('')
+        self.logger.info('')
         self.logger.info('Start Scan')
-        self.logger.info(str('number of steps:'+ str(self.parent.nbStep)+ str(self.parent.unitName)))
-        # logging.info('Initial position:',self.parent.vInit,self.parent.unitName)
-        # logging.info('final position:',self.parent.vFin,self.parent.unitName)
-        # logging.info('step value',self.parent.vStep,self.parent.unitName)
-        # logging.info('nb of shoot for one postion',self.parent.val_nbTir.value())
+        self.logger.info(str('number of steps:  '+ str(self.parent.nbStep) ))
+        self.logger.info(str('Initial position:  ' + str(self.parent.vInit)+ str(self.parent.unitName)))
+        self.logger.info(str('final position:  '+ str(self.parent.vFin)+str(self.parent.unitName)))
+        self.logger.info(str('step value:  '+str(self.parent.vStep)+str(self.parent.unitName)))
+        self.logger.info(str('nb of shoot for one postion:  '+str(self.parent.val_nbTir.value())))
+        
         self.vini=self.parent.vInit*self.parent.unitChange
         self.vfin=self.parent.vFin*self.parent.unitChange
         self.step=self.parent.vStep*self.parent.unitChange
@@ -405,8 +408,8 @@ class ThreadScan(QtCore.QThread):
                         b=self.parent.MOT.position()
                         print (b,mv)
                         if b==mv:
-                            self.logger.info('position reached')
-                            print( "position reached")
+                            self.logger.info('position reached '+ str(b))
+                            print( "position reached", str(b))
                             break
                 
                 for nu in range (0,int(self.parent.val_nbTir.value())):
@@ -416,19 +419,22 @@ class ThreadScan(QtCore.QThread):
                     a=tirSJ.Tir()
                     print(a)
                     if a==0 or a=="":
+                        print('error shoot')
+                        # msg = QMessageBox(self.parent)
                         
-                        msg = QMessageBox(self.parent)
+                        # msg.setText("Not connected !")
                         
-                        msg.setText("Not connected !")
-                        
-                        msg.setWindowTitle("Warning ...")
-                        msg.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
-                        msg.exec()
+                        # msg.setWindowTitle("Warning ...")
+                        # msg.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
+                        # msg.exec()
                         
                     print('wait',self.val_time)
                     time.sleep(self.val_time)
         print ("fin du scan")
         self.logger.info('end of scan')
+        self.logger.info('  ')
+        self.logger.info('  ')
+        self.parent.stopScan()
     def stopThread(self):
         self.stop=True
         print( "stop thread" )  

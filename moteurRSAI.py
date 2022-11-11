@@ -133,7 +133,7 @@ class MOTORRSAI():
         print(self.moteurname, "position before ", self.position(), "(step)")
         PilMot.wCdeMot(self.numEsim , self.numMoteur, regCde, posi, vit)
         print(self.moteurname, "move to", pos, "(step)")
-        tx='motor ' +self.moteurname +'  absolute move to ' + str(position) + ' step  ' + '  position is :  ' + str(self.position())
+        tx='motor ' +self.moteurname +'  absolute move to ' + str(pos) + ' step  ' + '  position is :  ' + str(self.position())
         logging.info(tx)
 
     def rmove(self, posrelatif, vitesse=1000):

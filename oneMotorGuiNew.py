@@ -4,7 +4,7 @@ Created on Mon Apr  1 11:16:50 2019
 
 @author: sallejaune
 """
-#%%Import
+
 try :
     from PyQt6 import QtCore
     from PyQt6.QtWidgets import QApplication
@@ -14,20 +14,19 @@ try :
     from PyQt6.QtGui import QIcon
 except ImportError:
     print(' pyqt6 import error')
-    from PyQt5 import QtCore
-    from PyQt5.QtWidgets import QApplication
-    from PyQt5.QtWidgets import QWidget,QMessageBox,QLineEdit
-    from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
-    from PyQt5.QtWidgets import QComboBox,QLabel
-    from PyQt5.QtGui import QIcon
-    from PyQt5.QtCore import QRect
+    
 
 import sys,time,os
 import qdarkstyle
 import pathlib
 from scanMotor import SCAN
 import __init__
-import TirGui
+
+try :
+    import TirGui
+except :
+    print('error connection SJ shoot program')
+
 __version__=__init__.__version__
 
 
