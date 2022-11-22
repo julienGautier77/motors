@@ -1,8 +1,8 @@
 # -*- coding: UTF-8
 """
 Pilotage des controleurs RSAI via les ddl PilmotTango.dll et openMD.dll
-python 3.X pyQT5
-system 32 bit (at least python MSC v.1900 32 bit (Intel)) 
+python 3.X pyQT6
+system 64 bit (at least python MSC v.1900 64 bit (Intel)) 
 @author: Gautier julien loa
 Created on Tue Jan 4 10:42:10 2018
 modified on Tue Feb 27 15:49:32 2018
@@ -174,12 +174,26 @@ class MOTORRSAI():
         a verifier
         """
         a=PilMot.rEtatMoteur(self.numEsim , self.numMoteur)
-        if a==8320 or a==41088  or a==128 or a==41104 or a==32869:
-            etat=1
-        else :
-            etat=0
+        a=hex(a)
+        # print('mot err',a)
+        if a=='0x2030' or a=='0x30' : 
+            etat='mvt'
+        
+        elif a=='0x2012' or a=='0x12' or a=='0x92' or a=='0x2082': 
+            etat='FDC-'
+        elif a=='0x2011' or a=='0x11' or a=='0x91' or a=='0x2082': 
+            etat='FDC+'
+        elif a=='0x2010' or a=='0x10' : 
+            etat='ok'
+        elif a=='0x2090' or a=='0x90' : 
+            etat='ok'    
+        elif a=='0x2090' or a=='0x90' : 
+            etat='ok'
+        elif a=='0x890' or a=='0x2890' : 
+            etat='Power off'
+        else:
+            etat='?'
         return etat
-        print(self.moteurname,a,etat)
 
     def position(self):
         """ position (self.moteurname) : donne la postion de motor """
