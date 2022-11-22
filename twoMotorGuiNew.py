@@ -6,12 +6,14 @@ Created on Mon Apr  1 11:16:50 2019
 """
 #%%Import
 from PyQt6 import QtCore
+from PyQt6.QtWidgets import QApplication,QStyle
+from PyQt6.QtWidgets import QWidget,QMessageBox,QSpinBox,QLineEdit,QFrame
+from PyQt6.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushButton,QGridLayout,QTextEdit,QDoubleSpinBox
+from PyQt6.QtWidgets import QInputDialog,QComboBox,QSlider,QCheckBox,QLabel,QSizePolicy,QLineEdit,QPlainTextEdit,QMessageBox,QMenu,QRadioButton
 from PyQt6.QtWidgets import QApplication
-from PyQt6.QtWidgets import QWidget,QMessageBox,QLineEdit
-from PyQt6.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QWidget,QPushButton,QGridLayout,QDoubleSpinBox
-from PyQt6.QtWidgets import QComboBox,QCheckBox,QLabel,QLineEdit,QMessageBox
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import QRect
 from PyQt6.QtGui import QIcon
+
 import sys,time,os
 import qdarkstyle
 import pathlib
@@ -56,7 +58,8 @@ class TWOMOTORGUI(QWidget) :
         self.indexUnit=unit
         self.nomTilt=nomTilt
         self.jogValue=jogValue
-        
+        self.etatLat='ok'
+        self.etatVert='ok'
         self.LatWidget=ONEMOTORGUI(mot=self.motor[0],motorTypeName=self.motorTypeName[0],nomWin='Control One Motor : ',showRef=False,unit=2)
         self.VertWidget=ONEMOTORGUI(mot=self.motor[1],motorTypeName=self.motorTypeName[1],nomWin='Control One Motor : ',showRef=False,unit=2)
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
@@ -108,8 +111,6 @@ class TWOMOTORGUI(QWidget) :
             else:
                 print('Error config motor Type name')
                 self.configMotName[zi]=self.configPath+'configMoteurTest.ini'
-                print("a dummy motor class will be used")
-                self.motor[zi]="test"
                 import moteurtest as test
                 self.motorType[zi]=test
                 self.MOT[zi]=self.motorType[zi].MOTORTEST(self.motor[zi])
@@ -131,11 +132,12 @@ class TWOMOTORGUI(QWidget) :
         
         self.setWindowTitle(nomWin+'                V.'+str(self.version))#+' : '+ self.name[0])
         
-        self.threadLat=PositionThread(mot=self.MOT[0],motorType=self.motorType[0]) # thread for displaying position Lat
+        self.threadLat=PositionThread(self,mot=self.MOT[0],motorType=self.motorType[0]) # thread for displaying position Lat
         self.threadLat.POS.connect(self.PositionLat)
-        
-        self.threadVert=PositionThread(mot=self.MOT[1],motorType=self.motorType[1]) # thread for displaying  position Vert
+        self.threadLat.ETAT.connect(self.EtatLat)
+        self.threadVert=PositionThread(self,mot=self.MOT[1],motorType=self.motorType[1]) # thread for displaying  position Vert
         self.threadVert.POS.connect(self.PositionVert)
+        self.threadVert.ETAT.connect(self.EtatVert)
         
        
         
@@ -259,7 +261,7 @@ class TWOMOTORGUI(QWidget) :
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
         self.haut=QPushButton()
-        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechehaut.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechehaut.png);background-color: transparent ;border-color: blue}")
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechehaut.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechehaut.png);background-color: transparent ;border-color: blue}")
         
         self.haut.setMaximumHeight(70)
         self.haut.setMinimumWidth(70)
@@ -267,21 +269,21 @@ class TWOMOTORGUI(QWidget) :
         self.haut.setMinimumHeight(70)
         
         self.bas=QPushButton()
-        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechebas.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechebas.png);background-color: transparent;border-color: blue}")
+        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechebas.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechebas.png);background-color: transparent;border-color: blue}")
         self.bas.setMaximumHeight(70)
         self.bas.setMinimumWidth(70)
         self.bas.setMaximumWidth(70)
         self.bas.setMinimumHeight(70)
         
         self.gauche=QPushButton('Left')
-        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechegauche.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechegauche.png);background-color: transparent ;border-color: blue}")
+        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechegauche.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechegauche.png);background-color: transparent ;border-color: blue}")
         
         self.gauche.setMaximumHeight(70)
         self.gauche.setMinimumWidth(70)
         self.gauche.setMaximumWidth(70)
         self.gauche.setMinimumHeight(70)
         self.droite=QPushButton('right')
-        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechedroite.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./icons/flechedroite.png);background-color: transparent ;border-color: blue}")
+        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechedroite.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechedroite.png);background-color: transparent ;border-color: blue}")
         self.droite.setMaximumHeight(70)
         self.droite.setMinimumWidth(70)
         self.droite.setMaximumWidth(70)
@@ -291,9 +293,9 @@ class TWOMOTORGUI(QWidget) :
         self.jogStep=QDoubleSpinBox()
         self.jogStep.setMaximum(1000)
         self.jogStep.setStyleSheet("font: bold 12pt")
-        self.jogStep.setValue(self.jogValue)
+        self.jogStep.setValue(100)
         self.jogStep.setMaximumWidth(120)
-        # self.unitChangeLat=1
+        self.unitChangeLat=1
     
         center=QHBoxLayout()
         center.addWidget(self.jogStep)
@@ -540,9 +542,8 @@ class TWOMOTORGUI(QWidget) :
         '''
          unit change mot foc
         '''
-        valueJog=self.jogStep.value()*self.unitChangeLat
         self.indexUnit=self.unitTransBouton.currentIndex()
-        
+        valueJog=self.jogStep.value()*self.unitChangeLat
         if self.indexUnit==0: # step
             self.unitChangeLat=1
             self.unitChangeVert=1
@@ -596,7 +597,23 @@ class TWOMOTORGUI(QWidget) :
         a=float(Posi)
         b=a # value in step
         a=a/self.unitChangeLat # value with unit changed
-        self.position_Lat.setText(str(round(a,2))) 
+        
+        if self.etatLat=='FDC-':
+            self.position_Lat.setText('FDC -')
+            self.position_Lat.setStyleSheet('font: bold 25pt;color:red')
+            
+        elif self.etatLat=='FDC+':
+            self.position_Lat.setText('FDC +')
+            self.position_Lat.setStyleSheet('font: bold 25pt;color:red')
+        elif self.etatLat=='Power off' :
+            self.position_Lat.setText('Power Off')
+            self.position_Lat.setStyleSheet('font: bold 20pt;color:red')
+        else:   
+            self.position_Lat.setText(str(round(a,2))) 
+            self.position_Lat.setStyleSheet('font: bold 25pt;color:white')
+        
+        
+        
         positionConnue_Lat=0 # 
         precis=1
         if self.motorTypeName[0]=='SmartAct':
@@ -616,7 +633,24 @@ class TWOMOTORGUI(QWidget) :
         a=float(Posi)
         b=a # value in step 
         a=a/self.unitChangeVert # value  with unit changed
-        self.position_Vert.setText(str(round(a,2))) 
+        
+        if self.etatVert=='FDC-':
+            self.position_Vert.setText('FDC -')
+            self.position_Vert.setStyleSheet('font: bold 25pt;color:red')
+            
+        elif self.etatVert=='FDC+':
+            self.position_Vert.setText('FDC +')
+            self.position_Vert.setStyleSheet('font: bold 25pt;color:red')
+        elif self.etatVert=='Power off' :
+            self.position_Vert.setText('Power Off')
+            self.position_Vert.setStyleSheet('font: bold 20pt;color:red')
+        else:   
+            self.position_Vert.setText(str(round(a,2))) 
+            self.position_Vert.setStyleSheet('font: bold 25pt;color:white')
+        
+        
+        
+         
         positionConnue_Vert=0 # 
         precis=1
         if self.motorTypeName[1]=='SmartAct':
@@ -630,16 +664,21 @@ class TWOMOTORGUI(QWidget) :
         if positionConnue_Vert==0:
             self.enPosition_Vert.setText('?' )   
             
-
+    def EtatLat(self,etat):
+#        print(etat)
+        self.etatLat=etat
+    def EtatVert(self,etat):
+#        print(etat)
+        self.etatVert=etat
 
     def take (self) : 
         ''' 
         take and save the reference
         '''
         sender=QtCore.QObject.sender(self) # take the name of  the button 
-        reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,QMessageBox.StandardButton.No)
+        reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
         
-        if reply == QMessageBox.StandardButton.Yes:
+        if reply == QMessageBox.Yes:
             
                tposLat=self.MOT[0].position()
                nbRef=str(sender.objectName()[0])
@@ -662,8 +701,8 @@ class TWOMOTORGUI(QWidget) :
         Fait bouger le moteur a la valeur de reference en step : bouton Go 
         '''
         sender=QtCore.QObject.sender(self)
-        reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,QMessageBox.StandardButton.No)
-        if reply == QMessageBox.StandardButton.Yes:
+        reply=QMessageBox.question(None,'Go to this Position ?',"Do you want to GO to this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
+        if reply == QMessageBox.Yes:
             nbRef=str(sender.objectName()[0])
             for i in range (0,2):
                 print(i)
@@ -751,10 +790,7 @@ class REF2M(QWidget):
         self.vboxPos.addWidget(self.posText)
         self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
-
-        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/disquette.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/disquette.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
-
-        
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
         self.take.setMaximumWidth(30)
         self.take.setMinimumWidth(30)
         self.take.setMinimumHeight(30)
@@ -762,9 +798,7 @@ class REF2M(QWidget):
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
         self.Pos=QPushButton()
-
-        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./icons/playGreen.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
-
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
         self.Pos.setMinimumHeight(40)
         self.Pos.setMaximumHeight(40)
         self.Pos.setMinimumWidth(40)
@@ -796,7 +830,7 @@ class REF2M(QWidget):
         grid_layoutPos.addWidget(self.ABSVertref,2,1)
 
         self.vboxPos.addLayout(grid_layoutPos)
-        #self.wid.setStyleSheet("background-color: rgb(60, 77, 87)")
+        self.wid.setStyleSheet("background-color: rgb(60, 77, 87)")
         self.wid.setLayout(self.vboxPos)
         mainVert=QVBoxLayout()
         mainVert.addWidget(self.wid)
@@ -809,27 +843,38 @@ class PositionThread(QtCore.QThread):
     '''
     Secon thread  to display the position
     '''
+    import time #?
     POS=QtCore.pyqtSignal(float) # signal of the second thread to main thread  to display motors position
+    ETAT=QtCore.pyqtSignal(str)
     def __init__(self,parent=None,mot='',motorType=''):
         super(PositionThread,self).__init__(parent)
         self.MOT=mot
         self.motorType=motorType
         self.stop=False
-        
+        self.parent=parent
+        self.motorTypeName=self.parent.motorTypeName
     def run(self):
         while True:
             if self.stop==True:
                 break
             else:
-                
+                time.sleep(0.5)
                 Posi=(self.MOT.position())
-                time.sleep(1)
+                
                 try :
                     self.POS.emit(Posi)
                     
                     time.sleep(0.1)
                 except:
                     print('error emit')
+                try :
+                    etat=self.MOT.etatMotor()
+                        
+                    self.ETAT.emit(etat)
+                except: pass
+                    #print('error emit etat')  
+                    
+                    
                     
     def ThreadINIT(self):
         self.stop=False   
@@ -844,12 +889,12 @@ class PositionThread(QtCore.QThread):
 
 
 if __name__ =='__main__':
-    motor0="testMot"
-    motor1="testMot"
+    motor0="cibleLat"
+    motor1="cibleVert"
     
     appli=QApplication(sys.argv)
-    mot5=TWOMOTORGUI( motLat='Axipara_LAT',motorTypeName0='RSAI', motVert='Axipara_VERT',motorTypeName1='RSAI',nomWin='AXIPARABOLA Control',nomTilt='AXIPARA',unit=1,jogValue=100)
-        
+    mot5=TWOMOTORGUI(motor0,'RSAI',motor1,'RSAI',nomWin='Cible ',nomTilt='Cible') # croix XUV
+    
     mot5.show()
     mot5.startThread2()
     appli.exec_()
