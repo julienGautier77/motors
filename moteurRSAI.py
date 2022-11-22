@@ -54,8 +54,8 @@ except AttributeError as s:
 
 #%% ENTREE
 # liste adresse IP des modules
-IP    = b"10.0.1.30\0      10.0.1.31\0      10.0.4.30\0      " 
-IPs_C = ctypes.create_string_buffer(IP, 48) # permet d avoir la liste comme demander dans la dll
+IP    = b"10.0.5.10\0      " 
+IPs_C = ctypes.create_string_buffer(IP, 16) # permet d avoir la liste comme demander dans la dll
 
 
 #conf = QSettings(QSettings.IniFormat, QSettings.UserScope, "configMoteur", "configMoteurRSAI")
