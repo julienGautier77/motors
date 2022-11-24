@@ -169,7 +169,7 @@ class TILTMOTORGUI(QWidget) :
             self.unitChangeLat=1 *self.stepmotor[0]
             self.unitName='°'
         self.unitTrans()
-        
+        self.jogStep.setValue(self.jogValue)
         
     def setup(self):
         

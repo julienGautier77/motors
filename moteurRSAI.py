@@ -112,7 +112,7 @@ class MOTORRSAI():
             print('configuration file error : motor name or motortype is not correct ')
             # sys.exit()
         date=time.strftime("%Y_%m_%d_%H_%M_%S")
-        fileNameLog='logMotor_'+date+'.log'
+        fileNameLog='motorLog/logMotor_'+date+'.log'
         logging.basicConfig(filename=fileNameLog, encoding='utf-8', level=logging.INFO,format='%(asctime)s %(message)s')
 
     def stopMotor(self): # stop le moteur motor
@@ -133,7 +133,7 @@ class MOTORRSAI():
         print(self.moteurname, "position before ", self.position(), "(step)")
         PilMot.wCdeMot(self.numEsim , self.numMoteur, regCde, posi, vit)
         print(self.moteurname, "move to", pos, "(step)")
-        tx='motor ' +self.moteurname +'  absolute move to ' + str(pos) + ' step  ' + '  position is :  ' + str(self.position())
+        tx='motor ' +self.moteurname +'  absolute move to ' + str(pos) + ' step  ' + '  position is :  ' + str(self.position()+'step')
         logging.info(tx)
 
     def rmove(self, posrelatif, vitesse=1000):
@@ -149,7 +149,7 @@ class MOTORRSAI():
         vit  = ctypes.c_int(int(vitesse))
         PilMot.wCdeMot(self.numEsim , self.numMoteur, regCde, posi, vit)
         print(self.moteurname, "relative move of", posrelatif, "(step)")
-        tx='motor ' +self.moteurname +' rmove  of ' + str(posrelatif) + ' step  ' + '  position is :  ' + str(self.position())
+        tx='motor ' +self.moteurname +' rmove  of ' + str(posrelatif) + ' step  ' + '  position is :  ' + str(self.position()+'step')
 
         logging.info(tx)
 

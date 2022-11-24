@@ -162,7 +162,7 @@ class ONEMOTORGUI(QWidget) :
             self.unitName='°'    
         self.setup()
         self.unit()
-        
+        self.jogStep.setValue(self.jogValue)
         
     def startThread2(self):
         self.thread.ThreadINIT()
@@ -776,7 +776,7 @@ if __name__ =='__main__':
     appli=QApplication(sys.argv)
     
         
-    mot5=ONEMOTORGUI( mot='camFoc',motorTypeName='RSAI',showRef=False,unit=4,jogValue=1)
+    mot5=ONEMOTORGUI( mot='camVert',motorTypeName='RSAI',showRef=False,unit=1,jogValue=1)
     mot5.show()
     mot5.startThread2()
     appli.exec_()

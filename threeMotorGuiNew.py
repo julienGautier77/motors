@@ -78,6 +78,7 @@ class THREEMOTORGUI(QWidget) :
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
         self.version=__version__
         self.tir=TirGui.TIRGUI()
+        # self.setWindowOpacity(0.5)
         
         for zi in range (0,3): #  list configuration and motor types 
             if self.motorTypeName[zi]=='RSAI':
@@ -200,8 +201,8 @@ class THREEMOTORGUI(QWidget) :
         self.setup()
         self.unitFoc()
         self.unitTrans()
-        
-
+        self.jogStep.setValue(self.jogValue)
+        self.jogStep_2.setValue(self.jogValueFoc)
         
         
         
@@ -341,6 +342,8 @@ class THREEMOTORGUI(QWidget) :
         self.jogStep.setStyleSheet("font: bold 12pt")
         self.jogStep.setValue(100)
         self.jogStep.setMaximumWidth(120)
+        print('ddd',self.jogValue)
+        self.jogStep.setValue(55)
         self.unitChangeLat=1
     
         center=QHBoxLayout()
@@ -395,7 +398,7 @@ class THREEMOTORGUI(QWidget) :
         hboxFoc.addSpacing(25)
         
         self.moins=QPushButton()
-        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/moinsBleu.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/moinsBleu.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
+        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/moinsBleu.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/moinsBleu.png);background-color: transparent;border-color: blue}")
         self.moins.setMaximumWidth(70)
         self.moins.setMinimumHeight(70)
         hboxFoc.addWidget(self.moins)
@@ -409,7 +412,7 @@ class THREEMOTORGUI(QWidget) :
          
         
         self.plus=QPushButton()
-        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/plusBleu.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/plusBleu.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
+        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/plusBleu.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/plusBleu.png) ;background-color: transparent;border-color: blue}")
         self.plus.setMaximumWidth(70)
         self.plus.setMinimumHeight(70)
     
@@ -900,7 +903,7 @@ class THREEMOTORGUI(QWidget) :
         take and save the reference
         '''
         sender=QtCore.QObject.sender(self) # take the name of  the button 
-        print ('sender name',sender)
+        # print ('sender name',sender)
         reply=QMessageBox.question(None,'Save Position ?',"Do you want to save this position ?",QMessageBox.Yes | QMessageBox.No,QMessageBox.No)
         if reply == QMessageBox.Yes:
                tposLat=self.MOT[0].position()
@@ -933,7 +936,7 @@ class THREEMOTORGUI(QWidget) :
         if reply == QMessageBox.Yes:
             nbRef=str(sender.objectName()[0])
             for i in range (0,3):
-                print(i)
+                # print(i)
                 vref=int(self.conf[i].value(self.motor[i]+"/ref"+nbRef+"Pos"))
                 if vref<self.buteNeg[i] :
                     print( "STOP : negative switch")
@@ -1119,9 +1122,11 @@ class PositionThread(QtCore.QThread):
                 except:
                     print('error emit')
                 try :
+                    
                     etat=self.MOT.etatMotor()
                         
                     self.ETAT.emit(etat)
+                    # print(etat)
                 except: pass
                     #print('error emit etat')  
                     
@@ -1139,7 +1144,7 @@ class PositionThread(QtCore.QThread):
 if __name__ =='__main__':
    
     appli=QApplication(sys.argv)
-    mot5=motLat=THREEMOTORGUI( 'cibleLat',motorTypeName0='RSAI', motVert='cibleVert',motorTypeName1='RSAI',motFoc='cibleFoc',motorTypeName2='RSAI',nomWin='CIBLE',nomTilt='CIBLE',nomFoc='CIBLE FOC')
+    mot5=motLat=THREEMOTORGUI( motLat='camLat',motorTypeName0='RSAI', motVert='camVert',motorTypeName1='RSAI',motFoc='camFoc',motorTypeName2='RSAI',nomWin='Camera Tache Focale',nomTilt='',nomFoc='Cam Foc')
     mot5.show()
     mot5.startThread2()
     appli.exec_()

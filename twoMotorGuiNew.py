@@ -168,7 +168,7 @@ class TWOMOTORGUI(QWidget) :
         
         self.setup()
         self.unitTrans()
-        
+        self.jogStep.setValue(self.jogValue)
    
     def startThread2(self):
         
@@ -893,7 +893,7 @@ if __name__ =='__main__':
     motor1="cibleVert"
     
     appli=QApplication(sys.argv)
-    mot5=TWOMOTORGUI(motor0,'RSAI',motor1,'RSAI',nomWin='Cible ',nomTilt='Cible') # croix XUV
+    mot5=TWOMOTORGUI(motor0,'RSAI',motor1,'RSAI',nomWin='cible',nomTilt='cible') # croix XUV
     
     mot5.show()
     mot5.startThread2()
