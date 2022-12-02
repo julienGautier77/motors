@@ -21,7 +21,7 @@ from PyQt6.QtWidgets import QApplication
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox
-from PyQt6.QtWidgets import QComboBox,QLabel
+from PyQt6.QtWidgets import QComboBox,QLabel,QToolButton
 import qdarkstyle
 import pathlib
 import time
@@ -65,7 +65,22 @@ class TILTMOTORGUI(QWidget) :
         self.MOT=[0,0]
         self.configMotName=[0,0]
         self.conf=[0,0]
-        self.configPath="./fichiersConfig/"
+        self.configPath=str(p.parent)+sepa+"fichiersConfig"+sepa
+        self.iconFlecheHaut=self.icon+"flechehaut.PNG"
+        self.iconFlecheHaut=pathlib.Path(self.iconFlecheHaut)
+        self.iconFlecheHaut=pathlib.PurePosixPath(self.iconFlecheHaut)
+
+        self.iconFlecheBas=self.icon+"flechebas.PNG"
+        self.iconFlecheBas=pathlib.Path(self.iconFlecheBas)
+        self.iconFlecheBas=pathlib.PurePosixPath(self.iconFlecheBas)
+
+        self.iconFlecheDroite=self.icon+"flechedroite.PNG"
+        self.iconFlecheDroite=pathlib.Path(self.iconFlecheDroite)
+        self.iconFlecheDroite=pathlib.PurePosixPath(self.iconFlecheDroite)
+
+        self.iconFlecheGauche=self.icon+"flechegauche.PNG"
+        self.iconFlecheGauche=pathlib.Path(self.iconFlecheGauche)
+        self.iconFlecheGauche=pathlib.PurePosixPath(self.iconFlecheGauche)
         self.isWinOpen=False
         self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         self.indexUnit=unit
@@ -204,30 +219,30 @@ class TILTMOTORGUI(QWidget) :
         grid_layout = QGridLayout()
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
-        self.haut=QPushButton()
-        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechehaut.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechehaut.png) ;background-color: transparent;border-color: blue}")
+        self.haut=QToolButton()
+        self.haut.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconFlecheHaut,self.iconFlecheHaut))
         
         self.haut.setMaximumHeight(70)
         self.haut.setMinimumWidth(70)
         self.haut.setMaximumWidth(70)
         self.haut.setMinimumHeight(70)
         
-        self.bas=QPushButton()
-        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechebas.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechebas.png) ;background-color: transparent;border-color: blue}")
+        self.bas=QToolButton()
+        self.bas.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconFlecheBas,self.iconFlecheBas))
         self.bas.setMaximumHeight(70)
         self.bas.setMinimumWidth(70)
         self.bas.setMaximumWidth(70)
         self.bas.setMinimumHeight(70)
         
-        self.droite=QPushButton()
-        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechedroite.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechedroite.png) ;background-color: transparent;border-color: blue}")
+        self.droite=QToolButton()
+        self.droite.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconFlecheDroite,self.iconFlecheDroite))
         self.droite.setMaximumHeight(70)
         self.droite.setMinimumWidth(70)
         self.droite.setMaximumWidth(70)
         self.droite.setMinimumHeight(70)
         
-        self.gauche=QPushButton()
-        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./icons/flechegauche.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./icons/flechegauche.png) ;background-color: transparent;border-color: blue}")
+        self.gauche=QToolButton()
+        self.gauche.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconFlecheGauche,self.iconFlecheGauche))
         
         self.gauche.setMaximumHeight(70)
         self.gauche.setMinimumWidth(70)

@@ -24,7 +24,7 @@ except ImportError:
     from PyQt5.QtGui import QIcon
 
 import tirSalleJaune as tirSJ
-import sys,time,logging
+import sys,time#,logging
 import qdarkstyle
 import numpy as np
 
@@ -354,11 +354,11 @@ class ThreadScan(QtCore.QThread):
         date=time.strftime("%Y_%m_%d_%H_%M_%S")
         fileNameLog='logScanMotor_'+date+'.log'
         
-        self.handler_scan= logging.FileHandler(fileNameLog, mode="a", encoding="utf-8")
-        # self.handler_scan.setFormatter('%(asctime)s %(message)s')
-        self.logger = logging.getLogger("Scan")
-        self.logger.setLevel(logging.INFO)
-        self.logger.addHandler(self.handler_scan)
+        # self.handler_scan= logging.FileHandler(fileNameLog, mode="a", encoding="utf-8")
+        # # self.handler_scan.setFormatter('%(asctime)s %(message)s')
+        # self.logger = logging.getLogger("Scan")
+        # self.logger.setLevel(logging.INFO)
+        # self.logger.addHandler(self.handler_scan)
 
     def run(self):
         
