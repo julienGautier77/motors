@@ -280,7 +280,7 @@ class ONEMOTORGUI(QWidget) :
         hbox1.addWidget(self.moins)
         
         self.jogStep=QDoubleSpinBox()
-        self.jogStep.setMaximum(10000)
+        self.jogStep.setMaximum(1000000)
         self.jogStep.setMaximumWidth(130)
         self.jogStep.setStyleSheet("font: bold 12pt")
         self.jogStep.setValue(self.jogValue)
@@ -811,7 +811,7 @@ if __name__ =='__main__':
     appli=QApplication(sys.argv)
     
         
-    mot5=ONEMOTORGUI( mot='P2MirVert',motorTypeName='RSAI',showRef=False,unit=1,jogValue=1)
+    mot5=ONEMOTORGUI( mot='tiltLat',motorTypeName='A2V',showRef=False,unit=1,jogValue=1)
     mot5.show()
     mot5.startThread2()
     appli.exec_()

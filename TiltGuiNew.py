@@ -139,10 +139,10 @@ class TILTMOTORGUI(QWidget) :
                 import moteurtest as test
                 self.motorType[zi]=test
                 self.MOT[zi]=self.motorType[zi].MOTORTEST(self.motor[zi])
-                
+            print(self.configMotName[zi],(self.motor[zi]))
             self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.Format.IniFormat) # fichier config motor fichier .ini
         
-        
+            print(self.conf[zi].value(self.motor[zi]+'/stepmotor'))
         self.stepmotor=[0,0]
         self.butePos=[0,0]
         self.buteNeg=[0,0]
@@ -541,10 +541,10 @@ class PositionThread(QtCore.QThread):
     
 
 if __name__ =='__main__':
-    motor0='testMot1'
-    motor1='testMot2'
+    motor0='tiltLat'
+    motor1='tiltVert'
     appli=QApplication(sys.argv)
-    mot5=TILTMOTORGUI( motLat=motor0,motorTypeName0='Test' , motVert=motor1,motorTypeName1='Test',nomWin='Test',background='')
+    mot5=TILTMOTORGUI( motLat=motor0,motorTypeName0='A2V' , motVert=motor1,motorTypeName1='A2V',nomWin='Tilt',background='')
     mot5.show()
     mot5.startThread2()
     appli.exec_()
