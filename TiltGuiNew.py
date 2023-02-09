@@ -52,7 +52,7 @@ class TILTMOTORGUI(QWidget) :
     fichier de config des moteurs : 'configMoteurRSAI.ini' 'configMoteurA2V.ini' 'configMoteurNewFocus.ini' 'configMoteurSmartAct.ini'
     """
   
-    def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',nomWin='',nomTilt='',unit=2,jogValue=1,background='',parent=None,showUnit=False):
+    def __init__(self, motLat='',motorTypeName0='', motVert='',motorTypeName1='',nomWin='',nomTilt='',unit=1,jogValue=100,background='',parent=None,showUnit=False):
         
         super(TILTMOTORGUI, self).__init__()
         p = pathlib.Path(__file__)
@@ -252,7 +252,7 @@ class TILTMOTORGUI(QWidget) :
         
         
         self.jogStep=QDoubleSpinBox()
-        self.jogStep.setMaximum(1000)
+        self.jogStep.setMaximum(1000000)
         self.jogStep.setStyleSheet("font: bold 12pt")
         self.jogStep.setValue(self.jogValue)
         self.jogStep.setMaximumWidth(120)
@@ -544,7 +544,7 @@ if __name__ =='__main__':
     motor0='tiltLat'
     motor1='tiltVert'
     appli=QApplication(sys.argv)
-    mot5=TILTMOTORGUI( motLat=motor0,motorTypeName0='A2V' , motVert=motor1,motorTypeName1='A2V',nomWin='Tilt',background='')
+    mot5=TILTMOTORGUI( motLat=motor0,motorTypeName0='A2V' , motVert=motor1,motorTypeName1='A2V',nomWin='Tilt Turning Haut',background='')
     mot5.show()
     mot5.startThread2()
     appli.exec_()
