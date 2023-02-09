@@ -19,9 +19,9 @@ import time
 
 #%% rack initialisation et connexion des racks
 
-portA='com4' # USB n1
+portA='com6' # USB n1
 portB='com5' #USB n2
-
+mutexA=QtCore.QMutex()
 mysA=Serial()
 mysB=Serial()
 confA2V=QSettings('fichiersConfig/configMoteurA2V.ini', QtCore.QSettings.Format.IniFormat) # motor configuration  files
@@ -67,11 +67,11 @@ try :
 except:
     print( "Error connexion A2V rack A")
     msg = QMessageBox()
-    msg.setIcon(QMessageBox.Critical)
+    msg.setIcon(QMessageBox.Icon.Critical)
     msg.setText("Error connexion A2V")
     msg.setInformativeText("Error connexion A2V rack A please chek connexion or restart computeur")
     msg.setWindowTitle("Warning ...")
-    msg.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+    msg.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
     msg.exec_()
     pass
 
@@ -124,10 +124,12 @@ def sendCommand(instruction, instr_type, mii, values_list,rack="A"):
 
         cmd[8] = sum(cmd[0:8])&0xff
     if rack=="A" :
+        mutexA.lock()
         mysA.write(cmd)
         time.sleep(0.02)
         out = mysA.read(9)
         time.sleep(0.02)
+        mutexA.unlock()
         return bytearray(out)
     elif rack=='B':
         mysB.write(cmd)
@@ -287,6 +289,7 @@ class MOTORA2V():
         cmd= 5 #set Axis Parameter
         Type= 1 # Set Actual Postion Bizarre ....
         value = [0]
+        out = sendCommand(1,0,self.numMoteur,[0],self.rack) #velocity =0s
         out = sendCommand(cmd,Type,self.numMoteur,value,self.rack)
 
 
