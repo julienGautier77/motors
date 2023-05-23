@@ -5,7 +5,7 @@ python 3.X pyQT6
 system 64 bit (at least python MSC v.1900 64 bit (Intel)) 
 @author: Gautier julien loa
 Created on Tue Jan 4 10:42:10 2018
-modified on Tue Feb 27 15:49:32 2018
+modified on Tue May 23 15:49:32 2023
 """
 
 #%% Imports
@@ -101,7 +101,10 @@ def testConnection():
     
 class MOTORRSAI():
     def __init__(self, mot1='',parent=None):
-        #super(MOTORNEWPORT, self).__init__()
+        # RSAI motor class for 1 motor defined by mot1=str()
+        #mot1=name of the motor  (group name) in the ini file return all properties (numesim,nunMoteur , value of step , ref position, user name )
+        # ini file is the folder :fichiersConfig/configMoteurRSAI.ini
+        
         self.moteurname=mot1
         try: 
             self.numEsim=ctypes.c_int16(int(confRSAI.value(self.moteurname+'/numESim')))
@@ -139,7 +142,7 @@ class MOTORRSAI():
 
     def rmove(self, posrelatif, vitesse=1000):
         """
-        rmove(motor,posrelatif,vitesse): : mouvement absolu du moteur (motor) a la position posrelatif avec la vitesse vitesse
+        rmove(motor,posrelatif,vitesse): : mouvement relatif  du moteur (motor) a la position posrelatif avec la vitesse vitesse
         """
         regCde    = ctypes.c_uint(2) # commande mvt absolue
         posActuel = self.position()
@@ -172,7 +175,7 @@ class MOTORRSAI():
 
     def etatMotor(self):
         """ Etat du moteur (alimentation on/off)
-        a verifier
+        a verifier certain etat manque ...
         """
         a=PilMot.rEtatMoteur(self.numEsim , self.numMoteur)
         a=hex(a)
