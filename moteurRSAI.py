@@ -53,11 +53,12 @@ except AttributeError as s:
             return 0
 
 #%% ENTREE
-# liste adresse IP des modules
+# liste adresse IP des modules in class MotorRSAI self.numEsim is the number of the rack in this list (start from 0)
 IP    = b"10.0.5.10\0      " 
-IPs_C = ctypes.create_string_buffer(IP, 16) # permet d avoir la liste comme demander dans la dll
-
-
+IPs_C = ctypes.create_string_buffer(IP, 16) # permet d avoir la liste comme demander dans la dll Here 10.0.5.10 numEsim =0
+# for 2 racks
+#IP    = b"10.0.5.10\0      10.0.5.11\0      " 
+#IPs_C = ctypes.create_string_buffer(IP, 32) # permet d avoir la liste comme demander dans la dll Here 10.0.5.10 numEsim =0 Here 10.0.5.11 numEsim =1
 #conf = QSettings(QSettings.IniFormat, QSettings.UserScope, "configMoteur", "configMoteurRSAI")
 confRSAI = QSettings('fichiersConfig/configMoteurRSAI.ini', QSettings.Format.IniFormat)
 
