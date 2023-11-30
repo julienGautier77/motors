@@ -8,7 +8,7 @@ Created on Mon Apr  1 11:16:50 2019
 #%%Import
 from PyQt6 import QtCore
 from PyQt6.QtWidgets import QApplication
-from PyQt6.QtWidgets import QWidget,QMessageBox,QLineEdit,QToolButton
+from PyQt6.QtWidgets import QWidget,QMessageBox,QLineEdit
 from PyQt6.QtWidgets import QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
 from PyQt6.QtWidgets import QComboBox,QLabel
 from PyQt6.QtGui import QIcon
@@ -56,7 +56,6 @@ class ONEMOTORGUI(QWidget) :
         self.MOT=[0]
         self.configMotName=[0]
         self.conf=[0]
-        self.path=str(p.parent)+sepa
         self.configPath=str(p.parent / "fichiersConfig")+sepa
         self.isWinOpen=False
         self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
@@ -66,23 +65,7 @@ class ONEMOTORGUI(QWidget) :
         self.etat='ok'
         self.tir=TirGui.TIRGUI()
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
-
-        self.iconPlay=self.icon+"playGreen.PNG"
-        self.iconPlay=pathlib.Path(self.iconPlay)
-        self.iconPlay=pathlib.PurePosixPath(self.iconPlay)
-
-        self.iconMoins=self.icon+"moinsBleu.PNG"
-        self.iconMoins=pathlib.Path(self.iconMoins)
-        self.iconMoins=pathlib.PurePosixPath(self.iconMoins)
-
-        self.iconPlus=self.icon+"plusBleu.PNG"
-        self.iconPlus=pathlib.Path(self.iconPlus)
-        self.iconPlus=pathlib.PurePosixPath(self.iconPlus)
-
-        self.iconStop=self.icon+"close.PNG"
-        self.iconStop=pathlib.Path(self.iconStop)
-        self.iconStop=pathlib.PurePosixPath(self.iconStop)
-    
+        self.setWindowOpacity(0.96)
         for zi in range (0,1): #  list configuration et motor types 
             
             if self.motorTypeName[zi]=='RSAI':
@@ -137,7 +120,7 @@ class ONEMOTORGUI(QWidget) :
                 print(self.configMotName[zi])
                 
             self.conf[zi]=QtCore.QSettings(self.configMotName[zi], QtCore.QSettings.Format.IniFormat) # fichier config motor fichier .ini
-            
+       
         self.scanWidget=SCAN(MOT=self.MOT[0],motor=self.motor[0],configMotName=self.configMotName[0]) # for the scan
         
         self.stepmotor=[0,0,0]
@@ -177,9 +160,7 @@ class ONEMOTORGUI(QWidget) :
         if self.indexUnit==4: #  en degres
             self.unitChange=1 *self.stepmotor[0]
             self.unitName='°'    
-        
         self.setup()
-        
         self.unit()
         self.jogStep.setValue(self.jogValue)
         
@@ -253,10 +234,8 @@ class ONEMOTORGUI(QWidget) :
         self.MoveStep.setMinimum(-1000000)
         #self.MoveStep.setStyleSheet("background-color: green")
         
-        self.absMvtButton=QToolButton()
-        
-        self.absMvtButton.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconPlay,self.iconPlay))
-        
+        self.absMvtButton=QPushButton()
+        self.absMvtButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png) ;background-color: transparent;border-color: blue}")
         self.absMvtButton.setMinimumHeight(50)
         self.absMvtButton.setMaximumHeight(50)
         self.absMvtButton.setMinimumWidth(50)
@@ -268,8 +247,8 @@ class ONEMOTORGUI(QWidget) :
         vbox1.addLayout(hboxAbs)
         vbox1.addSpacing(10)
         hbox1=QHBoxLayout()
-        self.moins=QToolButton()
-        self.moins.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconMoins,self.iconMoins))
+        self.moins=QPushButton()
+        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/moinsBleu.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/moinsBleu.png);background-color: transparent;border-color: blue}")
         
         self.moins.setMinimumHeight(70)
         self.moins.setMaximumHeight(70)
@@ -280,7 +259,7 @@ class ONEMOTORGUI(QWidget) :
         hbox1.addWidget(self.moins)
         
         self.jogStep=QDoubleSpinBox()
-        self.jogStep.setMaximum(1000000)
+        self.jogStep.setMaximum(10000)
         self.jogStep.setMaximumWidth(130)
         self.jogStep.setStyleSheet("font: bold 12pt")
         self.jogStep.setValue(self.jogValue)
@@ -288,8 +267,8 @@ class ONEMOTORGUI(QWidget) :
         hbox1.addWidget(self.jogStep)
          
         
-        self.plus=QToolButton()
-        self.plus.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconPlus,self.iconPlus))
+        self.plus=QPushButton()
+        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/plusBleu.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/plusBleu.png) ;background-color: transparent;border-color: blue}")
         self.plus.setMinimumHeight(70)
         self.plus.setMaximumHeight(70)
         self.plus.setMinimumWidth(70)
@@ -302,9 +281,8 @@ class ONEMOTORGUI(QWidget) :
         vbox1.addSpacing(10)
         
         hbox2=QHBoxLayout()
-        self.stopButton=QToolButton()
-        self.stopButton.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconStop,self.iconStop))
-        
+        self.stopButton=QPushButton()
+        self.stopButton.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/close.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/close.png) ;background-color: transparent;border-color: blue}")
         #self.stopButton.setStyleSheet("border-radius:20px;background-color: red")
         self.stopButton.setMaximumHeight(70)
         self.stopButton.setMaximumWidth(70)
@@ -325,15 +303,10 @@ class ONEMOTORGUI(QWidget) :
         vbox1.addSpacing(10)
         
         self.REF1 = REF1M(num=1)
-        
         self.REF2 = REF1M(num=2)
-        
         self.REF3 = REF1M(num=3)
-        
         self.REF4 = REF1M(num=4)
-        
         self.REF5 = REF1M(num=5)
-        
         self.REF6 = REF1M(num=6)
         
         grid_layoutRef = QGridLayout()
@@ -691,37 +664,29 @@ class REF1M(QWidget):
         self.wid=QWidget()
         self.id=num
         self.vboxPos=QVBoxLayout()
-        p = pathlib.Path(__file__)
-        sepa=os.sep
-        self.icon=str(p.parent) + sepa + 'icons' +sepa
+        
         self.posText=QLineEdit('ref')
         self.posText.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.posText.setStyleSheet("font: bold 15pt")
         self.posText.setObjectName('%s'%self.id)
 #        self.posText.setMaximumWidth(80)
         self.vboxPos.addWidget(self.posText)
-        self.iconTake=self.icon+"disquette.PNG"
-        self.iconTake=pathlib.Path(self.iconTake)
-        self.iconTake=pathlib.PurePosixPath(self.iconTake)
-        self.take=QToolButton()
+        
+        self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconTake,self.iconTake))
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
         self.take.setMaximumWidth(30)
         self.take.setMinimumWidth(30)
         self.take.setMinimumHeight(30)
         self.take.setMaximumHeight(30)
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
-
-        self.iconGo=self.icon+"go.PNG"
-        self.iconGo=pathlib.Path(self.iconGo)
-        self.iconGo=pathlib.PurePosixPath(self.iconGo)
-        self.Pos=QToolButton()
-        self.Pos.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconGo,self.iconGo))
-        self.Pos.setMinimumHeight(30)
-        self.Pos.setMaximumHeight(30)
-        self.Pos.setMinimumWidth(30)
-        self.Pos.setMaximumWidth(30)
+        self.Pos=QPushButton()
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0, 0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
+        self.Pos.setMinimumHeight(40)
+        self.Pos.setMaximumHeight(40)
+        self.Pos.setMinimumWidth(40)
+        self.Pos.setMaximumWidth(40)
         self.PosLayout=QHBoxLayout()
         self.PosLayout.addWidget(self.Pos)
         self.Pos.setObjectName('%s'%self.id)
@@ -811,7 +776,7 @@ if __name__ =='__main__':
     appli=QApplication(sys.argv)
     
         
-    mot5=ONEMOTORGUI( mot='tiltLat',motorTypeName='A2V',showRef=False,unit=1,jogValue=1)
+    mot5=ONEMOTORGUI( mot='Renv_lat',motorTypeName='RSAI',showRef=False,unit=1,jogValue=1)
     mot5.show()
     mot5.startThread2()
     appli.exec_()

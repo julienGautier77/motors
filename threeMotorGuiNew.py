@@ -6,7 +6,7 @@ Created on Mon Apr  1 11:16:50 2019
 """
 #%%Import
 from PyQt6 import QtCore
-from PyQt6.QtWidgets import QWidget,QMessageBox,QLineEdit,QToolButton
+from PyQt6.QtWidgets import QWidget,QMessageBox,QLineEdit
 from PyQt6.QtWidgets import QApplication,QVBoxLayout,QHBoxLayout,QPushButton,QGridLayout,QDoubleSpinBox,QCheckBox
 from PyQt6.QtWidgets import QComboBox,QLabel
 from PyQt6.QtGui import QIcon
@@ -54,41 +54,6 @@ class THREEMOTORGUI(QWidget) :
         p = pathlib.Path(__file__)
         sepa=os.sep
         self.icon=str(p.parent) + sepa + 'icons' +sepa
-
-        self.iconPlay=self.icon+"playGreen.PNG"
-        self.iconPlay=pathlib.Path(self.iconPlay)
-        self.iconPlay=pathlib.PurePosixPath(self.iconPlay)
-
-        self.iconMoins=self.icon+"moinsBleu.PNG"
-        self.iconMoins=pathlib.Path(self.iconMoins)
-        self.iconMoins=pathlib.PurePosixPath(self.iconMoins)
-
-        self.iconPlus=self.icon+"plusBleu.PNG"
-        self.iconPlus=pathlib.Path(self.iconPlus)
-        self.iconPlus=pathlib.PurePosixPath(self.iconPlus)
-
-        self.iconStop=self.icon+"close.PNG"
-        self.iconStop=pathlib.Path(self.iconStop)
-        self.iconStop=pathlib.PurePosixPath(self.iconStop)
-
-
-        self.iconFlecheHaut=self.icon+"flechehaut.PNG"
-        self.iconFlecheHaut=pathlib.Path(self.iconFlecheHaut)
-        self.iconFlecheHaut=pathlib.PurePosixPath(self.iconFlecheHaut)
-
-        self.iconFlecheBas=self.icon+"flechebas.PNG"
-        self.iconFlecheBas=pathlib.Path(self.iconFlecheBas)
-        self.iconFlecheBas=pathlib.PurePosixPath(self.iconFlecheBas)
-
-        self.iconFlecheDroite=self.icon+"flechedroite.PNG"
-        self.iconFlecheDroite=pathlib.Path(self.iconFlecheDroite)
-        self.iconFlecheDroite=pathlib.PurePosixPath(self.iconFlecheDroite)
-
-        self.iconFlecheGauche=self.icon+"flechegauche.PNG"
-        self.iconFlecheGauche=pathlib.Path(self.iconFlecheGauche)
-        self.iconFlecheGauche=pathlib.PurePosixPath(self.iconFlecheGauche)
-
-
         self.motor=[str(motLat),str(motVert),str(motFoc)]
         self.motorTypeName=[motorTypeName0,motorTypeName1,motorTypeName2]
         self.motorType=[0,0,0]
@@ -99,7 +64,7 @@ class THREEMOTORGUI(QWidget) :
         self.etatLat='ok'
         self.etatVert='ok'
         self.etatFoc='ok'
-        self.configPath=str(p.parent)+sepa+"fichiersConfig"+sepa
+        self.configPath="./fichiersConfig/"#"/.fichiersConfig/"
         self.isWinOpen=False
         self.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt6'))
         self.refShowId=showRef
@@ -113,7 +78,7 @@ class THREEMOTORGUI(QWidget) :
         self.setWindowIcon(QIcon(self.icon+'LOA.png'))
         self.version=__version__
         self.tir=TirGui.TIRGUI()
-        # self.setWindowOpacity(0.5)
+        self.setWindowOpacity(0.96)
         
         for zi in range (0,3): #  list configuration and motor types 
             if self.motorTypeName[zi]=='RSAI':
@@ -153,9 +118,9 @@ class THREEMOTORGUI(QWidget) :
                  self.MOT=self.motorType[zi].MOTORSERVO(self.motor[zi])
                  
             elif self.motorTypeName[zi]=='Arduino':
-                # print('zi',zi)
+                print('zi',zi)
                 self.configMotName[zi]=self.configPath+'configMoteurArduino.ini'
-                # print(self.configMotName[zi])
+                print(self.configMotName[zi])
                 import moteurArduino as arduino
                 self.motorType[zi]=arduino
                 self.MOT[zi]=self.motorType[zi].MOTORARDUINO(self.motor[zi])
@@ -342,30 +307,30 @@ class THREEMOTORGUI(QWidget) :
         grid_layout = QGridLayout()
         grid_layout.setVerticalSpacing(0)
         grid_layout.setHorizontalSpacing(10)
-        self.haut=QToolButton()
-        self.haut.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconFlecheHaut,self.iconFlecheHaut))
+        self.haut=QPushButton()
+        self.haut.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechehaut.png);background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechehaut.png) ;background-color: transparent ;border-color: blue}")
         
         self.haut.setMaximumHeight(70)
         self.haut.setMinimumWidth(70)
         self.haut.setMaximumWidth(70)
         self.haut.setMinimumHeight(70)
         
-        self.bas=QToolButton()
-        self.bas.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconFlecheBas,self.iconFlecheBas))
+        self.bas=QPushButton()
+        self.bas.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechebas.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechebas.png);background-color: transparent ;border-color: blue}")
         self.bas.setMaximumHeight(70)
         self.bas.setMinimumWidth(70)
         self.bas.setMaximumWidth(70)
         self.bas.setMinimumHeight(70)
         
-        self.gauche=QToolButton()
-        self.gauche.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconFlecheGauche,self.iconFlecheGauche))
+        self.gauche=QPushButton('Left')
+        self.gauche.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechegauche.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechegauche.png);background-color: transparent ;border-color: blue}")
+        
         self.gauche.setMaximumHeight(70)
         self.gauche.setMinimumWidth(70)
         self.gauche.setMaximumWidth(70)
         self.gauche.setMinimumHeight(70)
-        self.droite=QToolButton()
-
-        self.droite.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconFlecheDroite,self.iconFlecheDroite))
+        self.droite=QPushButton('right')
+        self.droite.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/flechedroite.png) ;background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/flechedroite.png) ;background-color: transparent ;border-color: blue}")
         self.droite.setMaximumHeight(70)
         self.droite.setMinimumWidth(70)
         self.droite.setMaximumWidth(70)
@@ -377,6 +342,7 @@ class THREEMOTORGUI(QWidget) :
         self.jogStep.setStyleSheet("font: bold 12pt")
         self.jogStep.setValue(100)
         self.jogStep.setMaximumWidth(120)
+        
         self.jogStep.setValue(55)
         self.unitChangeLat=1
     
@@ -431,8 +397,8 @@ class THREEMOTORGUI(QWidget) :
         hboxFoc.addWidget(self.zeroButtonFoc)
         hboxFoc.addSpacing(25)
         
-        self.moins=QToolButton()
-        self.moins.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconMoins,self.iconMoins))
+        self.moins=QPushButton()
+        self.moins.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/moinsBleu.png);background-color: transparent ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/moinsBleu.png);background-color: transparent;border-color: blue}")
         self.moins.setMaximumWidth(70)
         self.moins.setMinimumHeight(70)
         hboxFoc.addWidget(self.moins)
@@ -445,9 +411,8 @@ class THREEMOTORGUI(QWidget) :
         hboxFoc.addWidget(self.jogStep_2)
          
         
-        self.plus=QToolButton()
-        self.plus.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconPlus,self.iconPlus))
-        
+        self.plus=QPushButton()
+        self.plus.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/plusBleu.png) ;background-color: transparent;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/plusBleu.png) ;background-color: transparent;border-color: blue}")
         self.plus.setMaximumWidth(70)
         self.plus.setMinimumHeight(70)
     
@@ -1061,35 +1026,27 @@ class REF3M(QWidget):
         self.wid=QWidget()
         self.id=num
         self.vboxPos=QVBoxLayout()
-        p = pathlib.Path(__file__)
-        sepa=os.sep
-        self.icon=str(p.parent) + sepa + 'icons' +sepa
+        
         self.posText=QLineEdit('ref')
         self.posText.setStyleSheet("font: bold 15pt")
         self.posText.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.posText.setObjectName('%s'%self.id)
         self.vboxPos.addWidget(self.posText)
-        self.iconTake=self.icon+"disquette.PNG"
-        self.iconTake=pathlib.Path(self.iconTake)
-        self.iconTake=pathlib.PurePosixPath(self.iconTake)
-        self.take=QToolButton()
+        self.take=QPushButton()
         self.take.setObjectName('%s'%self.id)
-        self.take.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconTake,self.iconTake))
+        self.take.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/disquette.png);background-color: rgb(0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/disquette.png);background-color: rgb(0, 0,0) ;border-color: blue}")
         self.take.setMaximumWidth(30)
         self.take.setMinimumWidth(30)
         self.take.setMinimumHeight(30)
         self.take.setMaximumHeight(30)
         self.takeLayout=QHBoxLayout()
         self.takeLayout.addWidget(self.take)
-        self.iconGo=self.icon+"go.PNG"
-        self.iconGo=pathlib.Path(self.iconGo)
-        self.iconGo=pathlib.PurePosixPath(self.iconGo)
-        self.Pos=QToolButton()
-        self.Pos.setStyleSheet("QToolButton:!pressed{border-image: url(%s);background-color: transparent ;border-color: gray;}""QToolButton:pressed{image: url(%s);background-color: gray ;border-color: gray}"%(self.iconGo,self.iconGo))
-        self.Pos.setMinimumHeight(30)
-        self.Pos.setMaximumHeight(30)
-        self.Pos.setMinimumWidth(30)
-        self.Pos.setMaximumWidth(30)
+        self.Pos=QPushButton()
+        self.Pos.setStyleSheet("QPushButton:!pressed{border-image: url(./Iconeslolita/playGreen.png);background-color: rgb(0, 0,0) ;border-color: green;}""QPushButton:pressed{image: url(./IconesLolita/playGreen.png);background-color: rgb(0, 0, 0) ;border-color: blue}")
+        self.Pos.setMinimumHeight(40)
+        self.Pos.setMaximumHeight(40)
+        self.Pos.setMinimumWidth(40)
+        self.Pos.setMaximumWidth(40)
         self.PosLayout=QHBoxLayout()
         self.PosLayout.addWidget(self.Pos)
         self.Pos.setObjectName('%s'%self.id)
